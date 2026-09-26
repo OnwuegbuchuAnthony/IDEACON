@@ -10,16 +10,18 @@ IDEACON closes this gap: a global platform that captures a limitless pool of nov
 
 ## Target Users
 
-**Idea Creators:**
-- Independent inventors and innovators
-- General public (crowdsourced submissions)
-- Vetted experts and researchers
+**Idea Creators (4 personas):**
+- Independent Inventor — serious builders with concrete designs/processes; needs credible channel + theft protection
+- Casual Public Submitter — “why doesn't this exist” insights; needs starting point + merit signal before exposure
+- Vetted Expert / Researcher — academics/specialists with commercializable research; needs translation to impact + royalties
+- Student Innovator — final-year/hackathon/campus-club builders; needs exposure, mentorship, validation; sourced via university hubs + ambassadors
 
-**Companies:**
-- Startups and small businesses
-- Large enterprises and corporates
+**Companies (by actual user, not monolith):**
+- Startup Founder / CEO — browses directly; needs fast edge without R&D overhead
+- Enterprise Innovation / R&D Lead — needs defensible, auditable sourcing for KPIs
+- Product / Strategy Manager — needs documented proof (uniqueness, review status) to pitch internally
 
-Targeted simultaneously from launch, globally from day one.
+Industry-agnostic platform; GTM focus niches: HealthTech, AgroTech, FinTech, Business cross-industry.
 
 ## Core Value
 
@@ -59,8 +61,8 @@ Targeted simultaneously from launch, globally from day one.
 
 ## Go-to-Market
 
-Launch targeting startups and enterprises at once, global from day one. Early growth driven by case studies and successful matches to overcome trust barriers (creators fear idea theft; companies fear low-quality submissions).
+Nigeria-first entry, global architecture. Initial focus: companies across Lagos, Abuja/FCT, Rivers/Port Harcourt, Kano, Ogun + other commercial centers. University innovation hubs as renewable creator pipeline. Early growth driven by case studies to overcome trust barriers (creators fear theft; companies fear low quality).
 
 ## Status
 
-Initial version (v0.1) — see `IDEACON-PRD.md` for full product requirements.
+Initial version (v0.2) — see `IDEACON-PRD refined.md` for full product requirements.
