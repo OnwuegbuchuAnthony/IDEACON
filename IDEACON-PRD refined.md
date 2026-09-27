@@ -162,3 +162,23 @@ Especially critical in early stages to attract both creators and companies:
 - **Keep the compensation model flexible but templated.** Fully case-by-case deals will be hard to scale operationally. Build 2–3 standard deal templates (e.g. "licensing," "revenue share," "advisory partnership") that cover most cases, with true custom deals as the exception, not the default.
 - **Delay community voting deliberately.** Introducing public ratings too early — before you have enough idea volume and quality control — risks a race-to-the-bottom on visible ideas. Phase 2 is the right call.
 - **Global-from-day-one needs a legal backbone before scale.** Given the IP-protection promise (NDA, proof of origin, licensing templates) is core to your pitch, get this legally solid in at least 2–3 major jurisdictions before actively marketing in them — a broken promise here would be fatal to trust.
+
+# Appendix A — Build Notes (implementation log, not requirements)
+
+## A.1 Design system → v1.1 Bright (preview: `DESIGN_SYSTEM_PREVIEW.html`)
+- Palette replaced: bright azure primary (`#0F62FE` family), teal freshness (`#00C2A8`), coral creator energy (`#FF5C38`), ink text (`#0A2540`); airy tints for surfaces; semantic mint/sun/violet for score/review/NDA states.
+- Fonts replaced: Sora (display/headings) + Plus Jakarta Sans (UI), system fallback offline.
+- Components rebuilt on the new tokens: gradient pill buttons, tinted badges, teaser cards with colored top-edge, violet NDA panel, gradient timeline. Live in the app via Tailwind v4 `@theme` (`app/app/globals.css`).
+
+## A.2 Locked stack (owner-confirmed, replaces plan §3 defaults)
+- Database: PostgreSQL 17 on local device (native install, `ideacon` DB) — no Supabase.
+- Auth: Better Auth (email/password + Google-ready) — roles creator/reviewer/broker/admin.
+- Storage: Cloudflare R2 (private bucket, presigned URLs; code-ready, credentials pending).
+- Email: Resend (console-log fallback until domain verified).
+- Hosting: self-hosted on local device (Docker Compose + Caddy, `next start`) — no Vercel.
+- pgvector unavailable on Windows Postgres → embeddings stored as bytes placeholder; swap to `vector(1536)` in Phase 1 hardening.
+
+## A.3 Progress
+- Phase 0 (`96412c9`): Next.js 16 scaffold, design tokens, Better Auth shell, Prisma audit spine (hash-chained events + status machine), CI.
+- Phase 1 (`a199ffa`): submission wizard, teaser catalog (full detail never leaked), reviewer console + heuristic-v0 scoring, NDA gate (14-day grants), broker console + templated deals, evidence-pack export, 8 seeded ideas.
+- Phase 2 slice (`3685c6b`): role-aware match ranking (founder/R&D/PM lenses) surfaced in broker console.
