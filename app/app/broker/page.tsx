@@ -2,7 +2,9 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { requireRole } from "@/lib/session";
 import { suggestMatches } from "@/lib/matching";
+import { TIERS } from "@/lib/tiers";
 import { ApproveButton, DealForm } from "./BrokerActions";
+import { TierForm, DigestButton, CaseStudyForm } from "./BillingActions";
 
 export default async function BrokerPage() {
   await requireRole("BROKER", "ADMIN");
@@ -36,6 +38,21 @@ export default async function BrokerPage() {
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 px-6 py-12">
       <h1 className="font-display text-3xl font-extrabold">Broker console ({matches.length})</h1>
       <p className="text-sm text-ink/60">All company↔creator contact flows through here. No open messaging by design.</p>
+
+      <section className="rounded-2xl border border-primary-100 bg-white p-5 shadow">
+        <h2 className="font-display text-lg font-bold">Subscriptions &amp; digests</h2>
+        <div className="mt-2 flex flex-wrap items-center gap-3">
+          <DigestButton />
+          <span className="text-xs text-ink/50">Tiers: {Object.entries(TIERS).map(([k, t]) => `${k} ₦${t.priceNgn.toLocaleString()}`).join(" · ")}</span>
+        </div>
+        <div className="mt-3 flex flex-col gap-2">
+          {[...seen.entries()].map(([id, info]) => (
+            <TierForm key={id} companyId={id} companyName={info.name} />
+          ))}
+        </div>
+      </section>
+
+      <CaseStudyForm />
 
       {suggestions.length > 0 && (
         <section className="rounded-2xl border-2 border-teal-500 bg-teal-100/40 p-5">

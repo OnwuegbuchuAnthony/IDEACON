@@ -1,6 +1,8 @@
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/session";
+import { formatNgn } from "@/lib/billing";
 import { MessageForm } from "../DealActions";
+import { ValueForm } from "../ValueActions";
 
 export default async function DealPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -27,6 +29,10 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
         <span className="rounded-full bg-mint-100 px-2 py-0.5 text-emerald-800">{deal.currency}</span>
       </div>
       <h1 className="font-display text-3xl font-extrabold">Deal timeline</h1>
+      <p className="text-sm">
+        Value: <b>{formatNgn(deal.amountKobo)}</b> · Commission (10%): <b>{formatNgn(deal.commissionKobo)}</b>
+      </p>
+      <ValueForm dealId={deal.id} />
 
       <ul className="flex flex-col gap-2">
         {events.map((e) => (

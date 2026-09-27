@@ -253,8 +253,10 @@ model Deal {
   ideaId    String
   companyId String
   template  String   // licensing | revenue_share | advisory | custom
-  status    String   @default("draft")
+  status    String   @default("draft") // draft | active | invoiced | closed
   currency  String   @default("NGN")
+  amountKobo    BigInt @default(0) // deal value in minor units
+  commissionKobo BigInt @default(0) // IDEACON commission ledger
   createdAt DateTime @default(now())
   messages  DealMessage[]
 }
@@ -270,9 +272,22 @@ model DealMessage {
 
 model Subscription {
   id        String   @id @default(cuid())
-  companyId String
-  tier      String   @default("free")
+  companyId String   @unique
+  tier      String   @default("free") // free | starter | growth | enterprise
   seats     Int      @default(1)
+  status    String   @default("active")
+  renewsAt  DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CaseStudy {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  niche     Niche    @default(OTHER)
+  company   String?
+  published Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 

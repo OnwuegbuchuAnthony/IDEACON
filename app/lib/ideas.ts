@@ -152,6 +152,14 @@ export async function requestAccess(input: {
   });
   if (existing) return existing;
 
+  const { checkRequestQuota } = await import("./billing");
+  const quota = await checkRequestQuota(input.companyId);
+  if (!quota.ok) {
+    throw new Error(
+      `Monthly request quota reached (${quota.used}/${quota.quota} on ${quota.tier}). Ask a broker about upgrading.`,
+    );
+  }
+
   const match = await db.match.create({
     data: {
       ideaId: input.ideaId,
