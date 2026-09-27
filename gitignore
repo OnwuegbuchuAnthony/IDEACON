@@ -1,0 +1,58 @@
+# IDEACON repo root
+
+# --- Node / package managers ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# --- Next.js build output (never commit compiled output) ---
+.next/
+out/
+build/
+dist/
+next-env.d.ts
+*.tsbuildinfo
+
+# --- Environment & secrets (never commit real values) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# --- Local Postgres / self-hosted data (per IMPLEMENTATION_PLAN.md stack) ---
+*.sql
+*.dump
+pgdata/
+postgres-data/
+redis-data/
+
+# --- Docker local overrides ---
+docker-compose.override.yml
+.docker/
+
+# --- Logs ---
+*.log
+logs/
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+
+# --- Editors ---
+.vscode/
+.idea/
+*.swp
+
+# --- Testing / build tooling caches ---
+coverage/
+.turbo/
+storybook-static/
+
+# --- Office docs generated during planning (existing rule, kept) ---
+*.docx
+~$*.docx
