@@ -1,6 +1,6 @@
 # IDEACON — Implementation Plan (v1.1)
 
-Derived from `IDEACON-PRD refined.md`. Nigeria-first GTM, global + industry-agnostic architecture.
+Derived from `IDEACON-PRD.md`. Nigeria-first GTM, global + industry-agnostic architecture.
 Brokered model is the moat: teased ideas, expert + AI review, NDA-gated full disclosure, team-managed handoff. No open creator↔company messaging.
 
 **Locked stack decisions (owner-confirmed):** local PostgreSQL (on-device) · Better Auth · Cloudflare R2 storage · Resend email · no Supabase · no Vercel — self-hosted on local device.

@@ -65,4 +65,4 @@ Nigeria-first entry, global architecture. Initial focus: companies across Lagos,
 
 ## Status
 
-Initial version (v0.2) — see `IDEACON-PRD refined.md` for full product requirements.
+Initial version (v0.2) — see `IDEACON-PRD.md` for full product requirements.

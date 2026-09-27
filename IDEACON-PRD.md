@@ -1,4 +1,4 @@
-IDEACON — Product Requirements Document
+# IDEACON — Product Requirements Document
 
 _Idea + Connection — the platform that links novel ideas to the industries built to use them._
 
@@ -10,17 +10,49 @@ IDEACON closes this gap: a global platform that captures a limitless pool of nov
 
 # 2\. Target Users
 
-## Idea Creators
+IDEACON serves two sides of a market, each with several distinct personas. No single persona is prioritized over another at launch — the platform is built to serve all of them from day one, and stays industry-agnostic rather than leading with specific verticals.
 
-- Independent inventors and innovators
-- General public (crowdsourced submissions)
-- Vetted experts and researchers
+## 2.1 Idea Creators
 
-## Companies
+- **The Independent Inventor.** Builds or tinkers as a serious practice, not just a hobby. Has often solved a real problem in the course of their own work or life and formalized it into something concrete — a design, a mechanism, a process. Motivated by seeing the idea actually built and used, and by fair compensation for it. Pain point: no credible channel to reach a company without an existing network, and real fear of the idea being copied once shared.
+- **The Casual Public Submitter.** Not a professional inventor — has a flash of insight, a “why doesn't this exist yet” moment, but no formal process, network, or roadmap for what to do next. Motivated by curiosity and the chance that a real idea gets taken seriously. Pain point: no idea where to even start, and no way to know if the idea has merit before exposing it.
+- **The Vetted Expert / Researcher.** Academic, industry specialist, or domain researcher with deep credibility in a field. Often sits on ideas with real commercial potential that never leave the lab or the research paper. Motivated by seeing research translated into real-world impact, plus royalties or partnership upside. Pain point: commercialization is outside their expertise, and existing tech-transfer processes are slow, bureaucratic, or nonexistent outside a university setting.
+- **The Student Innovator.** Undergraduate or postgraduate student — final-year project builders, hackathon participants, campus entrepreneurship-club members, across engineering, agriculture, medicine, business, and other disciplines. Represents a large, renewable pool of fresh, low-cost ideas that are otherwise graded once and forgotten. Motivated by exposure, mentorship, portfolio-building, and the chance at real-world validation or income while still in school. Pain point: no clear path from a class project or thesis to real-world use — ideas die with the semester. Reachable in bulk through university innovation hubs, entrepreneurship centers, and campus ambassador programs, making this persona a distinct acquisition channel as well as a user type.
 
-- Startups and small businesses
-- Large enterprises and corporates
-- Both segments targeted simultaneously from launch, globally from day one
+Shared creator needs across all four: visibility to the right audience (not just any audience), protection of ownership before anything is shared in full, and a compensation path that doesn't require them to become a business person overnight.
+
+## 2.2 Companies
+
+Company-side usage varies by size, so IDEACON is modeled around who is actually doing the browsing and requesting — not just “the company” as a monolith.
+
+- **The Startup Founder / CEO.** Often the one directly logging in and browsing. Moves fast, has limited time and limited budget, and is looking for a genuine edge — a unique angle or capability that helps the company differentiate or move into a new space without a long internal R&D cycle. Pain point: no time to build an internal idea-sourcing pipeline, and can't afford a costly, slow deal process.
+- **The Enterprise Innovation / R&D Lead.** Operates inside a larger organization with formal innovation or R&D mandates. Actively scouts for external ideas to supplement internal pipelines, often to hit a stated innovation KPI. Needs a defensible, well-documented sourcing process to justify decisions internally. Pain point: internal procurement and legal processes are slow, and “informal” sourcing of outside ideas is a governance risk without a structured, auditable platform like IDEACON.
+- **The Product / Strategy Manager.** Mid-level, closer to the ground than an R&D lead, scouting for solutions to a specific, current product gap or market weakness. Usually needs to build a case to leadership before a deal can move forward, so needs strong documentation (uniqueness scoring, review status, stage) they can bring into an internal pitch. Pain point: needs to justify sourcing outside the building, and needs materials credible enough to survive internal scrutiny.
+
+Shared company needs across all three: speed to a credible option, confidence the idea is vetted (not just AI noise), and a paper trail (NDA, proof of origin, review status) that makes the deal defensible internally.
+
+## 2.3 Segment Summary
+
+- Creator — Independent Inventor: motivated by seeing it built and fair pay; blocked by no credible channel and fear of theft
+- Creator — Casual Public Submitter: motivated by validation and a real shot; blocked by not knowing where to start
+- Creator — Vetted Expert/Researcher: motivated by real-world impact and royalties; blocked by commercialization being outside their skillset
+- Creator — Student Innovator: motivated by exposure, mentorship, and income; blocked by ideas dying with the semester
+- Company — Startup Founder/CEO: motivated by fast differentiation; blocked by no time or budget for a sourcing pipeline
+- Company — Enterprise Innovation/R&D Lead: motivated by hitting innovation KPIs; blocked by slow internal process and governance risk
+- Company — Product/Strategy Manager: motivated by solving a specific gap; blocked by needing internal buy-in and documentation
+
+## 2.4 Company Niches & Types
+
+While the platform stays industry-agnostic in its architecture (any niche can submit and browse), go-to-market attention concentrates on four company niches first. Within each, IDEACON is relevant across the full company lifecycle — invent, innovate, launch a startup, or scale an existing operation.
+
+- **HealthTech.** Clinics, diagnostics startups, digital health/telemedicine platforms, medtech manufacturers, and health-insurance-adjacent companies. Use IDEACON to source innovations in diagnostics, patient management tools, telemedicine delivery, and biotech or medical-device processes.
+- **AgroTech.** Agribusinesses, agro-processing companies, farm input and equipment suppliers, agri-fintech providers, and cooperatives. Use IDEACON to find ideas in sensors and precision farming, irrigation, storage and post-harvest loss reduction, and supply-chain efficiency.
+- **FinTech.** Banks, microfinance institutions, payment startups, and insurtech companies. Use IDEACON to source novel financial-inclusion products, fraud-prevention approaches, and alternative credit-scoring models.
+- **Business (cross-industry).** General SMEs and corporates — FMCG, retail, logistics, manufacturing — looking for operational innovation, new product lines, or process efficiency outside the three specialist niches above.
+
+## 2.5 First Market: Nigeria
+
+The first target persona-and-location combination is companies in Nigeria, across all major business states, rather than a simultaneous global rollout. This narrows the platform's initial go-to-market focus (Section 7) while the underlying product and vision remain global and industry-agnostic — Nigeria is the proving ground, not the ceiling.
 
 # 3\. Core Value Propositions
 
@@ -111,7 +143,8 @@ Especially critical in early stages to attract both creators and companies:
 # 7\. Go-to-Market Approach
 
 - Launch targeting both startups and large enterprises at once, rather than sequencing one before the other
-- Global scope from day one — no initial regional restriction
+- **Nigeria-first entry, global architecture.** Initial go-to-market concentrates on companies across Nigeria's major business states — Lagos (commercial hub), Abuja/FCT (policy and enterprise), Rivers/Port Harcourt (oil & gas, logistics), Kano (northern trade and agro-commerce), Ogun (industrial/manufacturing corridor), and other key commercial centers — while the platform itself remains architected for global, industry-agnostic use from day one. This gives IDEACON a concentrated market to build density before expanding.
+- **University pipeline as a creator acquisition channel.** Partnerships with university innovation hubs and entrepreneurship centers turn student projects, theses, and hackathon output into a renewable, low-cost source of submissions — while building brand familiarity with a future generation of both creators and founders.
 - Early growth likely driven by case studies and visible successful matches, since trust is the primary adoption barrier for both sides (creators fear idea theft; companies fear low-quality submissions)
 
 # 8\. Open Questions / Areas to Refine Further
