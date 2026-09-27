@@ -171,7 +171,7 @@ Especially critical in early stages to attract both creators and companies:
 - Components rebuilt on the new tokens: gradient pill buttons, tinted badges, teaser cards with colored top-edge, violet NDA panel, gradient timeline. Live in the app via Tailwind v4 `@theme` (`app/app/globals.css`).
 
 ## A.2 Locked stack (owner-confirmed, replaces plan §3 defaults)
-- Database: PostgreSQL 17 on local device (native install, `ideacon` DB) — no Supabase.
+- Database: PostgreSQL 17 on local device (native install, `ideacon` DB) — no Supabase. Chosen because it's free and open-source: no license fees and no managed-database bills.
 - Auth: Better Auth (email/password + Google-ready) — roles creator/reviewer/broker/admin.
 - Storage: Cloudflare R2 (private bucket, presigned URLs; code-ready, credentials pending).
 - Email: Resend (console-log fallback until domain verified).
