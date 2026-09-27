@@ -38,10 +38,20 @@ export async function checkSeatAvailable(companyId: string): Promise<{ ok: boole
 
 /** Record deal value + IDEACON commission (minor units). */
 export async function bookDealValue(dealId: string, amountKobo: bigint, actorId: string) {
-  const commissionKobo = (amountKobo * BigInt(Math.round(COMMISSION_RATE * 100))) / BigInt(100);
+  return bookDealValueIn(dealId, amountKobo, "NGN", actorId);
+}
+
+/** Currency-aware variant (Phase 3 multi-currency). */
+export async function bookDealValueIn(
+  dealId: string,
+  amountMinor: bigint,
+  currency: string,
+  actorId: string,
+) {
+  const commissionMinor = (amountMinor * BigInt(Math.round(COMMISSION_RATE * 100))) / BigInt(100);
   const deal = await db.deal.update({
     where: { id: dealId },
-    data: { amountKobo, commissionKobo, status: "invoiced" },
+    data: { amountKobo: amountMinor, commissionKobo: commissionMinor, currency, status: "invoiced" },
   });
   const { recordEvent } = await import("./audit");
   await recordEvent({
@@ -50,15 +60,23 @@ export async function bookDealValue(dealId: string, amountKobo: bigint, actorId:
     ideaId: deal.ideaId,
     payload: {
       dealId,
-      amountKobo: amountKobo.toString(),
-      commissionKobo: commissionKobo.toString(),
-      currency: deal.currency,
+      amountMinor: amountMinor.toString(),
+      commissionMinor: commissionMinor.toString(),
+      currency,
     },
   });
   return deal;
 }
 
+const CURRENCY_SYMBOL: Record<string, string> = { NGN: "₦", USD: "$" };
+
+export function formatMoney(minor: bigint | number, currency = "NGN"): string {
+  const major = Number(minor) / 100;
+  const symbol = CURRENCY_SYMBOL[currency] ?? `${currency} `;
+  return `${symbol}${major.toLocaleString("en-NG")}`;
+}
+
+/** @deprecated use formatMoney */
 export function formatNgn(kobo: bigint | number): string {
-  const naira = Number(kobo) / 100;
-  return `₦${naira.toLocaleString("en-NG")}`;
+  return formatMoney(kobo, "NGN");
 }

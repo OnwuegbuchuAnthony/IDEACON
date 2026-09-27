@@ -33,6 +33,16 @@ export async function bookDealAction(dealId: string, amountNaira: number) {
   redirect(`/deals/${dealId}`);
 }
 
+/** Broker books deal value in a chosen currency (NGN default, USD supported). */
+export async function bookDealCurrencyAction(dealId: string, amountMajor: number, currency: string) {
+  const user = await requireRole("BROKER", "ADMIN");
+  if (!Number.isFinite(amountMajor) || amountMajor <= 0) throw new Error("Invalid amount");
+  if (!["NGN", "USD"].includes(currency)) throw new Error("Unsupported currency");
+  const { bookDealValueIn } = await import("./billing");
+  await bookDealValueIn(dealId, BigInt(Math.round(amountMajor * 100)), currency, user.id);
+  redirect(`/deals/${dealId}`);
+}
+
 /** Broker/creator publishes a case study (trust engine). */
 export async function publishCaseStudyAction(form: {
   title: string;

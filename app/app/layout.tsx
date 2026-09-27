@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Sora, Plus_Jakarta_Sans } from "next/font/google";
+import { Analytics } from "@/lib/analytics";
 import "./globals.css";
 
 const display = Sora({
@@ -18,6 +19,14 @@ export const metadata: Metadata = {
   title: "IDEACON — Idea + Connection",
   description:
     "The platform that links novel ideas to the industries built to use them.",
+  manifest: "/manifest.webmanifest",
+  icons: { icon: "/icon.svg", apple: "/icon.svg" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0F62FE",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -30,7 +39,10 @@ export default function RootLayout({
       lang="en"
       className={`${display.variable} ${sans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Analytics />
+        {children}
+      </body>
     </html>
   );
 }

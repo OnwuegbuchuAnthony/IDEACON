@@ -1,0 +1,13 @@
+{
+  "name": "IDEACON — Idea + Connection",
+  "short_name": "IDEACON",
+  "description": "Novel ideas matched to the industries built to use them.",
+  "start_url": "/browse",
+  "display": "standalone",
+  "background_color": "#F6FAFF",
+  "theme_color": "#0F62FE",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

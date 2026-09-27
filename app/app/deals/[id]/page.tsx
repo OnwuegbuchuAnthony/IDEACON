@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/session";
-import { formatNgn } from "@/lib/billing";
+import { formatMoney } from "@/lib/billing";
 import { MessageForm } from "../DealActions";
 import { ValueForm } from "../ValueActions";
 
@@ -30,7 +30,7 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
       </div>
       <h1 className="font-display text-3xl font-extrabold">Deal timeline</h1>
       <p className="text-sm">
-        Value: <b>{formatNgn(deal.amountKobo)}</b> · Commission (10%): <b>{formatNgn(deal.commissionKobo)}</b>
+        Value: <b>{formatMoney(deal.amountKobo, deal.currency)}</b> · Commission (10%): <b>{formatMoney(deal.commissionKobo, deal.currency)}</b>
       </p>
       <ValueForm dealId={deal.id} />
 

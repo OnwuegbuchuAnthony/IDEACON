@@ -24,6 +24,7 @@ model User {
   creatorProfile CreatorProfile?
   memberships  CompanyMember[]
   reviews      Review[]
+  votes        Vote[]
   auditEvents  AuditEvent[] @relation("EventActor")
 
   @@map("user")
@@ -186,6 +187,7 @@ model Idea {
   aiScores AiScore[]
   matches  Match[]
   events   AuditEvent[]
+  votes    Vote[]
 }
 
 model IdeaFile {
@@ -306,4 +308,20 @@ model AuditEvent {
   createdAt DateTime @default(now())
 
   @@index([ideaId, createdAt])
+}
+
+// Phase 3 community voting. Anti-gaming: one vote per user per idea
+// (@@unique), verified-email only + daily cap enforced in code,
+// reviewer votes carry extra weight at read time.
+model Vote {
+  id        String   @id @default(cuid())
+  ideaId    String
+  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  value     Int      // +1 or -1
+  createdAt DateTime @default(now())
+
+  @@unique([ideaId, userId])
+  @@index([ideaId])
 }
