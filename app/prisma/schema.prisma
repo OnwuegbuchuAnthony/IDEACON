@@ -1,0 +1,294 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- Better Auth core tables (required names/fields) ----------
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  role         Role     @default(CREATOR)
+  creatorType  CreatorType?
+  sessions     Session[]
+  accounts     Account[]
+  creatorProfile CreatorProfile?
+  memberships  CompanyMember[]
+  reviews      Review[]
+  auditEvents  AuditEvent[] @relation("EventActor")
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verification")
+}
+
+// ---------- IDEACON domain ----------
+
+enum Role {
+  CREATOR
+  COMPANY_MEMBER
+  REVIEWER
+  BROKER
+  ADMIN
+}
+
+enum CreatorType {
+  INDEPENDENT
+  CASUAL
+  EXPERT
+  STUDENT
+}
+
+enum CompanyRole {
+  FOUNDER
+  RD_LEAD
+  PRODUCT_MANAGER
+}
+
+enum IdeaStatus {
+  DRAFT
+  SUBMITTED
+  IN_REVIEW
+  SCORED
+  APPROVED
+  FLAGGED
+  MATCHED
+  UNDER_NDA
+  DEAL
+  CLOSED
+}
+
+enum Niche {
+  HEALTHTECH
+  AGROTECH
+  FINTECH
+  BUSINESS
+  OTHER
+}
+
+model CreatorProfile {
+  id               String      @id @default(cuid())
+  userId           String      @unique
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  creatorType      CreatorType
+  verificationTier Int         @default(0)
+  universityId     String?
+  university       UniversityPartner? @relation(fields: [universityId], references: [id])
+  bio              String?
+  createdAt        DateTime    @default(now())
+  ideas            Idea[]
+}
+
+model CompanyProfile {
+  id        String   @id @default(cuid())
+  name      String
+  niche     Niche    @default(OTHER)
+  state     String?  // Nigerian state (Lagos, Kano, ...) — global-ready
+  country   String   @default("NG")
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  members   CompanyMember[]
+  matches   Match[]
+}
+
+model CompanyMember {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyId String
+  company   CompanyProfile @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  role      CompanyRole
+  createdAt DateTime    @default(now())
+
+  @@unique([userId, companyId])
+}
+
+model UniversityPartner {
+  id        String   @id @default(cuid())
+  name      String
+  state     String?
+  createdAt DateTime @default(now())
+  creators  CreatorProfile[]
+}
+
+model Idea {
+  id          String     @id @default(cuid())
+  title       String
+  teaser      String     // public teaser — safe to show
+  fullDetail  String     // NEVER returned without a valid NDA grant (enforced server-side)
+  niche       Niche      @default(OTHER)
+  problemType String?
+  stage       String     @default("concept") // concept | prototype | ready-to-scale
+  status      IdeaStatus @default(DRAFT)
+  creatorId   String
+  creator     CreatorProfile @relation(fields: [creatorId], references: [id])
+  originHash  String?    // sha256 recorded at first submit (proof of origin)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Phase 1: swap to vector(1536) once pgvector is installed on local Postgres.
+  // BYTEA placeholder keeps Phase 0 migrations green without the extension.
+  embedding   Bytes?
+
+  files    IdeaFile[]
+  reviews  Review[]
+  aiScores AiScore[]
+  matches  Match[]
+  events   AuditEvent[]
+}
+
+model IdeaFile {
+  id        String   @id @default(cuid())
+  ideaId    String
+  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  r2Key     String   // private bucket key; access via presigned URL only
+  fileName  String
+  mimeType  String?
+  sizeBytes Int?
+  createdAt DateTime @default(now())
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  ideaId     String
+  idea       Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  reviewerId String
+  reviewer   User     @relation(fields: [reviewerId], references: [id])
+  originality Int
+  feasibility Int
+  marketFit   Int
+  verdict    String   // approve | flag | request-changes
+  note       String?
+  version    Int      @default(1) // rubric version
+  createdAt  DateTime @default(now())
+}
+
+model AiScore {
+  id          String   @id @default(cuid())
+  ideaId      String
+  idea        Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  originality Float
+  feasibility Float
+  marketFit   Float
+  factors     Json     // explainable breakdown, not raw model output
+  model       String   // model name + version
+  createdAt   DateTime @default(now())
+}
+
+model Match {
+  id        String   @id @default(cuid())
+  ideaId    String
+  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  companyId String
+  company   CompanyProfile @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  source    String   @default("manual") // ai | manual | curated
+  score     Float?
+  brokerNote String?
+  createdAt DateTime @default(now())
+}
+
+model NdaGrant {
+  id             String   @id @default(cuid())
+  ideaId         String
+  companyId      String
+  templateVersion String  @default("v1")
+  signedPdfKey   String?  // R2 key of signed artifact
+  expiresAt      DateTime
+  createdAt      DateTime @default(now())
+}
+
+model Deal {
+  id        String   @id @default(cuid())
+  ideaId    String
+  companyId String
+  template  String   // licensing | revenue_share | advisory | custom
+  status    String   @default("draft")
+  currency  String   @default("NGN")
+  createdAt DateTime @default(now())
+  messages  DealMessage[]
+}
+
+model DealMessage {
+  id        String   @id @default(cuid())
+  dealId    String
+  deal      Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  authorId  String   // broker-mediated only — no direct creator↔company chat
+  body      String
+  createdAt DateTime @default(now())
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  companyId String
+  tier      String   @default("free")
+  seats     Int      @default(1)
+  createdAt DateTime @default(now())
+}
+
+// Append-only audit chain (proof of origin / NDA / deal evidence).
+// Enforced in code (lib/audit.ts): never UPDATE or DELETE rows.
+model AuditEvent {
+  id        String   @id @default(cuid())
+  type      String   // idea.submitted | review.verdict | nda.signed | deal.status | ...
+  actorId   String?
+  actor     User?    @relation("EventActor", fields: [actorId], references: [id])
+  ideaId    String?
+  idea      Idea?    @relation(fields: [ideaId], references: [id])
+  payload   Json
+  prevHash  String?
+  hash      String   @unique
+  createdAt DateTime @default(now())
+
+  @@index([ideaId, createdAt])
+}

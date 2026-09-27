@@ -1,0 +1,39 @@
+# Self-hosted IDEACON on local device. No Vercel, no Supabase.
+# Usage: copy .env.example to .env.local, then `docker compose up -d`
+# (Local Postgres already runs natively; compose db is for parity/CI.)
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ideacon
+      POSTGRES_PASSWORD: ideacon_local_dev
+      POSTGRES_DB: ideacon
+    ports:
+      - "5433:5432"
+    volumes:
+      - ideacon-pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgresql://ideacon:ideacon_local_dev@db:5432/ideacon
+      BETTER_AUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    env_file:
+      - .env.local
+    ports:
+      - "3000:3000"
+
+volumes:
+  ideacon-pgdata:

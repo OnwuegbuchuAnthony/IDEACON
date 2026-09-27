@@ -1,0 +1,5 @@
+# IDEACON repo root
+*.docx
+~$*.docx
+.DS_Store
+Thumbs.db

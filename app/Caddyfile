@@ -1,0 +1,4 @@
+# Caddy reverse proxy (automatic HTTPS). `caddy run` on the device.
+:80 {
+  reverse_proxy localhost:3000
+}

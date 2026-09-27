@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDEACON — Design System Preview (v1.1 Bright)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A2540;
+    --primary-800:#0B3D91; --primary-600:#0F62FE; --primary-400:#5B9DFF; --primary-100:#E3EFFF;
+    --teal:#00C2A8; --teal-100:#D9F7F1;
+    --coral:#FF5C38; --coral-100:#FFE7DE;
+    --sun:#FFB800; --sun-100:#FFF4D6; --sun-ink:#8A5A00;
+    --mint:#00B87C; --mint-100:#D9F7EA;
+    --violet:#7C3AED; --violet-100:#EFE7FF;
+    --danger:#F04438;
+    --neutral-600:#4A5B74; --neutral-300:#DCE6F2; --white:#fff;
+    --radius:14px; --shadow:0 6px 24px rgba(15,98,254,.12);
+    --font-display:'Sora','Plus Jakarta Sans',system-ui,sans-serif;
+    --font-ui:'Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box} body{font-family:var(--font-ui);margin:0;color:var(--ink);
+    background:#F6FAFF radial-gradient(900px 320px at 10% -60px,#D8E9FF 0%,transparent 60%) fixed,
+    radial-gradient(800px 300px at 95% 0%,#D9F7F1 0%,transparent 55%) fixed}
+  header{background:linear-gradient(120deg,var(--primary-800),var(--primary-600) 55%,var(--teal));color:#fff;padding:36px 32px}
+  header h1{font-family:var(--font-display);margin:0;font-size:30px;letter-spacing:-.5px}
+  header p{margin:8px 0 0;opacity:.85}
+  main{max-width:1080px;margin:0 auto;padding:32px 20px 60px}
+  section{background:var(--white);border:1px solid var(--neutral-300);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:24px}
+  h2{font-family:var(--font-display);margin:0 0 4px;font-size:20px} .sub{color:var(--neutral-600);font-size:13px;margin:0 0 18px}
+  .swatches{display:flex;gap:12px;flex-wrap:wrap}
+  .sw{width:124px;border:1px solid var(--neutral-300);border-radius:10px;overflow:hidden;background:#fff}
+  .sw div{height:56px} .sw span{display:block;font-size:11px;padding:6px 8px;font-weight:600}
+  .type-scale div{border-bottom:1px dashed var(--neutral-300);padding:8px 0}
+  .font-display{font-family:var(--font-display)}
+  .btn{display:inline-block;border:none;border-radius:999px;padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer;margin:4px 6px 4px 0;font-family:var(--font-ui)}
+  .btn-primary{background:linear-gradient(120deg,var(--primary-600),var(--primary-400));color:#fff;box-shadow:0 4px 14px rgba(15,98,254,.35)}
+  .btn-accent{background:linear-gradient(120deg,var(--coral),#FF8A5C);color:#fff;box-shadow:0 4px 14px rgba(255,92,56,.35)}
+  .btn-outline{background:#fff;border:2px solid var(--primary-600);color:var(--primary-600)}
+  .btn-ghost{background:var(--primary-100);color:var(--primary-800)} .btn-danger{background:var(--danger);color:#fff}
+  .btn-sm{padding:7px 14px;font-size:12px}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;margin:2px 4px 2px 0}
+  .b-niche{background:var(--primary-100);color:var(--primary-800)} .b-stage{background:var(--coral-100);color:#C24A1F}
+  .b-score{background:var(--mint-100);color:#007A52} .b-pending{background:var(--sun-100);color:var(--sun-ink)}
+  .b-nda{background:var(--violet-100);color:var(--violet)}
+  input,select,textarea{font-family:inherit;font-size:14px;padding:10px 14px;border:1.5px solid var(--neutral-300);border-radius:10px;width:100%;max-width:420px;margin:4px 0 12px;background:#FBFDFF}
+  input:focus,select:focus{outline:2px solid var(--primary-400);border-color:var(--primary-600)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px} @media(max-width:700px){.grid2{grid-template-columns:1fr}}
+  .teaser{border:1px solid var(--neutral-300);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);background:#fff;border-top:4px solid var(--primary-600)}
+  .teaser.warm{border-top-color:var(--coral)}
+  .teaser h3{font-family:var(--font-display);margin:8px 0 6px} .teaser p{color:var(--neutral-600);font-size:13px}
+  .locked{background:#F2F7FF;border:1px dashed var(--primary-400);border-radius:10px;padding:12px;font-size:13px;color:var(--primary-800);margin-top:10px}
+  .timeline{list-style:none;margin:0;padding:0} .timeline li{padding:8px 0 8px 26px;position:relative;font-size:14px}
+  .timeline li::before{content:'';position:absolute;left:6px;top:14px;width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--primary-600),var(--teal))}
+  .timeline li::after{content:'';position:absolute;left:10px;top:28px;bottom:-4px;width:2px;background:var(--neutral-300)}
+  .timeline li:last-child::after{display:none} .timeline small{color:var(--neutral-600)}
+  .modal{border:2px solid var(--violet);border-radius:var(--radius);padding:20px;background:linear-gradient(180deg,#FBF7FF,#F3EBFF)}
+  footer{text-align:center;color:var(--neutral-600);font-size:12px;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <h1>◈ IDEACON — Design System Preview</h1>
+  <p>Idea + Connection · v1.1 Bright · Sora display + Plus Jakarta Sans · bright azure, teal &amp; coral</p>
+</header>
+<main>
+
+<section>
+  <h2>1 · Brand &amp; Color Tokens</h2>
+  <p class="sub">Bright azure primary, teal freshness, coral creator energy — airy tints for surfaces.</p>
+  <div class="swatches">
+    <div class="sw"><div style="background:#0F62FE"></div><span>primary-600 · #0F62FE</span></div>
+    <div class="sw"><div style="background:#5B9DFF"></div><span>primary-400 · #5B9DFF</span></div>
+    <div class="sw"><div style="background:#E3EFFF"></div><span>primary-100 · #E3EFFF</span></div>
+    <div class="sw"><div style="background:#00C2A8"></div><span>teal · #00C2A8</span></div>
+    <div class="sw"><div style="background:#FF5C38"></div><span>coral · #FF5C38</span></div>
+    <div class="sw"><div style="background:#FFE7DE"></div><span>coral-100 · #FFE7DE</span></div>
+    <div class="sw"><div style="background:#00B87C"></div><span>mint · #00B87C</span></div>
+    <div class="sw"><div style="background:#FFB800"></div><span>sun · #FFB800</span></div>
+    <div class="sw"><div style="background:#0A2540"></div><span>ink · #0A2540</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>2 · Typography</h2>
+  <p class="sub">Sora for display/headings · Plus Jakarta Sans for UI (system fallback offline).</p>
+  <div class="type-scale">
+    <div class="font-display" style="font-size:40px;font-weight:800">Display 40 — Ideas meet industry</div>
+    <div class="font-display" style="font-size:32px;font-weight:700">Heading 32 — Browse teasers</div>
+    <div class="font-display" style="font-size:24px;font-weight:700">Heading 24 — Review queue</div>
+    <div class="font-display" style="font-size:20px;font-weight:600">Heading 20 — Deal timeline</div>
+    <div style="font-size:16px">Body 16 — Teaser text and descriptions.</div>
+    <div style="font-size:14px">Body 14 — Form labels and table rows.</div>
+    <div style="font-size:12px;color:var(--neutral-600)">Caption 12 — timestamps, proof-of-origin hashes.</div>
+  </div>
+</section>
+
+<section>
+  <h2>3 · Buttons &amp; Badges</h2>
+  <p class="sub">Gradient pill buttons with glow · tinted pill badges.</p>
+  <div>
+    <button class="btn btn-primary">Request access</button>
+    <button class="btn btn-accent">Submit idea</button>
+    <button class="btn btn-outline">Save search</button>
+    <button class="btn btn-ghost">Preview score</button>
+    <button class="btn btn-danger">Flag idea</button>
+    <button class="btn btn-primary btn-sm">Sign NDA</button>
+  </div>
+  <div style="margin-top:12px">
+    <span class="badge b-niche">AgroTech</span><span class="badge b-niche">HealthTech</span>
+    <span class="badge b-stage">Prototype</span><span class="badge b-stage">Concept</span>
+    <span class="badge b-score">Score 8.4 · High fit</span><span class="badge b-pending">In review</span>
+    <span class="badge b-nda">NDA required</span>
+  </div>
+</section>
+
+<section>
+  <h2>4 · Form Controls</h2>
+  <p class="sub">Submission wizard + filters share these.</p>
+  <div class="grid2">
+    <div><label>Idea title</label><input value="Solar cold-box for tomato transport"></div>
+    <div><label>Niche</label><select><option>AgroTech</option><option>HealthTech</option><option>FinTech</option><option>Business</option></select></div>
+  </div>
+  <label>Teaser (public)</label><textarea rows="2">Cuts post-harvest tomato loss on long-haul routes without grid power…</textarea>
+  <label>Filter: problem type</label><select><option>Post-harvest loss</option><option>Efficiency</option><option>Cost reduction</option></select>
+</section>
+
+<section>
+  <h2>5 · Idea Teaser Card (core pattern)</h2>
+  <p class="sub">Public teaser only — full detail renders ONLY behind an NDA grant.</p>
+  <div class="grid2">
+    <div class="teaser">
+      <span class="badge b-niche">AgroTech</span><span class="badge b-stage">Prototype</span>
+      <span class="badge b-score">8.4 · High fit</span>
+      <h3>Solar cold-box for tomato transport</h3>
+      <p>Teaser: cuts post-harvest loss on long-haul routes without grid power. Uniqueness: high · Scaling: multi-state.</p>
+      <div class="locked">🔒 Full design, files &amp; creator identity locked — <b>sign NDA to view</b></div>
+      <div style="margin-top:10px"><button class="btn btn-primary btn-sm">Request access</button> <button class="btn btn-outline btn-sm">Save</button></div>
+    </div>
+    <div class="teaser warm">
+      <span class="badge b-niche">FinTech</span><span class="badge b-stage">Concept</span>
+      <span class="badge b-pending">In review</span>
+      <h3>USSD micro-credit scoring for traders</h3>
+      <p>Teaser: alternative credit signal from market-ledger activity. Review: AI 7.1 · expert pending.</p>
+      <div class="locked">🔒 Full model spec &amp; data dictionary locked — <b>sign NDA to view</b></div>
+      <div style="margin-top:10px"><button class="btn btn-primary btn-sm">Request access</button> <button class="btn btn-outline btn-sm">Save</button></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>6 · NDA Gate + Deal Timeline</h2>
+  <p class="sub">Brokered handoff — every step timestamped (proof-of-origin UX).</p>
+  <div class="grid2">
+    <div class="modal">
+      <h3 style="margin-top:0;font-family:var(--font-display)">🔐 NDA required</h3>
+      <p style="font-size:14px">Full details for <b>Solar cold-box</b> are protected. Sign the mutual NDA (v2) to unlock for 14 days.</p>
+      <button class="btn btn-primary">Sign NDA</button>
+      <button class="btn btn-ghost">View template</button>
+    </div>
+    <ul class="timeline">
+      <li>Submitted <small>· 12 May, 09:14 UTC · hash #a3f9</small></li>
+      <li>AI scored 8.4 <small>· originality 9 · feasibility 8</small></li>
+      <li>Expert approved <small>· Dr. A. · 14 May</small></li>
+      <li>NDA signed <small>· Kano Foods Ltd · 18 May</small></li>
+      <li>Deal: licensing <small>· broker-managed · in progress</small></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+<footer>IDEACON design tokens v1.1 Bright · Sora + Plus Jakarta Sans · single-file preview.</footer>
+</body>
+</html>
