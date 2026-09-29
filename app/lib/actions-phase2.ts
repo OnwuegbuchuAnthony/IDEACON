@@ -112,3 +112,26 @@ export async function sendDigestsAction() {
   await recordEvent({ type: "digest.sent", actorId: user.id, payload: { emails: sent } });
   redirect("/broker");
 }
+
+/** Issue a public API key for a company. Secret is shown ONCE. */
+export async function issueKeyAction(companyId: string, name: string) {
+  const user = await requireRole("BROKER", "ADMIN");
+  const { issueApiKey } = await import("./api-keys");
+  const { key, secret } = await issueApiKey({ companyId, name });
+  await recordEvent({
+    type: "apikey.issued",
+    actorId: user.id,
+    payload: { companyId, keyId: key.id, prefix: key.keyPrefix },
+  });
+  // Secret can't survive a redirect — return it for one-time display.
+  return { prefix: key.keyPrefix, secret };
+}
+
+/** Revoke a public API key. */
+export async function revokeKeyAction(keyId: string) {
+  const user = await requireRole("BROKER", "ADMIN");
+  const { revokeApiKey } = await import("./api-keys");
+  await revokeApiKey(keyId);
+  await recordEvent({ type: "apikey.revoked", actorId: user.id, payload: { keyId } });
+  redirect("/admin/keys");
+}

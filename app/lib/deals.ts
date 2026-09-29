@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { recordEvent } from "./audit";
 import { transitionIdea } from "./ideas";
+import { jurisdictionPack } from "./jurisdictions";
 import type { DealTemplate } from "./deal-templates";
 
 export type { DealTemplate };
@@ -27,12 +28,15 @@ export async function signNda(input: {
   actorId: string;
   signerName: string;
   templateVersion?: string;
+  jurisdiction?: string;
 }) {
+  const jurisdiction = input.jurisdiction ?? "NG";
   const grant = await db.ndaGrant.create({
     data: {
       ideaId: input.ideaId,
       companyId: input.companyId,
-      templateVersion: input.templateVersion ?? "mutual-v1",
+      templateVersion:
+        input.templateVersion ?? jurisdictionPack(jurisdiction).ndaTemplate,
       expiresAt: new Date(Date.now() + NDA_DAYS * 24 * 3600 * 1000),
     },
   });
@@ -53,6 +57,8 @@ export async function signNda(input: {
       companyId: input.companyId,
       signerName: input.signerName,
       grantId: grant.id,
+      jurisdiction,
+      templateVersion: grant.templateVersion,
     },
   });
   return grant;
@@ -64,6 +70,7 @@ export async function createDeal(input: {
   companyId: string;
   template: DealTemplate;
   actorId: string;
+  jurisdiction?: string;
 }) {
   const grant = await db.ndaGrant.findFirst({
     where: {
@@ -75,14 +82,19 @@ export async function createDeal(input: {
   if (!grant) throw new Error("A valid NDA grant is required before opening a deal");
 
   const deal = await db.deal.create({
-    data: { ideaId: input.ideaId, companyId: input.companyId, template: input.template },
+    data: {
+      ideaId: input.ideaId,
+      companyId: input.companyId,
+      template: input.template,
+      jurisdiction: input.jurisdiction ?? "NG",
+    },
   });
   await transitionIdea(input.ideaId, "DEAL", input.actorId);
   await recordEvent({
     type: "deal.opened",
     actorId: input.actorId,
     ideaId: input.ideaId,
-    payload: { dealId: deal.id, template: input.template },
+    payload: { dealId: deal.id, template: input.template, jurisdiction: deal.jurisdiction },
   });
   return deal;
 }

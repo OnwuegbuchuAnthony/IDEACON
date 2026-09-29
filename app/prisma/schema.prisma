@@ -257,6 +257,7 @@ model Deal {
   template  String   // licensing | revenue_share | advisory | custom
   status    String   @default("draft") // draft | active | invoiced | closed
   currency  String   @default("NGN")
+  jurisdiction String @default("NG") // governing-law pack: NG | GH | GB | US | ...
   amountKobo    BigInt @default(0) // deal value in minor units
   commissionKobo BigInt @default(0) // IDEACON commission ledger
   createdAt DateTime @default(now())
@@ -291,6 +292,19 @@ model CaseStudy {
   company   String?
   published Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+// Phase 4 public API keys. Scoped, revocable, hashed at rest.
+model ApiKey {
+  id         String    @id @default(cuid())
+  companyId  String
+  name       String
+  keyHash    String    @unique
+  keyPrefix  String    // first 8 chars, for identification
+  scopes     String    @default("teasers:read,evidence:read")
+  revokedAt  DateTime?
+  lastUsedAt DateTime?
+  createdAt  DateTime  @default(now())
 }
 
 // Append-only audit chain (proof of origin / NDA / deal evidence).

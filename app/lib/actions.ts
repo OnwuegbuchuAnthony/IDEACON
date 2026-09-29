@@ -115,6 +115,7 @@ export async function createDealAction(input: {
   ideaId: string;
   companyId: string;
   template: DealTemplate;
+  jurisdiction?: string;
 }) {
   const user = await requireRole("BROKER", "ADMIN");
   const deal = await createDeal({ ...input, actorId: user.id });
