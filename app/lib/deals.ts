@@ -18,6 +18,12 @@ export async function approveMatch(matchId: string, actorId: string) {
     ideaId: match.ideaId,
     payload: { matchId, companyId: match.companyId },
   });
+  const { notify } = await import("./notifications");
+  const members = await db.companyMember.findMany({ where: { companyId: match.companyId }, select: { userId: true } });
+  const idea = await db.idea.findUnique({ where: { id: match.ideaId }, select: { title: true } });
+  for (const m of members) {
+    await notify({ userId: m.userId, kind: "match.approved", title: `Access approved: ${idea?.title ?? "your requested idea"}`, link: `/ideas/${match.ideaId}` });
+  }
   return match;
 }
 
@@ -61,6 +67,19 @@ export async function signNda(input: {
       templateVersion: grant.templateVersion,
     },
   });
+  const { notify } = await import("./notifications");
+  const ideaOwner = await db.idea.findUnique({
+    where: { id: input.ideaId },
+    select: { title: true, creator: { select: { userId: true } } },
+  });
+  if (ideaOwner) {
+    await notify({
+      userId: ideaOwner.creator.userId,
+      kind: "nda.signed",
+      title: `NDA signed on: ${ideaOwner.title}`,
+      link: `/ideas/${input.ideaId}`,
+    });
+  }
   return grant;
 }
 
@@ -96,6 +115,19 @@ export async function createDeal(input: {
     ideaId: input.ideaId,
     payload: { dealId: deal.id, template: input.template, jurisdiction: deal.jurisdiction },
   });
+  const { notify: notifyParties } = await import("./notifications");
+  const parties = await db.companyMember.findMany({
+    where: { companyId: input.companyId },
+    select: { userId: true },
+  });
+  for (const p of parties) {
+    await notifyParties({
+      userId: p.userId,
+      kind: "deal.opened",
+      title: `Deal opened (${input.template})`,
+      link: `/deals/${deal.id}`,
+    });
+  }
   return deal;
 }
 

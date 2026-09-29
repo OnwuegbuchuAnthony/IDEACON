@@ -25,6 +25,7 @@ model User {
   memberships  CompanyMember[]
   reviews      Review[]
   votes        Vote[]
+  notifications Notification[]
   auditEvents  AuditEvent[] @relation("EventActor")
 
   @@map("user")
@@ -338,4 +339,29 @@ model Vote {
 
   @@unique([ideaId, userId])
   @@index([ideaId])
+}
+
+// Phase 6: broker-mediated notifications (no open chat — inbox only).
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      String   // review.verdict | match.approved | nda.signed | deal.opened | digest
+  title     String
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+// Phase 6: company saved searches (named filter sets).
+model SavedSearch {
+  id        String   @id @default(cuid())
+  companyId String
+  name      String
+  niche     Niche?
+  stage     String?
+  q         String?
+  createdAt DateTime @default(now())
 }

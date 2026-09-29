@@ -13,8 +13,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "key and contentType required" }, { status: 400 });
   }
   try {
-    const url = await r2PutUrl(`uploads/${session.user.id}/${key}`, contentType);
-    return NextResponse.json({ url });
+    const r2Key = `uploads/${session.user.id}/${key}`;
+    const url = await r2PutUrl(r2Key, contentType);
+    return NextResponse.json({ url, r2Key });
   } catch {
     return NextResponse.json({ error: "storage not configured" }, { status: 503 });
   }

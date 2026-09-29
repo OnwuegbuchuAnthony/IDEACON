@@ -10,6 +10,8 @@ const STAGES = ["concept", "prototype", "ready-to-scale"];
 export default function SubmitPage() {
   const [draft, setDraft] = useState({ title: "", teaser: "", fullDetail: "", problemType: "" });
   const [saving, setSaving] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const [note, setNote] = useState("");
 
   // Draft autosave (offline-tolerant per design system).
   function update(field: keyof typeof draft, value: string) {
@@ -22,6 +24,26 @@ export default function SubmitPage() {
 
   async function submit(formData: FormData) {
     setSaving(true);
+    setNote("");
+    // Upload attachments direct to R2 first (skipped gracefully if unconfigured).
+    const uploaded: { r2Key: string; fileName: string; mimeType: string; sizeBytes: number }[] = [];
+    for (const f of files) {
+      try {
+        const key = `${Date.now()}-${f.name}`;
+        const res = await fetch("/api/uploads/sign", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key, contentType: f.type || "application/octet-stream" }),
+        });
+        if (!res.ok) throw new Error();
+        const { url, r2Key } = await res.json();
+        const put = await fetch(url, { method: "PUT", headers: { "Content-Type": f.type || "application/octet-stream" }, body: f });
+        if (!put.ok) throw new Error();
+        uploaded.push({ r2Key, fileName: f.name, mimeType: f.type, sizeBytes: f.size });
+      } catch {
+        setNote("Storage not configured — idea will submit without attachments.");
+      }
+    }
     await submitIdeaAction({
       title: String(formData.get("title")),
       teaser: String(formData.get("teaser")),
@@ -29,6 +51,7 @@ export default function SubmitPage() {
       niche: String(formData.get("niche")) as Niche,
       problemType: String(formData.get("problemType") ?? ""),
       stage: String(formData.get("stage") ?? "concept"),
+      files: uploaded,
     });
   }
 
@@ -56,6 +79,10 @@ export default function SubmitPage() {
         </div>
         <input name="problemType" placeholder="Problem type (e.g. post-harvest loss)"
           defaultValue={draft.problemType} onChange={(e) => update("problemType", e.target.value)} />
+        <label className="text-sm font-bold">Attachments (drawings, prototypes, PDFs)
+          <input type="file" multiple onChange={(e) => setFiles([...(e.target.files ?? [])])} />
+        </label>
+        {note && <p className="text-sm text-amber-700">{note}</p>}
         <button disabled={saving} className="rounded-full bg-gradient-to-r from-coral-500 to-orange-400 px-6 py-3 text-sm font-bold text-white" type="submit">
           {saving ? "Submitting…" : "Submit for review"}
         </button>

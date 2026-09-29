@@ -41,6 +41,16 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Analytics />
+        <nav className="border-b border-primary-100 bg-white/80 backdrop-blur">
+          <div className="mx-auto flex w-full max-w-5xl items-center gap-4 px-6 py-2 text-sm font-bold">
+            <a href="/" className="font-display text-base font-extrabold">◈ IDEACON</a>
+            <a href="/browse" className="text-ink/70 hover:text-primary-600">Discover</a>
+            <a href="/submit" className="text-ink/70 hover:text-primary-600">Submit</a>
+            <a href="/trust" className="text-ink/70 hover:text-primary-600">Trust</a>
+            <a href="/dashboard" className="ml-auto text-ink/70 hover:text-primary-600">Dashboard</a>
+            <a href="/notifications" className="text-ink/70 hover:text-primary-600">Inbox</a>
+          </div>
+        </nav>
         {children}
       </body>
     </html>

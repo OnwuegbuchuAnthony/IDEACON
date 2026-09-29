@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listTeasers, type TeaserFilters } from "@/lib/ideas";
 import type { Niche } from "@prisma/client";
+import { SaveSearchButton } from "./SaveSearch";
 
 export default async function BrowsePage({
   searchParams,
@@ -36,6 +37,7 @@ export default async function BrowsePage({
         <button className="rounded-full bg-primary-600 px-5 py-2 text-sm font-bold text-white" type="submit">
           Filter
         </button>
+        <SaveSearchButton niche={sp.niche} stage={sp.stage} q={sp.q} />
       </form>
 
       <div className="grid gap-4 sm:grid-cols-2">

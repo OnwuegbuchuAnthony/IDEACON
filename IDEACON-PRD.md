@@ -182,3 +182,8 @@ Especially critical in early stages to attract both creators and companies:
 - Phase 0 (`96412c9`): Next.js 16 scaffold, design tokens, Better Auth shell, Prisma audit spine (hash-chained events + status machine), CI.
 - Phase 1 (`a199ffa`): submission wizard, teaser catalog (full detail never leaked), reviewer console + heuristic-v0 scoring, NDA gate (14-day grants), broker console + templated deals, evidence-pack export, 8 seeded ideas.
 - Phase 2 slice (`3685c6b`): role-aware match ranking (founder/R&D/PM lenses) surfaced in broker console.
+- Phase 2 full (`c0c55e9`): NGN billing tiers + quotas + commission ledger, university portal + bulk intake, match digests, trust pages.
+- Phase 3 (`9d389ae`): community voting with anti-gaming, pg_trgm similarity search, PWA, analytics hook, multi-currency deals.
+- Phase 4 (`9aa5024`): NG/GH/GB/US jurisdiction packs, public API (keys + v1 endpoints), data export, audit viewer.
+- Phase 5 (`b81cfbd`): E2E pilot gate (all pass), API rate limits, error page, nightly backups, ops runbook.
+- Phase 6 (workspace completion): real dashboards, notification inbox, saved searches, R2 upload wiring in submit flow, admin users console, site nav.

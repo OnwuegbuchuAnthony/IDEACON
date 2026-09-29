@@ -116,3 +116,4 @@ SSO/SAML, DPA/SOC2 posture, jurisdiction packs (2–3 legal regimes before marke
 ## 8. Milestones
 
 - M0 (wk2): shell + design system live. M1 (wk8): MVP loop + evidence pack. M2 (wk14): paid pilots + 10 NDAs. Success = first published case studies, not raw idea count.
+- Shipped log: Phase 0 shell → Phase 1 deal loop → Phase 2 monetization → Phase 3 community/scale → Phase 4 enterprise/API → Phase 5 pilot gate → Phase 6 workspace completion. All milestones built; pilot pilots + NDAs are people work, not code.

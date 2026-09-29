@@ -27,6 +27,7 @@ export async function submitIdeaAction(form: {
   niche: Niche;
   problemType: string;
   stage: string;
+  files?: { r2Key: string; fileName: string; mimeType: string; sizeBytes: number }[];
 }) {
   const user = await requireUser();
   const profile = await myCreatorProfile(user.id);
@@ -35,6 +36,11 @@ export async function submitIdeaAction(form: {
     actorId: user.id,
     ...form,
   });
+  if (form.files?.length) {
+    await db.ideaFile.createMany({
+      data: form.files.map((f) => ({ ideaId: idea.id, ...f })),
+    });
+  }
   // Creators submit straight into the review pipeline.
   await transitionIdea(idea.id, "IN_REVIEW", user.id);
   redirect(`/ideas/${idea.id}`);
@@ -84,6 +90,19 @@ export async function reviewAction(input: {
     await transitionIdea(input.ideaId, "APPROVED", user.id);
   } else if (input.verdict === "flag") {
     await transitionIdea(input.ideaId, "FLAGGED", user.id);
+  }
+  const created = await db.idea.findUnique({
+    where: { id: input.ideaId },
+    select: { title: true, creator: { select: { userId: true } } },
+  });
+  if (created) {
+    const { notify } = await import("./notifications");
+    await notify({
+      userId: created.creator.userId,
+      kind: "review.verdict",
+      title: `Review ${input.verdict}: ${created.title}`,
+      link: `/ideas/${input.ideaId}`,
+    });
   }
   redirect("/review");
 }
