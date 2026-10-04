@@ -295,6 +295,21 @@ model CaseStudy {
   createdAt DateTime @default(now())
 }
 
+// Paystack payments ledger (idempotent on reference).
+model Payment {
+  id        String   @id @default(cuid())
+  companyId String
+  tier      String
+  amountKobo Int
+  currency  String   @default("NGN")
+  reference String   @unique
+  status    String   @default("pending") // pending | success | failed
+  paidAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([companyId])
+}
+
 // Phase 4 public API keys. Scoped, revocable, hashed at rest.
 model ApiKey {
   id         String    @id @default(cuid())
