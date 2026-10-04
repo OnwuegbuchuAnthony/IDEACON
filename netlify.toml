@@ -1,0 +1,9 @@
+# Netlify production build for IDEACON (Next.js in app/, local-first stack).
+# Repo: OnwuegbuchuAnthony/IDEACON — import from GitHub in the Netlify dashboard.
+[build]
+  base = "app"
+  command = "npx prisma generate && npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "24"
