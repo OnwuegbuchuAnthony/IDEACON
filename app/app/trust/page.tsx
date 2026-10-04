@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
 
+// Always server-rendered: needs live DB (no build-time prerender on Netlify).
+export const dynamic = "force-dynamic";
+
 // Public trust page: case studies, platform stats, partner logos.
 export default async function TrustPage() {
   const [ideas, ndas, deals, studies, companies] = await Promise.all([
