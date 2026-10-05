@@ -50,8 +50,8 @@ export default function AboutPage() {
         <p className="mt-1 text-sm text-ink/70">
           Partnerships, universities, press, support — we reply within 2 business days.
         </p>
-        <a href="mailto:ideacon@gmail.com" className="mt-3 inline-block rounded-full bg-primary-600 px-6 py-2 text-sm font-bold text-white">
-          ✉ ideacon@gmail.com
+        <a href="mailto:ideaconnectglobal@gmail.com" className="mt-3 inline-block rounded-full bg-primary-600 px-6 py-2 text-sm font-bold text-white">
+          ✉ ideaconnectglobal@gmail.com
         </a>
         <div className="mt-5 flex items-center gap-3">
           <span className="text-sm font-bold text-ink/60">Follow:</span>
