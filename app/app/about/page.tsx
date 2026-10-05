@@ -55,32 +55,7 @@ export default function AboutPage() {
         </a>
         <div className="mt-5 flex items-center gap-3">
           <span className="text-sm font-bold text-ink/60">Follow:</span>
-          <a href="https://x.com/ideacon" target="_blank" rel="noopener noreferrer" aria-label="IDEACON on X" title="X"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-ink text-white hover:bg-primary-600">
-            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.451-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644Z" />
-            </svg>
-          </a>
-          <a href="https://www.linkedin.com/company/ideacon" target="_blank" rel="noopener noreferrer" aria-label="IDEACON on LinkedIn" title="LinkedIn"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-ink text-white hover:bg-primary-600">
-            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
-              <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.55V9h3.57v11.45Z" />
-            </svg>
-          </a>
-          <a href="https://www.instagram.com/ideacon" target="_blank" rel="noopener noreferrer" aria-label="IDEACON on Instagram" title="Instagram"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-ink text-white hover:bg-primary-600">
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
-              <circle cx="12" cy="12" r="4.5" />
-              <circle cx="17.6" cy="6.4" r="1.4" fill="currentColor" stroke="none" />
-            </svg>
-          </a>
-          <a href="https://www.facebook.com/ideacon" target="_blank" rel="noopener noreferrer" aria-label="IDEACON on Facebook" title="Facebook"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-ink text-white hover:bg-primary-600">
-            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
-              <path d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5h1.3V4.9c-.3 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.5V11H8.5v3H11v7h2.5Z" />
-            </svg>
-          </a>
+          <span className="text-sm text-ink/50">Official handles dropping soon.</span>
         </div>
       </section>
     </main>
