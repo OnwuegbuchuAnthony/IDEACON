@@ -380,3 +380,14 @@ model SavedSearch {
   q         String?
   createdAt DateTime @default(now())
 }
+
+// Pre-launch waitlist. Public form, deduped by email, no login needed.
+model WaitlistEntry {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  kind      String   @default("creator") // creator | company
+  niche     Niche?
+  invited   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

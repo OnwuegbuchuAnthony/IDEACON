@@ -65,6 +65,12 @@ export default function Home() {
           >
             Discover ideas
           </Link>
+          <Link
+            href="/waitlist"
+            className="rounded-full border-2 border-primary-600 px-6 py-3 text-sm font-bold text-primary-600"
+          >
+            Join waitlist
+          </Link>
         </div>
 
         <div className="grid w-full gap-4 sm:grid-cols-3">
