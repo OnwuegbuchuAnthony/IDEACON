@@ -7,7 +7,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ideacon
-      POSTGRES_PASSWORD: ideacon_local_dev
+      # No default committed (secrets scanners flag literals). Export POSTGRES_PASSWORD first.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in your shell}
       POSTGRES_DB: ideacon
     ports:
       - "5433:5432"
