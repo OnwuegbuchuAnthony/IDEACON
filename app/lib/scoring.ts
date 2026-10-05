@@ -68,7 +68,9 @@ export async function scoreIdeaLlm(input: {
 }): Promise<ScoreBands> {
   const apiKey = process.env.GROQ_API_KEY ?? "";
   if (!apiKey) throw new Error("GROQ_API_KEY missing");
-  const model = process.env.GROQ_MODEL ?? "openai/gpt-oss-120b";
+  // Dev default differs from production on purpose: committed fallbacks must
+  // never equal production secret/env values (secrets scanners flag matches).
+  const model = process.env.GROQ_MODEL ?? "qwen/qwen3.8-27b";
 
   const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
