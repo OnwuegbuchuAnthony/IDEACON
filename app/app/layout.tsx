@@ -48,6 +48,7 @@ export default function RootLayout({
             <a href="/submit" className="text-ink/70 hover:text-primary-600">Submit</a>
             <a href="/trust" className="text-ink/70 hover:text-primary-600">Trust</a>
             <a href="/dashboard" className="ml-auto text-ink/70 hover:text-primary-600">Dashboard</a>
+            <a href="/profile" className="text-ink/70 hover:text-primary-600">Profile</a>
             <a href="/notifications" className="text-ink/70 hover:text-primary-600">Inbox</a>
           </div>
         </nav>
