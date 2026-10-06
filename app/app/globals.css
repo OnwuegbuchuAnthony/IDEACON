@@ -4,12 +4,20 @@
   --font-display: "Sora", "Plus Jakarta Sans", system-ui, sans-serif;
   --font-sans: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
 
+  /* Brand hues (exact values from design.html brief). */
+  --color-coral: #ff5c38;
+  --color-sun: #ffb800;
+  --color-violet: #7c3aed;
+  --color-azure: #0ea5e9;
+  --color-teal: #2dd4bf;
+
+  /* Supporting tints/scales already in use across the app. */
   --color-ink: #0a2540;
   --color-primary-800: #0b3d91;
   --color-primary-600: #0f62fe;
   --color-primary-400: #5b9dff;
   --color-primary-100: #e3efff;
-  --color-teal-500: #00c2a8;
+  --color-teal-500: #2dd4bf;
   --color-teal-100: #d9f7f1;
   --color-coral-500: #ff5c38;
   --color-coral-100: #ffe7de;
@@ -17,11 +25,106 @@
   --color-sun-100: #fff4d6;
   --color-mint-500: #00b87c;
   --color-mint-100: #d9f7ea;
-  --color-grape-500: #7c3aed;
-  --color-grape-100: #efe7ff;
+  --color-violet-500: #7c3aed;
+  --color-violet-100: #efe7ff;
+
+  /* Text-safe dark variants for light backgrounds (from design.html). */
+  --color-coral-700: #c24a1f;
+  --color-sun-ink: #8a5a00;
+
+  /* Neutrals/surfaces from design.html. */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f6faff;
+  --color-border: #dce6f2;
+  --color-ink-muted: #4a5b74;
 }
 
 body {
-  background: #f6faff;
+  background: var(--color-surface-muted);
   color: var(--color-ink);
+}
+
+/* Visible keyboard focus everywhere (token-based, 3px azure outline). */
+:focus-visible {
+  outline: 3px solid var(--color-azure);
+  outline-offset: 2px;
+}
+
+/* Minimum 44px touch target for compact controls. Apply alongside pills. */
+.tap {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Consistent press behavior for every button and button-like link. */
+button:not(:disabled),
+a[class*="rounded-full"] {
+  transition:
+    filter 150ms ease,
+    transform 150ms ease,
+    background-color 150ms ease;
+}
+button:not(:disabled):hover,
+a[class*="rounded-full"]:hover {
+  filter: brightness(1.06);
+}
+button:not(:disabled):active,
+a[class*="rounded-full"]:active {
+  transform: translateY(1px);
+  filter: brightness(0.97);
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Interactive cards (teasers, rows that navigate). */
+.card-hover {
+  transition:
+    box-shadow 200ms ease,
+    transform 200ms ease,
+    border-color 200ms ease;
+}
+.card-hover:hover {
+  box-shadow: 0 8px 28px rgba(15, 98, 254, 0.16);
+  transform: translateY(-2px);
+  border-color: var(--color-primary-400);
+}
+.card-hover:active {
+  transform: translateY(0);
+}
+
+/* Skeleton shimmer for loading states. */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-primary-100);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.7) 50%, transparent 70%);
+  animation: skeleton-sheen 1.4s ease infinite;
+}
+@keyframes skeleton-sheen {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Respect users who ask for less motion: kill non-essential animation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

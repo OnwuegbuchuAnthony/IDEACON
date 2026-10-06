@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Sora, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@/lib/analytics";
+import { SiteHeader } from "@/app/components/SiteHeader";
+import { SiteFooter } from "@/app/components/SiteFooter";
+import { OG_IMAGE, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const display = Sora({
@@ -16,15 +19,36 @@ const sans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "IDEACON — Idea + Connection",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "IDEACON — Idea + Connection",
+    template: "%s — IDEACON",
+  },
   description:
     "The platform that links novel ideas to the industries built to use them.",
+  alternates: { canonical: SITE_URL },
   manifest: "/manifest.webmanifest",
   icons: { icon: "/icon.svg", apple: "/icon.svg" },
+  openGraph: {
+    title: "IDEACON — Idea + Connection",
+    description:
+      "The platform that links novel ideas to the industries built to use them.",
+    url: SITE_URL,
+    siteName: "IDEACON",
+    type: "website",
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "IDEACON — Idea + Connection",
+    description:
+      "The platform that links novel ideas to the industries built to use them.",
+    images: [OG_IMAGE.url],
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0F62FE",
+  themeColor: "#0EA5E9", // Metadata API needs a literal; kept equal to --color-azure.
   width: "device-width",
   initialScale: 1,
 };
@@ -41,21 +65,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Analytics />
-        <nav className="border-b border-primary-100 bg-white/80 backdrop-blur">
-          <div className="mx-auto flex w-full max-w-5xl items-center gap-4 px-6 py-2 text-sm font-bold">
-            <a href="/" className="font-display text-base font-extrabold">◈ IDEACON</a>
-            <a href="/browse" className="text-ink/70 hover:text-primary-600">Discover</a>
-            <a href="/submit" className="text-ink/70 hover:text-primary-600">Submit</a>
-            <a href="/trust" className="text-ink/70 hover:text-primary-600">Trust</a>
-            <a href="/about" className="text-ink/70 hover:text-primary-600">About</a>
-            <a href="/ask" className="text-ink/70 hover:text-primary-600">Ask AI</a>
-            <a href="/waitlist" className="text-ink/70 hover:text-primary-600">Waitlist</a>
-            <a href="/dashboard" className="ml-auto text-ink/70 hover:text-primary-600">Dashboard</a>
-            <a href="/profile" className="text-ink/70 hover:text-primary-600">Profile</a>
-            <a href="/notifications" className="text-ink/70 hover:text-primary-600">Inbox</a>
-          </div>
-        </nav>
-        {children}
+        <SiteHeader />
+        <div id="main-content" className="flex flex-1 flex-col">{children}</div>
+        <SiteFooter />
       </body>
     </html>
   );

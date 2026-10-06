@@ -5,7 +5,7 @@
   "start_url": "/browse",
   "display": "standalone",
   "background_color": "#F6FAFF",
-  "theme_color": "#0F62FE",
+  "theme_color": "#0EA5E9",
   "icons": [
     { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
     { "src": "/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }

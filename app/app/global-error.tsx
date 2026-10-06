@@ -8,7 +8,7 @@ export default function GlobalError({ reset }: { reset: () => void }) {
         <p>The team has been notified. Your ideas and deals are safe.</p>
         <button
           onClick={reset}
-          style={{ background: "#0F62FE", color: "#fff", border: 0, borderRadius: 999, padding: "10px 24px", fontWeight: 700 }}
+          style={{ background: "var(--color-azure)", color: "var(--color-surface)", border: 0, borderRadius: 999, padding: "10px 24px", fontWeight: 700 }}
         >
           Try again
         </button>
