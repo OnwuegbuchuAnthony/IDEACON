@@ -41,4 +41,23 @@ export const auth = betterAuth({
       creatorType: { type: "string", required: false },
     },
   },
+  databaseHooks: {
+    user: {
+      create: {
+        // Every signup path (email, Google) gets a creator stub + audit.
+        // Company registration upgrades role + adds company rows later.
+        after: async (user) => {
+          try {
+            await db.creatorProfile.upsert({
+              where: { userId: user.id },
+              update: {},
+              create: { userId: user.id, creatorType: "CASUAL" },
+            });
+          } catch {
+            /* profile already exists — safe to ignore */
+          }
+        },
+      },
+    },
+  },
 });

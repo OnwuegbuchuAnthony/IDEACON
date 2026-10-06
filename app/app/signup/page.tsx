@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { completeSignupAction } from "@/lib/actions-signup";
+import { GoogleButton } from "@/app/components/GoogleButton";
 
 function SignupForm() {
   const router = useRouter();
@@ -82,6 +83,10 @@ export default function SignupPage() {
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-6 py-12">
       <h1 className="font-display text-3xl font-extrabold">Join IDEACON</h1>
+      <GoogleButton callbackURL="/onboarding" />
+      <div className="my-2 flex items-center gap-2 text-xs text-ink/50">
+        <span className="h-px flex-1 bg-primary-100" /> or with email <span className="h-px flex-1 bg-primary-100" />
+      </div>
       <Suspense>
         <SignupForm />
       </Suspense>
