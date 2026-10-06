@@ -34,10 +34,10 @@ export default async function UniversityPage() {
         await bulkIntakeAction({ universityId: String(fd.get("universityId")), lines: String(fd.get("lines")) });
       }} className="flex flex-col gap-2 rounded-2xl border-2 border-teal-500 bg-teal-100/40 p-5">
         <h2 className="font-display font-bold">Ambassador bulk intake</h2>
-        <select name="universityId" required defaultValue={partners[0]?.id ?? ""}>
+        <select name="universityId" aria-label="University" required defaultValue={partners[0]?.id ?? ""}>
           {partners.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
-        <textarea name="lines" rows={5} placeholder={"Solar dryer for pepper\nVoice soil alerts\n…"} required />
+        <textarea name="lines" aria-label="Idea titles, one per line" rows={5} placeholder={"Solar dryer for pepper\nVoice soil alerts\n…"} required />
         <button className="rounded-full bg-primary-600 px-6 py-2 text-sm font-bold text-white" type="submit">
           Create drafts
         </button>

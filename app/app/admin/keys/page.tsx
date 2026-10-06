@@ -22,7 +22,7 @@ export default async function ApiKeysPage() {
             <span>{names.get(k.companyId) ?? k.companyId}</span>
             <span className="text-ink/50">{k.name}</span>
             {k.revokedAt
-              ? <span className="rounded-full bg-coral-100 px-2 py-0.5 text-xs font-bold text-coral-500">revoked</span>
+              ? <span className="rounded-full bg-coral-100 px-2 py-0.5 text-xs font-bold text-coral-700">revoked</span>
               : <RevokeButton keyId={k.id} />}
           </div>
         ))}

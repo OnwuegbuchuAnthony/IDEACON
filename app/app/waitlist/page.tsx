@@ -1,10 +1,12 @@
-import { WaitlistForm } from "./WaitlistForm";
+import { WaitlistForm } from "@/app/components/WaitlistForm";
 import { waitlistCount } from "@/lib/actions-waitlist";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata = {
+export const metadata = pageMeta({
   title: "Join the Waitlist — IDEACON",
   description: "Be the first to know when IDEACON launches. Join the waitlist.",
-};
+  path: "/waitlist",
+});
 
 export default async function WaitlistPage() {
   const count = await waitlistCount().catch(() => 0);

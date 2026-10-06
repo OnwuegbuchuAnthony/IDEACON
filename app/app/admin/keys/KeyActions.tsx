@@ -17,10 +17,10 @@ export function IssueKeyForm({ companies }: { companies: { id: string; name: str
           setSecret(res.secret);
         }}
       >
-        <select value={companyId} onChange={(e) => setCompanyId(e.target.value)} style={{ maxWidth: 220 }}>
+        <select value={companyId} aria-label="Company" onChange={(e) => setCompanyId(e.target.value)} style={{ maxWidth: 220 }}>
           {companies.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
-        <input placeholder="Key name (e.g. data-warehouse)" value={name} onChange={(e) => setName(e.target.value)} required style={{ maxWidth: 240 }} />
+        <input aria-label="Key name" placeholder="Key name (e.g. data-warehouse)" value={name} onChange={(e) => setName(e.target.value)} required style={{ maxWidth: 240 }} />
         <button className="rounded-full bg-primary-600 px-4 py-2 text-xs font-bold text-white" type="submit">Issue</button>
       </form>
       {secret && (
@@ -35,7 +35,7 @@ export function IssueKeyForm({ companies }: { companies: { id: string; name: str
 export function RevokeButton({ keyId }: { keyId: string }) {
   return (
     <button onClick={() => revokeKeyAction(keyId)}
-      className="rounded-full bg-coral-100 px-3 py-1 text-xs font-bold text-coral-500">
+      className="tap rounded-full bg-coral-100 px-3 py-1 text-xs font-bold text-coral-700">
       Revoke
     </button>
   );

@@ -22,7 +22,14 @@ export async function approveMatch(matchId: string, actorId: string) {
   const members = await db.companyMember.findMany({ where: { companyId: match.companyId }, select: { userId: true } });
   const idea = await db.idea.findUnique({ where: { id: match.ideaId }, select: { title: true } });
   for (const m of members) {
-    await notify({ userId: m.userId, kind: "match.approved", title: `Access approved: ${idea?.title ?? "your requested idea"}`, link: `/ideas/${match.ideaId}` });
+    await notify({
+      userId: m.userId,
+      kind: "match.approved",
+      title: `Access approved: ${idea?.title ?? "your requested idea"}`,
+      link: `/ideas/${match.ideaId}`,
+      emailSubject: `Access approved: ${idea?.title ?? "your requested idea"}`,
+      emailHtml: `<p>Good news — a broker approved your access request. Sign the NDA to unlock the full detail.</p>`,
+    });
   }
   return match;
 }
@@ -78,6 +85,8 @@ export async function signNda(input: {
       kind: "nda.signed",
       title: `NDA signed on: ${ideaOwner.title}`,
       link: `/ideas/${input.ideaId}`,
+      emailSubject: `NDA signed on: ${ideaOwner.title}`,
+      emailHtml: `<p>A company signed an NDA on your idea <b>${ideaOwner.title}</b>. A broker will manage the handoff.</p>`,
     });
   }
   return grant;
@@ -126,6 +135,8 @@ export async function createDeal(input: {
       kind: "deal.opened",
       title: `Deal opened (${input.template})`,
       link: `/deals/${deal.id}`,
+      emailSubject: `Deal opened (${input.template})`,
+      emailHtml: `<p>A broker opened a <b>${input.template}</b> deal. Follow the timeline for next steps.</p>`,
     });
   }
   return deal;

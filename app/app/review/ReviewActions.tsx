@@ -8,7 +8,7 @@ export function ScoreButton({ ideaId }: { ideaId: string }) {
   const [busy, setBusy] = useState(false);
   return (
     <button disabled={busy} onClick={async () => { setBusy(true); await runScoringAction(ideaId); }}
-      className="rounded-full bg-grape-100 px-4 py-1 text-xs font-bold text-grape-500">
+      className="tap rounded-full bg-violet-100 px-4 py-1 text-xs font-bold text-violet-500">
       {busy ? "Scoring…" : "Run AI score"}
     </button>
   );
@@ -51,12 +51,12 @@ export function ReviewForm({ ideaId }: { ideaId: string }) {
           <input name={n} type="number" min={1} max={10} defaultValue={7} style={{ maxWidth: 70 }} />
         </label>
       ))}
-      <select value={verdict} onChange={(e) => setVerdict(e.target.value as typeof verdict)} style={{ maxWidth: 170 }}>
+      <select value={verdict} aria-label="Verdict" onChange={(e) => setVerdict(e.target.value as typeof verdict)} style={{ maxWidth: 170 }}>
         <option value="approve">Approve</option>
         <option value="flag">Flag</option>
         <option value="request-changes">Request changes</option>
       </select>
-      <input name="note" placeholder="Note (optional)" style={{ maxWidth: 220 }} />
+      <input name="note" aria-label="Review note" placeholder="Note (optional)" style={{ maxWidth: 220 }} />
       <button className="rounded-full bg-primary-600 px-4 py-2 text-xs font-bold text-white" type="submit">
         Submit review
       </button>

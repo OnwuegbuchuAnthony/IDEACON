@@ -49,7 +49,7 @@ export default async function AdminUsersPage() {
             }} className="flex flex-wrap items-center gap-2 rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
               <b>{u.name}</b>
               <span className="text-ink/50">{u.email}</span>
-              <select name="role" defaultValue={u.role} style={{ maxWidth: 170 }}>
+              <select name="role" aria-label={`Role for ${u.email}`} defaultValue={u.role} style={{ maxWidth: 170 }}>
                 {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
               </select>
               <button className="rounded-full bg-primary-600 px-3 py-1 text-xs font-bold text-white" type="submit">Set</button>

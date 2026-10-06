@@ -20,7 +20,7 @@ export default async function EventsPage({
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 px-6 py-12">
       <h1 className="font-display text-3xl font-extrabold">Audit trail</h1>
       <form method="get" className="flex gap-2">
-        <input name="type" placeholder="Filter by type (e.g. nda.signed)" defaultValue={sp.type ?? ""} style={{ maxWidth: 300 }} />
+        <input name="type" aria-label="Filter by event type" placeholder="Filter by type (e.g. nda.signed)" defaultValue={sp.type ?? ""} style={{ maxWidth: 300 }} />
         <button className="rounded-full bg-primary-600 px-5 py-2 text-sm font-bold text-white" type="submit">Filter</button>
       </form>
       <div className="flex flex-col gap-1">

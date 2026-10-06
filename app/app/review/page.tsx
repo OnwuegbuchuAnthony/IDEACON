@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { requireRole } from "@/lib/session";
 import { ScoreButton, StatusButtons, ReviewForm } from "./ReviewActions";
+import { EmptyState } from "@/app/components/EmptyState";
 
 export default async function ReviewPage() {
   await requireRole("REVIEWER", "BROKER", "ADMIN");
@@ -38,7 +39,12 @@ export default async function ReviewPage() {
           <ReviewForm ideaId={idea.id} />
         </article>
       ))}
-      {queue.length === 0 && <p className="text-ink/60">Queue clear. 🎉</p>}
+      {queue.length === 0 && (
+        <EmptyState
+          title="Queue clear"
+          body="No ideas await review. New submissions land here automatically."
+        />
+      )}
     </main>
   );
 }
