@@ -56,6 +56,19 @@ export const auth = betterAuth({
           } catch {
             /* profile already exists — safe to ignore */
           }
+          // Automatic welcome email (non-blocking).
+          try {
+            const { sendEmail } = await import("./email");
+            const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+            await sendEmail({
+              to: user.email,
+              subject: "Welcome to IDEACON ◈",
+              html: `<p>Hi ${user.name},</p><p>Your account is ready. Creators: <a href="${appUrl}/submit">submit your first idea</a>. Companies: <a href="${appUrl}/browse">discover vetted teasers</a>.</p><p>Ideas stay teaser-only until an NDA is signed — your work is protected by design.</p>`,
+              name: user.name,
+            });
+          } catch (e) {
+            console.warn("[welcome-email]", e instanceof Error ? e.message : e);
+          }
         },
       },
     },

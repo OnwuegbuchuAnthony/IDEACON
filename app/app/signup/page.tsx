@@ -64,12 +64,12 @@ function SignupForm() {
         ))}
       </div>
       <form onSubmit={submit} className="mt-4 flex flex-col gap-3">
-        <input placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />
+        <input aria-label="Full name" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />
         {kind === "company" && (
-          <input placeholder="Company / firm name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} required />
+          <input aria-label="Company or firm name" placeholder="Company / firm name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} required />
         )}
-        <input placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input placeholder="Password (8+ chars)" type="password" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input aria-label="Email" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input aria-label="Password" placeholder="Password (8+ chars)" type="password" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button className="rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-6 py-3 text-sm font-bold text-white" type="submit">
           Create {kind === "creator" ? "creator" : "company"} account

@@ -32,8 +32,9 @@ export default function LoginPage() {
         <span className="h-px flex-1 bg-primary-100" /> or with email <span className="h-px flex-1 bg-primary-100" />
       </div>
       <form onSubmit={submit} className="mt-6 flex flex-col gap-3">
-        <input placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input aria-label="Email" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input aria-label="Password" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <a href="/forgot-password" className="text-xs font-bold text-primary-600 underline">Forgot password?</a>
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button className="rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-6 py-3 text-sm font-bold text-white" type="submit">
           Log in

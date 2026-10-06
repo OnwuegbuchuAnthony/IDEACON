@@ -40,8 +40,8 @@ export default async function ProfilePage() {
         await u({ name: String(fd.get("name")), image: String(fd.get("image") ?? "") });
       }} className="flex flex-col gap-2 rounded-2xl border border-primary-100 bg-white p-5 shadow">
         <h2 className="font-display font-bold">Personal</h2>
-        <input name="name" defaultValue={record.name} placeholder="Display name" required />
-        <input name="image" defaultValue={record.image ?? ""} placeholder="Avatar image URL (optional)" />
+        <input name="name" aria-label="Display name" defaultValue={record.name} placeholder="Display name" required />
+        <input name="image" aria-label="Avatar image URL" defaultValue={record.image ?? ""} placeholder="Avatar image URL (optional)" />
         <button className="w-fit rounded-full bg-primary-600 px-5 py-2 text-sm font-bold text-white" type="submit">Save</button>
       </form>
 
@@ -51,10 +51,10 @@ export default async function ProfilePage() {
         await u({ creatorType: String(fd.get("creatorType")) as CreatorType, bio: String(fd.get("bio") ?? "") });
       }} className="flex flex-col gap-2 rounded-2xl border border-primary-100 bg-white p-5 shadow">
         <h2 className="font-display font-bold">Creator bio</h2>
-        <select name="creatorType" defaultValue={creator?.creatorType ?? "CASUAL"}>
+        <select name="creatorType" aria-label="Creator type" defaultValue={creator?.creatorType ?? "CASUAL"}>
           {CREATOR_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
         </select>
-        <textarea name="bio" rows={4} defaultValue={creator?.bio ?? ""} placeholder="Who you are, what you build, what industries fit…" />
+        <textarea name="bio" aria-label="Creator bio" rows={4} defaultValue={creator?.bio ?? ""} placeholder="Who you are, what you build, what industries fit…" />
         <button className="w-fit rounded-full bg-primary-600 px-5 py-2 text-sm font-bold text-white" type="submit">Save bio</button>
       </form>
 
@@ -72,14 +72,14 @@ export default async function ProfilePage() {
         }} className="flex flex-col gap-2 rounded-2xl border-2 border-teal-500 bg-white p-5 shadow">
           <h2 className="font-display font-bold">🏢 Company {m.company.verified ? "(✓ verified)" : "(unverified)"} · you are {m.role}</h2>
           <input type="hidden" name="companyId" value={m.companyId} />
-          <input name="name" defaultValue={m.company.name} placeholder="Company / firm name" required />
+          <input name="name" aria-label="Company name" defaultValue={m.company.name} placeholder="Company / firm name" required />
           <div className="grid grid-cols-2 gap-2">
-            <select name="niche" defaultValue={m.company.niche}>
+            <select name="niche" aria-label="Company niche" defaultValue={m.company.niche}>
               {NICHES.map((n) => <option key={n} value={n}>{n}</option>)}
             </select>
-            <input name="state" defaultValue={m.company.state ?? ""} placeholder="State (e.g. Lagos)" />
+            <input name="state" aria-label="Company state" defaultValue={m.company.state ?? ""} placeholder="State (e.g. Lagos)" />
           </div>
-          <input name="country" defaultValue={m.company.country} placeholder="Country code (e.g. NG)" />
+          <input name="country" aria-label="Country code" defaultValue={m.company.country} placeholder="Country code (e.g. NG)" />
           <button className="w-fit rounded-full bg-teal-500 px-5 py-2 text-sm font-bold text-white" type="submit">Save company</button>
         </form>
       ))}
@@ -91,12 +91,12 @@ export default async function ProfilePage() {
           await c({ name: String(fd.get("name")), niche: String(fd.get("niche")) as Niche, state: String(fd.get("state") ?? "") });
         }} className="flex flex-col gap-2 rounded-2xl border border-dashed border-primary-400 bg-primary-100/40 p-5">
           <h2 className="font-display font-bold">🏢 Register a firm</h2>
-          <input name="name" placeholder="Company / firm name" required />
+          <input name="name" aria-label="New company name" placeholder="Company / firm name" required />
           <div className="grid grid-cols-2 gap-2">
-            <select name="niche" defaultValue="OTHER">
+            <select name="niche" aria-label="Company niche" defaultValue="OTHER">
               {NICHES.map((n) => <option key={n} value={n}>{n}</option>)}
             </select>
-            <input name="state" placeholder="State (e.g. Lagos)" />
+            <input name="state" aria-label="Company state" placeholder="State (e.g. Lagos)" />
           </div>
           <button className="w-fit rounded-full bg-primary-600 px-5 py-2 text-sm font-bold text-white" type="submit">Register firm</button>
         </form>

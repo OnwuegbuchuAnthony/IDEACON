@@ -61,9 +61,9 @@ export default async function DashboardPage() {
           <Link href="/broker" className="rounded-full bg-teal-100 px-4 py-2 text-teal-700">Broker console</Link>
           {user.role === "ADMIN" && (
             <>
-              <Link href="/admin/users" className="rounded-full bg-grape-100 px-4 py-2 text-grape-500">Users</Link>
-              <Link href="/admin/keys" className="rounded-full bg-grape-100 px-4 py-2 text-grape-500">API keys</Link>
-              <Link href="/admin/events" className="rounded-full bg-grape-100 px-4 py-2 text-grape-500">Audit</Link>
+              <Link href="/admin/users" className="rounded-full bg-violet-100 px-4 py-2 text-violet-500">Users</Link>
+              <Link href="/admin/keys" className="rounded-full bg-violet-100 px-4 py-2 text-violet-500">API keys</Link>
+              <Link href="/admin/events" className="rounded-full bg-violet-100 px-4 py-2 text-violet-500">Audit</Link>
             </>
           )}
         </div>
@@ -72,11 +72,11 @@ export default async function DashboardPage() {
       <section>
         <div className="flex items-center justify-between">
           <h2 className="font-display text-xl font-bold">My submissions ({myIdeas.length})</h2>
-          <Link href="/submit" className="text-sm font-bold text-coral-500 underline">+ New idea</Link>
+          <Link href="/submit" className="text-sm font-bold text-coral-700 underline">+ New idea</Link>
         </div>
         <div className="mt-2 flex flex-col gap-2">
           {myIdeas.map((i) => (
-            <Link key={i.id} href={`/ideas/${i.id}`} className="rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
+            <Link key={i.id} href={`/ideas/${i.id}`} className="card-hover rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
               <b>{i.title}</b> <span className="text-ink/50">· {i.niche} · {i.status}</span>
             </Link>
           ))}
@@ -90,7 +90,7 @@ export default async function DashboardPage() {
             <h2 className="font-display text-xl font-bold">{company.name} — requests</h2>
             <div className="mt-2 flex flex-col gap-2">
               {company.matches.map((m) => (
-                <Link key={m.id} href={`/ideas/${m.idea.id}`} className="rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
+                <Link key={m.id} href={`/ideas/${m.idea.id}`} className="card-hover rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
                   <b>{m.idea.title}</b> <span className="text-ink/50">· {m.source} · {m.createdAt.toISOString().slice(0, 10)}</span>
                 </Link>
               ))}
@@ -102,7 +102,7 @@ export default async function DashboardPage() {
             <h2 className="font-display text-xl font-bold">Active NDA grants ({grants.length})</h2>
             <div className="mt-2 flex flex-col gap-2">
               {grants.map((g) => (
-                <Link key={g.id} href={`/ideas/${g.ideaId}`} className="rounded-xl border border-mint-500 bg-white px-4 py-2 text-sm shadow">
+                <Link key={g.id} href={`/ideas/${g.ideaId}`} className="card-hover rounded-xl border border-mint-500 bg-white px-4 py-2 text-sm shadow">
                   Idea <code>{g.ideaId.slice(0, 8)}</code> · {g.templateVersion} · expires {g.expiresAt.toISOString().slice(0, 10)}
                 </Link>
               ))}
@@ -114,7 +114,7 @@ export default async function DashboardPage() {
             <h2 className="font-display text-xl font-bold">Deals ({deals.length})</h2>
             <div className="mt-2 flex flex-col gap-2">
               {deals.map((d) => (
-                <Link key={d.id} href={`/deals/${d.id}`} className="rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
+                <Link key={d.id} href={`/deals/${d.id}`} className="card-hover rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
                   <b>{d.template}</b> <span className="text-ink/50">· {d.status} · {d.currency}</span>
                 </Link>
               ))}

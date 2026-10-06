@@ -102,6 +102,8 @@ export async function reviewAction(input: {
       kind: "review.verdict",
       title: `Review ${input.verdict}: ${created.title}`,
       link: `/ideas/${input.ideaId}`,
+      emailSubject: `Your idea was ${input.verdict === "approve" ? "approved ✓" : input.verdict}`,
+      emailHtml: `<p>Hi,</p><p>The review board returned <b>${input.verdict}</b> on <b>${created.title}</b>.</p>`,
     });
   }
   redirect("/review");
