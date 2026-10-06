@@ -2,6 +2,7 @@ import Link from "next/link";
 import { listTeasers, type TeaserFilters } from "@/lib/ideas";
 import type { Niche } from "@prisma/client";
 import { SaveSearchButton } from "./SaveSearch";
+import { EmptyState } from "@/app/components/EmptyState";
 
 export default async function BrowsePage({
   searchParams,
@@ -21,14 +22,14 @@ export default async function BrowsePage({
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-6 py-12">
       <h1 className="font-display text-3xl font-extrabold">Discover ideas</h1>
       <form className="flex flex-wrap gap-2" method="get">
-        <input name="q" placeholder="Search teasers…" defaultValue={sp.q ?? ""} style={{ maxWidth: 220 }} />
-        <select name="niche" defaultValue={sp.niche ?? ""} style={{ maxWidth: 170 }}>
+        <input name="q" aria-label="Search teasers" placeholder="Search teasers…" defaultValue={sp.q ?? ""} style={{ maxWidth: 220 }} />
+        <select name="niche" aria-label="Niche filter" defaultValue={sp.niche ?? ""} style={{ maxWidth: 170 }}>
           <option value="">All niches</option>
           {["HEALTHTECH", "AGROTECH", "FINTECH", "BUSINESS", "OTHER"].map((n) => (
             <option key={n} value={n}>{n}</option>
           ))}
         </select>
-        <select name="stage" defaultValue={sp.stage ?? ""} style={{ maxWidth: 170 }}>
+        <select name="stage" aria-label="Stage filter" defaultValue={sp.stage ?? ""} style={{ maxWidth: 170 }}>
           <option value="">Any stage</option>
           {["concept", "prototype", "ready-to-scale"].map((s) => (
             <option key={s} value={s}>{s}</option>
@@ -43,10 +44,10 @@ export default async function BrowsePage({
       <div className="grid gap-4 sm:grid-cols-2">
         {ideas.map((idea) => (
           <Link key={idea.id} href={`/ideas/${idea.id}`}
-            className="rounded-2xl border border-primary-100 bg-white p-5 shadow hover:shadow-lg">
+            className="card-hover rounded-2xl border border-primary-100 bg-white p-5 shadow">
             <div className="flex flex-wrap gap-1 text-[11px] font-bold">
               <span className="rounded-full bg-primary-100 px-2 py-0.5 text-primary-800">{idea.niche}</span>
-              <span className="rounded-full bg-coral-100 px-2 py-0.5 text-coral-500">{idea.stage}</span>
+              <span className="rounded-full bg-coral-100 px-2 py-0.5 text-coral-700">{idea.stage}</span>
               {idea.aiScores[0] && (
                 <span className="rounded-full bg-mint-100 px-2 py-0.5 text-emerald-800">
                   {Math.round(((idea.aiScores[0].originality + idea.aiScores[0].feasibility + idea.aiScores[0].marketFit) / 3) * 10) / 10} fit
@@ -59,7 +60,7 @@ export default async function BrowsePage({
           </Link>
         ))}
       </div>
-      {ideas.length === 0 && <p className="text-ink/60">No approved teasers match. Try widening filters.</p>}
+      {ideas.length === 0 && <EmptyState actionHref="/browse" actionLabel="Clear filters" />}
     </main>
   );
 }

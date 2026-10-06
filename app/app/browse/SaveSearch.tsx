@@ -22,7 +22,7 @@ export function SaveSearchButton({ niche, stage, q }: { niche?: string; stage?: 
         await saveSearchAction({ name, niche: (niche || undefined) as Niche | undefined, stage, q });
       }}
     >
-      <input placeholder="Search name" value={name} onChange={(e) => setName(e.target.value)} required style={{ maxWidth: 180 }} />
+      <input aria-label="Search name" placeholder="Search name" value={name} onChange={(e) => setName(e.target.value)} required style={{ maxWidth: 180 }} />
       <button className="rounded-full bg-primary-600 px-4 py-2 text-sm font-bold text-white" type="submit">Save</button>
     </form>
   );

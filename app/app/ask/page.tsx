@@ -1,9 +1,11 @@
 import { AskChat } from "./AskChat";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata = {
+export const metadata = pageMeta({
   title: "Ask IDEACON AI",
   description: "Ask me anything — answers grounded in the live idea catalog.",
-};
+  path: "/ask",
+});
 
 export default function AskPage() {
   return (

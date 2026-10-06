@@ -1,4 +1,11 @@
 import Link from "next/link";
+import { pageMeta } from "@/lib/seo";
+
+export const metadata = pageMeta({
+  title: "About — IDEACON",
+  description: "Idea + Connection: novel ideas matched to the industries built to use them.",
+  path: "/about",
+});
 
 // Public About: what IDEACON is, how it works, socials + contact.
 export default function AboutPage() {

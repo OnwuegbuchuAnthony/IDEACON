@@ -82,7 +82,7 @@ export function AskChat() {
         className="flex gap-2"
         onSubmit={(e) => { e.preventDefault(); send(input); }}
       >
-        <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask me anything…" maxLength={800} />
+        <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask me anything…" aria-label="Ask me anything" maxLength={800} />
         <button disabled={busy} className="rounded-full bg-gradient-to-r from-primary-600 to-teal-500 px-6 py-2 text-sm font-bold text-white disabled:opacity-50" type="submit">
           Ask
         </button>

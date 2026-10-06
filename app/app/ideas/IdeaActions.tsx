@@ -20,11 +20,11 @@ export function SignNdaForm({ ideaId }: { ideaId: string }) {
   const [name, setName] = useState("");
   return (
     <form
-      className="flex flex-col gap-2 rounded-2xl border-2 border-grape-500 bg-grape-100/40 p-5"
+      className="flex flex-col gap-2 rounded-2xl border-2 border-violet-500 bg-violet-100/40 p-5"
       action={async () => signNdaAction({ ideaId, signerName: name })}
     >
       <h3 className="font-display font-bold">🔐 Sign mutual NDA (v1) — 14-day access</h3>
-      <input placeholder="Full legal name of signer" value={name} onChange={(e) => setName(e.target.value)} required />
+      <input aria-label="Full legal name of signer" placeholder="Full legal name of signer" value={name} onChange={(e) => setName(e.target.value)} required />
       <button className="rounded-full bg-primary-600 px-6 py-2 text-sm font-bold text-white" type="submit">
         Sign &amp; unlock full detail
       </button>

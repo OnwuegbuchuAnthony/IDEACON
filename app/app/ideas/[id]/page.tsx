@@ -22,7 +22,7 @@ export default async function IdeaPage({ params }: { params: Promise<{ id: strin
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-5 px-6 py-12">
       <div className="flex flex-wrap gap-1 text-[11px] font-bold">
         <span className="rounded-full bg-primary-100 px-2 py-0.5 text-primary-800">{idea.niche}</span>
-        <span className="rounded-full bg-coral-100 px-2 py-0.5 text-coral-500">{idea.stage}</span>
+        <span className="rounded-full bg-coral-100 px-2 py-0.5 text-coral-700">{idea.stage}</span>
         <span className="rounded-full bg-sun-100 px-2 py-0.5 text-amber-800">{idea.status}</span>
         {avg !== null && <span className="rounded-full bg-mint-100 px-2 py-0.5 text-emerald-800">{avg} fit</span>}
       </div>
@@ -52,7 +52,7 @@ export default async function IdeaPage({ params }: { params: Promise<{ id: strin
           <h2 className="font-display font-bold">Similar ideas</h2>
           <div className="mt-2 grid gap-2">
             {similar.map((s) => (
-              <Link key={s.id} href={`/ideas/${s.id}`} className="rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
+              <Link key={s.id} href={`/ideas/${s.id}`} className="card-hover rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
                 <b>{s.title}</b> <span className="text-ink/50">· {s.niche} · {Math.round(s.sim * 100)}% alike</span>
               </Link>
             ))}
