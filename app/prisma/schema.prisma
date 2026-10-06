@@ -381,13 +381,18 @@ model SavedSearch {
   createdAt DateTime @default(now())
 }
 
-// Pre-launch waitlist. Public form, deduped by email, no login needed.
+// Pre-launch waitlist. Public form, deduped by lowercase email, no login needed.
 model WaitlistEntry {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  kind      String   @default("creator") // creator | company
-  niche     Niche?
-  invited   Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  role        String   @default("creator") @map("kind") // creator | company | student | other
+  state       String?  // Nigerian state, optional
+  university  String?  // student/campus lane, optional
+  department  String?  // student/campus lane, optional
+  niche       Niche?
+  consent     Boolean  @default(false)
+  consentedAt DateTime?
+  invited     Boolean  @default(false)
+  createdAt   DateTime @default(now())
 }

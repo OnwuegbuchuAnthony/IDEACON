@@ -174,8 +174,8 @@ Especially critical in early stages to attract both creators and companies:
 - Database: PostgreSQL 17 on local device (native install, `ideacon` DB) — no Supabase. Chosen because it's free and open-source: no license fees and no managed-database bills.
 - Auth: Better Auth (email/password + Google-ready) — roles creator/reviewer/broker/admin.
 - Storage: Cloudflare R2 (private bucket, presigned URLs; code-ready, credentials pending).
-- Email: Resend (console-log fallback until domain verified).
-- Hosting: self-hosted on local device (Docker Compose + Caddy, `next start`) — no Vercel.
+- Email: ZeptoMail primary, Gmail SMTP fallback (no domain needed), console fallback.
+- Hosting: Netlify production (`ideacon.netlify.app`) + self-hosted Docker Compose option — no Vercel.
 - pgvector unavailable on Windows Postgres → embeddings stored as bytes placeholder; swap to `vector(1536)` in Phase 1 hardening.
 
 ## A.3 Progress
@@ -187,3 +187,4 @@ Especially critical in early stages to attract both creators and companies:
 - Phase 4 (`9aa5024`): NG/GH/GB/US jurisdiction packs, public API (keys + v1 endpoints), data export, audit viewer.
 - Phase 5 (`b81cfbd`): E2E pilot gate (all pass), API rate limits, error page, nightly backups, ops runbook.
 - Phase 6 (workspace completion): real dashboards, notification inbox, saved searches, R2 upload wiring in submit flow, admin users console, site nav.
+- Launch hardening: Paystack test-mode checkout live (`/pricing`), Groq LLM scoring + Ask-AI assistant, Google OAuth, Umami analytics plan, Netlify production at https://ideacon.netlify.app (Neon Postgres, secrets-scan clean).

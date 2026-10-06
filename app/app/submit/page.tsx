@@ -63,21 +63,21 @@ export default function SubmitPage() {
         timestamped proof-of-origin recorded at submit.
       </p>
       <form action={submit} className="flex flex-col gap-3">
-        <input name="title" placeholder="Title" required defaultValue={draft.title}
+        <input name="title" aria-label="Idea title" placeholder="Title" required defaultValue={draft.title}
           onChange={(e) => update("title", e.target.value)} />
-        <textarea name="teaser" rows={3} placeholder="Public teaser (what it does, who it helps — no secrets)" required
+        <textarea name="teaser" aria-label="Public teaser" rows={3} placeholder="Public teaser (what it does, who it helps — no secrets)" required
           defaultValue={draft.teaser} onChange={(e) => update("teaser", e.target.value)} />
-        <textarea name="fullDetail" rows={6} placeholder="Full detail (locked behind NDA)" required
+        <textarea name="fullDetail" aria-label="Full detail (NDA-locked)" rows={6} placeholder="Full detail (locked behind NDA)" required
           defaultValue={draft.fullDetail} onChange={(e) => update("fullDetail", e.target.value)} />
         <div className="grid grid-cols-2 gap-3">
-          <select name="niche" defaultValue="OTHER">
+          <select name="niche" aria-label="Niche" defaultValue="OTHER">
             {NICHES.map((n) => <option key={n} value={n}>{n}</option>)}
           </select>
-          <select name="stage" defaultValue="concept">
+          <select name="stage" aria-label="Stage" defaultValue="concept">
             {STAGES.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
-        <input name="problemType" placeholder="Problem type (e.g. post-harvest loss)"
+        <input name="problemType" aria-label="Problem type" placeholder="Problem type (e.g. post-harvest loss)"
           defaultValue={draft.problemType} onChange={(e) => update("problemType", e.target.value)} />
         <label className="text-sm font-bold">Attachments (drawings, prototypes, PDFs)
           <input type="file" multiple onChange={(e) => setFiles([...(e.target.files ?? [])])} />
