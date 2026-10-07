@@ -77,9 +77,14 @@ export async function activateSubscription(input: {
     where: { reference: input.reference, status: "pending" },
     data: { status: "success", paidAt: new Date() },
   });
+  // Paid tier = verified firm (gold badge). Manual broker verification stays.
+  await db.companyProfile.update({
+    where: { id: input.companyId },
+    data: { verified: true },
+  });
   await recordEvent({
     type: "subscription.activated",
     actorId: input.actorId,
-    payload: { companyId: input.companyId, tier: input.tier, reference: input.reference },
+    payload: { companyId: input.companyId, tier: input.tier, reference: input.reference, verified: true },
   });
 }

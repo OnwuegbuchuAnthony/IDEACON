@@ -3,7 +3,9 @@ import { db } from "@/lib/db";
 import { requireRole } from "@/lib/session";
 import { suggestMatches } from "@/lib/matching";
 import { TIERS } from "@/lib/tiers";
-import { ApproveButton, DealForm } from "./BrokerActions";
+import { logoUrl } from "@/lib/media";
+import { GoldBadge, BlueBadge } from "@/app/components/Badges";
+import { ApproveButton, DealForm, MemberVerifyButton } from "./BrokerActions";
 import { TierForm, DigestButton, CaseStudyForm } from "./BillingActions";
 
 export default async function BrokerPage() {
@@ -33,6 +35,26 @@ export default async function BrokerPage() {
     const fresh = ranked.filter((r) => !requestedByCompany.get(companyId)?.has(r.ideaId)).slice(0, 3);
     if (fresh.length > 0) suggestions.push({ companyId, companyName: info.name, items: fresh });
   }
+
+  // Company cards: verification, logo, members (for blue-badge verification).
+  const companyIds = [...seen.keys()];
+  const companies = await db.companyProfile.findMany({
+    where: { id: { in: companyIds } },
+    select: { id: true, verified: true, logoKey: true },
+  });
+  const byId = new Map(companies.map((c) => [c.id, c]));
+  const members = await db.companyMember.findMany({
+    where: { companyId: { in: companyIds } },
+    include: { user: { select: { name: true, email: true } } },
+    take: 50,
+  });
+  const membersByCompany = new Map<string, typeof members>();
+  for (const m of members) {
+    if (!membersByCompany.has(m.companyId)) membersByCompany.set(m.companyId, []);
+    membersByCompany.get(m.companyId)!.push(m);
+  }
+  const logos = new Map<string, string | null>();
+  for (const c of companies) logos.set(c.id, await logoUrl(c.logoKey));
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 px-6 py-12">
@@ -79,10 +101,21 @@ export default async function BrokerPage() {
             <Link href={`/ideas/${m.idea.id}`} className="font-display font-bold underline">{m.idea.title}</Link>
             <span className="rounded-full bg-primary-100 px-2 py-0.5 font-bold text-primary-800">{m.idea.niche}</span>
             <span className="text-ink/60">← {m.company.name}{m.company.state ? ` (${m.company.state})` : ""}</span>
+            {byId.get(m.company.id)?.verified && <GoldBadge />}
             <span className="rounded-full bg-sun-100 px-2 py-0.5 font-bold text-amber-800">{m.idea.status}</span>
             <span className="text-ink/50">{m.source}</span>
             <ApproveButton matchId={m.id} />
           </div>
+          {(membersByCompany.get(m.company.id) ?? []).length > 0 && (
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+              {(membersByCompany.get(m.company.id) ?? []).map((mem) => (
+                <span key={mem.id} className="inline-flex items-center gap-1 rounded-full bg-primary-100/60 px-2 py-0.5">
+                  {mem.user.name} · {mem.role}
+                  {mem.verified ? <BlueBadge /> : <MemberVerifyButton memberId={mem.id} />}
+                </span>
+              ))}
+            </div>
+          )}
           <div className="mt-2">
             <DealForm ideaId={m.idea.id} companyId={m.company.id} />
           </div>

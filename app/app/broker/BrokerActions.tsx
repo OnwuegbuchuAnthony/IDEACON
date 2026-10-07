@@ -2,8 +2,22 @@
 
 import { useState } from "react";
 import { approveMatchAction, createDealAction } from "@/lib/actions";
+import { verifyMemberAction } from "@/lib/actions-workspace";
 import { DEAL_TEMPLATES, type DealTemplate } from "@/lib/deal-templates";
 import { JURISDICTIONS } from "@/lib/jurisdictions";
+
+export function MemberVerifyButton({ memberId }: { memberId: string }) {
+  const [busy, setBusy] = useState(false);
+  return (
+    <button
+      disabled={busy}
+      onClick={async () => { setBusy(true); await verifyMemberAction(memberId, true); }}
+      className="rounded-full bg-primary-600 px-2 py-0.5 text-[11px] font-bold text-white"
+    >
+      {busy ? "…" : "Verify"}
+    </button>
+  );
+}
 
 export function ApproveButton({ matchId }: { matchId: string }) {
   const [busy, setBusy] = useState(false);

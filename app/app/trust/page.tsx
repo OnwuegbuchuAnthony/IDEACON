@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
+import { logoUrl } from "@/lib/media";
+import { GoldBadge } from "@/app/components/Badges";
 
 // Always server-rendered: needs live DB (no build-time prerender on Netlify).
 export const dynamic = "force-dynamic";
@@ -11,8 +13,10 @@ export default async function TrustPage() {
     db.ndaGrant.count(),
     db.deal.count(),
     db.caseStudy.findMany({ where: { published: true }, orderBy: { createdAt: "desc" }, take: 10 }),
-    db.companyProfile.findMany({ where: { verified: true }, select: { name: true, niche: true, state: true }, take: 20 }),
+    db.companyProfile.findMany({ where: { verified: true }, select: { name: true, niche: true, state: true, logoKey: true }, take: 20 }),
   ]);
+  const logos = new Map<string, string | null>();
+  for (const c of companies) logos.set(c.name, await logoUrl(c.logoKey));
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-12">
@@ -45,8 +49,12 @@ export default async function TrustPage() {
         <h2 className="font-display text-xl font-bold">Verified partners</h2>
         <div className="mt-3 flex flex-wrap gap-2">
           {companies.map((c) => (
-            <span key={c.name} className="rounded-full bg-primary-100 px-4 py-1 text-sm font-bold text-primary-800">
-              {c.name}{c.state ? ` · ${c.state}` : ""}
+            <span key={c.name} className="inline-flex items-center gap-1.5 rounded-full bg-primary-100 px-3 py-1 text-sm font-bold text-primary-800">
+              {logos.get(c.name) ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={logos.get(c.name)!} alt={`${c.name} logo`} className="h-5 w-5 rounded-full object-cover" />
+              ) : null}
+              {c.name}{c.state ? ` · ${c.state}` : ""} <GoldBadge />
             </span>
           ))}
           {companies.length === 0 && <p className="text-sm text-ink/50">Partner logos appear as companies verify.</p>}

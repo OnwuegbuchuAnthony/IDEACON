@@ -27,8 +27,8 @@ if (companyArg?.startsWith("company:")) {
   if (!company) company = await db.companyProfile.create({ data: { name, verified: true } });
   await db.companyMember.upsert({
     where: { userId_companyId: { userId: user.id, companyId: company.id } },
-    update: { role: "FOUNDER" },
-    create: { userId: user.id, companyId: company.id, role: "FOUNDER" },
+    update: { role: "FOUNDER", verified: true },
+    create: { userId: user.id, companyId: company.id, role: "FOUNDER", verified: true },
   });
   console.log(`member of ${company.name}`);
 }

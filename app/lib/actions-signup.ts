@@ -23,7 +23,7 @@ export async function completeSignupAction(input: {
     await db.user.update({ where: { id: user.id }, data: { role: "COMPANY_MEMBER" } });
     const company = await db.companyProfile.create({ data: { name, verified: false } });
     await db.companyMember.create({
-      data: { userId: user.id, companyId: company.id, role: "FOUNDER" },
+      data: { userId: user.id, companyId: company.id, role: "FOUNDER", verified: true },
     });
     await db.subscription.create({ data: { companyId: company.id, tier: "free" } });
     await recordEvent({
@@ -31,6 +31,8 @@ export async function completeSignupAction(input: {
       actorId: user.id,
       payload: { companyId: company.id, name },
     });
+    // Firms opt into a paid tier immediately: verified gold badge on success.
+    redirect("/pricing?new=company");
   } else {
     await db.user.update({ where: { id: user.id }, data: { role: "CREATOR" } });
     await db.creatorProfile.upsert({

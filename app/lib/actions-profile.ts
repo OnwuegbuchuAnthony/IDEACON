@@ -60,7 +60,7 @@ export async function createCompanyAction(form: { name: string; niche: Niche; st
   const company = await db.companyProfile.create({
     data: { name, niche: form.niche, state: form.state.trim() || null, verified: false },
   });
-  await db.companyMember.create({ data: { userId: user.id, companyId: company.id, role: "FOUNDER" } });
+  await db.companyMember.create({ data: { userId: user.id, companyId: company.id, role: "FOUNDER", verified: true } });
   await db.subscription.upsert({
     where: { companyId: company.id },
     update: {},
@@ -68,5 +68,25 @@ export async function createCompanyAction(form: { name: string; niche: Niche; st
   });
   await db.user.update({ where: { id: user.id }, data: { role: "COMPANY_MEMBER" } });
   await recordEvent({ type: "company.registered", actorId: user.id, payload: { companyId: company.id, name } });
+  redirect("/profile");
+}
+
+/** Save an uploaded R2 key as the user's photo. */
+export async function setAvatarAction(r2Key: string) {
+  const user = await requireUser();
+  if (!r2Key.startsWith("uploads/")) throw new Error("Invalid file reference");
+  await db.user.update({ where: { id: user.id }, data: { avatarKey: r2Key } });
+  await recordEvent({ type: "profile.avatar", actorId: user.id, payload: {} });
+  redirect("/profile");
+}
+
+/** Save an uploaded R2 key as the firm's official logo. Members only. */
+export async function setCompanyLogoAction(companyId: string, r2Key: string) {
+  const user = await requireUser();
+  const mine = await myCompanyId(user.id);
+  if (mine !== companyId) throw new Error("Not a member of this company");
+  if (!r2Key.startsWith("uploads/")) throw new Error("Invalid file reference");
+  await db.companyProfile.update({ where: { id: companyId }, data: { logoKey: r2Key } });
+  await recordEvent({ type: "profile.logo", actorId: user.id, payload: { companyId } });
   redirect("/profile");
 }

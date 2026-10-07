@@ -2,6 +2,8 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { requireUser, myCompanyId } from "@/lib/session";
 import { unreadCount } from "@/lib/notifications";
+import { logoUrl } from "@/lib/media";
+import { GoldBadge } from "@/app/components/Badges";
 
 // Phase 6: real role dashboards (replaces the Phase 0 shell).
 export default async function DashboardPage() {
@@ -36,6 +38,7 @@ export default async function DashboardPage() {
   const deals = companyId
     ? await db.deal.findMany({ where: { companyId }, orderBy: { createdAt: "desc" }, take: 10 })
     : [];
+  const companyLogo = company?.logoKey ? await logoUrl(company.logoKey) : null;
 
   const searchHref = (s: { niche: string | null; stage: string | null; q: string | null }) => {
     const p = new URLSearchParams();
@@ -87,7 +90,13 @@ export default async function DashboardPage() {
       {company && (
         <>
           <section>
-            <h2 className="font-display text-xl font-bold">{company.name} — requests</h2>
+            <h2 className="flex items-center gap-2 font-display text-xl font-bold">
+              {companyLogo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={companyLogo} alt={`${company.name} logo`} className="h-8 w-8 rounded-lg object-cover" />
+              ) : null}
+              {company.name} {company.verified && <GoldBadge />} — requests
+            </h2>
             <div className="mt-2 flex flex-col gap-2">
               {company.matches.map((m) => (
                 <Link key={m.id} href={`/ideas/${m.idea.id}`} className="card-hover rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">

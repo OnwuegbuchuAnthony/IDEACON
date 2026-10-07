@@ -84,3 +84,15 @@ export async function verifyCompanyAction(companyId: string, verified: boolean) 
   await recordEvent({ type: "admin.verify", actorId: admin.id, payload: { companyId, verified } });
   redirect("/admin/users");
 }
+
+/** Broker/admin: verify a company member (blue affiliate badge). */
+export async function verifyMemberAction(memberId: string, verified: boolean) {
+  const user = await requireRole("BROKER", "ADMIN");
+  const member = await db.companyMember.update({ where: { id: memberId }, data: { verified } });
+  await recordEvent({
+    type: "member.verified",
+    actorId: user.id,
+    payload: { memberId, companyId: member.companyId, verified },
+  });
+  redirect("/broker");
+}

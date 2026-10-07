@@ -7,3 +7,8 @@ ALTER TABLE "WaitlistEntry" ADD COLUMN "university" TEXT;
 ALTER TABLE "WaitlistEntry" ADD COLUMN "department" TEXT;
 ALTER TABLE "WaitlistEntry" ADD COLUMN "consent" BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE "WaitlistEntry" ADD COLUMN "consentedAt" TIMESTAMP(3);
+
+-- Verified badges + brand imagery (additive, no data loss).
+ALTER TABLE "User" ADD COLUMN "avatarKey" TEXT;
+ALTER TABLE "CompanyProfile" ADD COLUMN "logoKey" TEXT;
+ALTER TABLE "CompanyMember" ADD COLUMN "verified" BOOLEAN NOT NULL DEFAULT false;
