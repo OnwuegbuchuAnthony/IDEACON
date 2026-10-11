@@ -16,8 +16,7 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix '.debug'
-            versionNameSuffix '-debug'
+            // Keep the same application ID as release so test installs can be upgraded.
         }
         release {
             minifyEnabled false
