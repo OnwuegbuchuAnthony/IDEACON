@@ -4,12 +4,14 @@ import { useState } from "react";
 import { joinWaitlistAction } from "@/lib/actions-waitlist";
 import { trackEvent } from "@/lib/analytics";
 import { NIGERIAN_STATES } from "@/lib/nigerian-states";
+import { NIGERIAN_UNIVERSITIES } from "@/lib/nigerian-universities";
 
 /** Campus lane: fixed role=student plus university + department. */
 export function StudentWaitlistForm() {
   const [done, setDone] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [uni, setUni] = useState("");
 
   if (done) {
     return (
@@ -26,12 +28,20 @@ export function StudentWaitlistForm() {
         setBusy(true);
         setError("");
         try {
+          const other = String(fd.get("universityOther") ?? "").trim();
+          if (!uni) throw new Error("Select your university");
+          if (uni === "Other (not listed)" && !other) {
+            throw new Error("Type your university name");
+          }
           const res = await joinWaitlistAction({
             email: String(fd.get("email")),
             name: String(fd.get("name") ?? ""),
             role: "student",
             state: String(fd.get("state") ?? ""),
-            university: String(fd.get("university") ?? ""),
+            university:
+              uni === "Other (not listed)"
+                ? `Other: ${String(fd.get("universityOther") ?? "").trim()}`
+                : uni,
             department: String(fd.get("department") ?? ""),
             consent: fd.get("consent") === "on",
           });
@@ -48,9 +58,29 @@ export function StudentWaitlistForm() {
       <div className="grid gap-3 sm:grid-cols-2">
         <input name="name" aria-label="Full name" placeholder="Full name (optional)" maxLength={120} />
         <input name="email" aria-label="Email address" type="email" placeholder="Email address" required maxLength={254} />
-        <input name="university" aria-label="University" placeholder="University" required maxLength={120} />
         <input name="department" aria-label="Department or faculty" placeholder="Department / faculty" required maxLength={120} />
       </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <select
+          aria-label="University (NUC-approved list)"
+          value={uni}
+          onChange={(e) => setUni(e.target.value)}
+          required
+        >
+          <option value="">Select your university…</option>
+          {NIGERIAN_UNIVERSITIES.map((u) => (
+            <option key={u} value={u}>{u}</option>
+          ))}
+        </select>
+        <input
+          name="universityOther"
+          aria-label="University name, if not listed"
+          placeholder={uni === "Other (not listed)" ? "Type your university…" : "Only if ‘Other’ selected"}
+          disabled={uni !== "Other (not listed)"}
+          maxLength={120}
+        />
+      </div>
+      <input name="university" type="hidden" value={uni} />
       <select name="state" defaultValue="" aria-label="Nigerian state (optional)">
         <option value="">State in Nigeria (optional)</option>
         {NIGERIAN_STATES.map((s) => (
