@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -41,8 +40,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createNotificationChannel();
-        requestNotificationPermission();
-        registerPushTokenIfConfigured();
 
         webView = new WebView(this);
         setContentView(webView);
@@ -66,9 +63,10 @@ public class MainActivity extends Activity {
                 Uri uri = request.getUrl();
                 String scheme = uri.getScheme() == null ? "" : uri.getScheme();
                 String host = uri.getHost();
-                if ("https".equalsIgnoreCase(scheme) && SITE_HOST.equalsIgnoreCase(host)) return false;
-                if ("https".equalsIgnoreCase(scheme) || "mailto".equalsIgnoreCase(scheme) ||
-                    "tel".equalsIgnoreCase(scheme)) {
+                if ("https".equalsIgnoreCase(scheme) && SITE_HOST.equalsIgnoreCase(host)
+                        && (uri.getPort() == -1 || uri.getPort() == 443)) return false;
+                if ("https".equalsIgnoreCase(scheme) || "mailto".equalsIgnoreCase(scheme)
+                        || "tel".equalsIgnoreCase(scheme)) {
                     try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); }
                     catch (Exception ignored) { }
                 }
@@ -115,8 +113,8 @@ public class MainActivity extends Activity {
                     callback.invoke(origin, false, false);
                     return;
                 }
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                    checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     callback.invoke(origin, true, false);
                 } else {
                     geoOrigin = origin;
@@ -129,8 +127,33 @@ public class MainActivity extends Activity {
             }
         });
 
-        if (savedInstanceState != null) webView.restoreState(savedInstanceState);
-        else webView.loadUrl("https://" + SITE_HOST + "/");
+        requestNotificationPermission();
+        registerPushTokenIfConfigured();
+        String notificationUrl = safeNotificationUrl(getIntent());
+        if (notificationUrl != null) {
+            webView.loadUrl(notificationUrl);
+        } else if (savedInstanceState != null) {
+            webView.restoreState(savedInstanceState);
+        } else {
+            webView.loadUrl("https://" + SITE_HOST + "/");
+        }
+    }
+
+    private String safeNotificationUrl(Intent intent) {
+        if (intent == null || !Intent.ACTION_VIEW.equals(intent.getAction())) return null;
+        Uri uri = intent.getData();
+        if (uri == null || !"https".equalsIgnoreCase(uri.getScheme())
+                || !SITE_HOST.equalsIgnoreCase(uri.getHost())
+                || (uri.getPort() != -1 && uri.getPort() != 443)) return null;
+        return uri.toString();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        String url = safeNotificationUrl(intent);
+        if (url != null && webView != null) webView.loadUrl(url);
     }
 
     private void registerPushTokenIfConfigured() {
@@ -154,8 +177,8 @@ public class MainActivity extends Activity {
     }
 
     private void requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= 33 &&
-            checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= 33
+                && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[] { Manifest.permission.POST_NOTIFICATIONS },
                 NOTIFICATION_PERMISSION_REQUEST);
         }
@@ -177,7 +200,7 @@ public class MainActivity extends Activity {
         return "<!doctype html><html><head><meta name='viewport' content='width=device-width,initial-scale=1'>" +
             "<meta name='theme-color' content='#F6FAFF'><style>body{font-family:Arial,sans-serif;background:#F6FAFF;color:#10243e;display:grid;place-items:center;min-height:90vh;margin:0;padding:24px;text-align:center}main{max-width:360px}button{border:0;border-radius:28px;padding:14px 24px;background:#0EA5E9;color:white;font-weight:bold;font-size:16px}</style></head>" +
             "<body><main><h1>You're offline</h1><p>IDEACON needs an internet connection to load your workspace. Reconnect and try again.</p>" +
-            "<button onclick=\"location.href='https://" + SITE_HOST + "/'\">Try again</button></main></body></html>";
+            "<button onclick=\"location.href='https://" + SITE_HOST + "/'\" >Try again</button></main></body></html>";
     }
 
     @Override
