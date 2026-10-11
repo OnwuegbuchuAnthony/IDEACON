@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HeroCta } from "./HeroCta";
+import { AskChat } from "./ask/AskChat";
 import { TrustBlock } from "@/app/components/TrustBlock";
 import { HowItWorks } from "@/app/components/HowItWorks";
 import { NicheShowcase } from "@/app/components/NicheShowcase";
@@ -77,6 +78,18 @@ export default function Home() {
           >
             For students &amp; universities
           </a>
+        </section>
+
+        <section aria-label="Ask IDEACON AI" className="w-full">
+          <h2 className="font-display text-2xl font-extrabold tracking-tight">
+            Ask me anything
+          </h2>
+          <p className="mt-1 max-w-xl text-sm text-ink-muted">
+            Grounded in live teasers. <a href="/ask" className="font-bold text-primary-600 underline">Open the full assistant →</a>
+          </p>
+          <div className="mt-3 max-w-2xl">
+            <AskChat />
+          </div>
         </section>
 
         <div className="grid w-full gap-4 sm:grid-cols-3">
