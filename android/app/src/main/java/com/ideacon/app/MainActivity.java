@@ -80,6 +80,14 @@ public class MainActivity extends Activity {
             }
 
             @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                if (url != null && url.startsWith("https://" + SITE_HOST + "/")) {
+                    registerPushTokenWithWebsite();
+                }
+            }
+
+            @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
                 if (request.isForMainFrame() && !showingOfflinePage) {
@@ -154,6 +162,19 @@ public class MainActivity extends Activity {
         setIntent(intent);
         String url = safeNotificationUrl(intent);
         if (url != null && webView != null) webView.loadUrl(url);
+    }
+
+    private void registerPushTokenWithWebsite() {
+        String token = getSharedPreferences("ideacon", MODE_PRIVATE).getString("fcm_token", null);
+        if (token == null || token.isEmpty() || webView == null) return;
+        String quotedToken = org.json.JSONObject.quote(token);
+        String script = "(async()=>{const token=" + quotedToken + ";" +
+            "window.dispatchEvent(new CustomEvent('ideacon:push-token',{detail:{token}}));" +
+            "try{const r=await fetch('/api/push/register',{method:'POST',credentials:'same-origin'," +
+            "headers:{'Content-Type':'application/json'},body:JSON.stringify({token})});" +
+            "if(!r.ok&&r.status!==401)console.warn('IDEACON push registration failed',r.status);" +
+            "}catch(e){console.warn('IDEACON push registration unavailable');}})();";
+        webView.evaluateJavascript(script, null);
     }
 
     private void registerPushTokenIfConfigured() {
