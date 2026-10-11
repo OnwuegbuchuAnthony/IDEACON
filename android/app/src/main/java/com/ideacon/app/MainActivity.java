@@ -16,8 +16,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 public class MainActivity extends Activity {
     private static final int FILE_CHOOSER_REQUEST = 4101;
     private static final int LOCATION_PERMISSION_REQUEST = 4102;
@@ -50,17 +48,16 @@ public class MainActivity extends Activity {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 Uri uri = request.getUrl();
                 String scheme = uri.getScheme() == null ? "" : uri.getScheme();
+                String host = uri.getHost();
                 if ("https".equalsIgnoreCase(scheme) &&
-                    ("ideacon.vercel.app".equalsIgnoreCase(uri.getHost()) ||
-                     uri.getHost() != null && uri.getHost().endsWith(".vercel.app"))) {
+                    host != null && ("ideacon.vercel.app".equalsIgnoreCase(host) ||
+                    host.endsWith(".vercel.app"))) {
                     return false;
                 }
                 if ("https".equalsIgnoreCase(scheme) || "mailto".equalsIgnoreCase(scheme) ||
                     "tel".equalsIgnoreCase(scheme)) {
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                    } catch (Exception ignored) { }
-                    return true;
+                    try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); }
+                    catch (Exception ignored) { }
                 }
                 return true;
             }
@@ -72,10 +69,8 @@ public class MainActivity extends Activity {
                     FileChooserParams params) {
                 if (filePathCallback != null) filePathCallback.onReceiveValue(null);
                 filePathCallback = callback;
-                Intent intent;
                 try {
-                    intent = params.createIntent();
-                    startActivityForResult(intent, FILE_CHOOSER_REQUEST);
+                    startActivityForResult(params.createIntent(), FILE_CHOOSER_REQUEST);
                     return true;
                 } catch (Exception ex) {
                     filePathCallback = null;
@@ -101,11 +96,8 @@ public class MainActivity extends Activity {
             }
         });
 
-        if (savedInstanceState != null) {
-            webView.restoreState(savedInstanceState);
-        } else {
-            webView.loadUrl("https://ideacon.vercel.app/");
-        }
+        if (savedInstanceState != null) webView.restoreState(savedInstanceState);
+        else webView.loadUrl("https://ideacon.vercel.app/");
     }
 
     @Override
@@ -119,14 +111,11 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST && geoCallback != null) {
             boolean granted = false;
-            for (int result : grantResults) {
-                if (result == PackageManager.PERMISSION_GRANTED) granted = true;
-            }
+            for (int result : grantResults) if (result == PackageManager.PERMISSION_GRANTED) granted = true;
             geoCallback.invoke(geoOrigin, granted, false);
             geoCallback = null;
             geoOrigin = null;
