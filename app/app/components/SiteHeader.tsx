@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { InstallButton } from "@/app/components/InstallButton";
 
 const LINKS: { href: string; label: string; key?: string }[] = [
   { href: "/about", label: "How it works" },
@@ -106,6 +107,9 @@ export function SiteHeader() {
           >
             Get started
           </Link>
+          <span className="hidden md:inline-block">
+            <InstallButton compact />
+          </span>
           <button
             ref={toggleRef}
             type="button"
@@ -152,6 +156,11 @@ export function SiteHeader() {
             >
               Get started
             </Link>
+            {open && (
+              <span className="mt-1">
+                <InstallButton compact />
+              </span>
+            )}
           </nav>
         </div>
       </header>
