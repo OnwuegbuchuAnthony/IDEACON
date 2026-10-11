@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 
+// FCM device tokens are account-scoped; callers must have a valid Better Auth session.
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
