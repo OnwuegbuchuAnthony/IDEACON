@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     return NextResponse.json(await askAssistant(clean));
   } catch (e) {
     const msg = e instanceof Error ? e.message : "assistant failed";
-    const status = msg.includes("not configured") ? 503 : 502;
+    const status = msg.includes("no LLM provider") ? 503 : 502;
     return NextResponse.json({ error: msg }, { status });
   }
 }

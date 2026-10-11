@@ -56,7 +56,7 @@ export function scoreIdeaHeuristic(input: {
 }
 
 /**
- * LLM scoring via Groq (OpenAI-compatible chat API). Returns bands +
+ * LLM scoring via the provider chain (Groq → Gemini). Returns bands +
  * human-readable factors; every row is versioned with the exact model.
  * Throws when unconfigured so callers fall back to the heuristic.
  */
@@ -66,38 +66,22 @@ export async function scoreIdeaLlm(input: {
   fullDetail: string;
   stage: string;
 }): Promise<ScoreBands> {
-  const apiKey = process.env.GROQ_API_KEY ?? "";
-  if (!apiKey) throw new Error("GROQ_API_KEY missing");
-  // Dev default differs from production on purpose: committed fallbacks must
-  // never equal production secret/env values (secrets scanners flag matches).
-  const model = process.env.GROQ_MODEL ?? "qwen/qwen3.8-27b";
-
-  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model,
-      temperature: 0.2,
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content:
-            "You score startup ideas for an African innovation broker. Reply with ONLY a JSON object: " +
-            '{"originality": 0-10, "feasibility": 0-10, "marketFit": 0-10, ' +
-            '"factors": {"originality": "one sentence", "feasibility": "one sentence", "marketFit": "one sentence"}}. ' +
-            "Be strict: vague ideas score under 5. Concrete mechanisms, evidence and clear beneficiaries score higher.",
-        },
-        {
-          role: "user",
-          content: `Title: ${input.title}\nStage: ${input.stage}\nTeaser: ${input.teaser}\nFull detail: ${input.fullDetail}`,
-        },
-      ],
-    }),
+  const { chatLlm } = await import("./llm");
+  const { text, model } = await chatLlm({
+    system:
+      "You score startup ideas for an African innovation broker. Reply with ONLY a JSON object: " +
+      '{"originality": 0-10, "feasibility": 0-10, "marketFit": 0-10, ' +
+      '"factors": {"originality": "one sentence", "feasibility": "one sentence", "marketFit": "one sentence"}}. ' +
+      "Be strict: vague ideas score under 5. Concrete mechanisms, evidence and clear beneficiaries score higher.",
+    messages: [
+      {
+        role: "user",
+        content: `Title: ${input.title}\nStage: ${input.stage}\nTeaser: ${input.teaser}\nFull detail: ${input.fullDetail}`,
+      },
+    ],
+    temperature: 0.2,
+    jsonMode: true,
   });
-  if (!res.ok) throw new Error(`Groq ${res.status}`);
-  const body = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-  const text = body.choices?.[0]?.message?.content ?? "";
   const parsed = JSON.parse(text) as {
     originality: number;
     feasibility: number;
@@ -115,7 +99,7 @@ export async function scoreIdeaLlm(input: {
       feasibility: String(parsed.factors?.feasibility ?? "LLM assessment"),
       marketFit: String(parsed.factors?.marketFit ?? "LLM assessment"),
     },
-    model: `groq/${model}`,
+    model,
   };
 }
 

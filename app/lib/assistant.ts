@@ -33,10 +33,6 @@ async function teaserContext(question: string): Promise<{ id: string; title: str
 export async function askAssistant(
   history: ChatMessage[],
 ): Promise<{ reply: string; ideas: { id: string; title: string }[] }> {
-  const apiKey = process.env.GROQ_API_KEY ?? "";
-  if (!apiKey) throw new Error("AI assistant is not configured yet");
-  const model = process.env.GROQ_MODEL ?? "qwen/qwen3.8-27b";
-
   const lastUser = [...history].reverse().find((m) => m.role === "user")?.content ?? "";
   const context = await teaserContext(lastUser.slice(0, 500));
   const contextBlock =
@@ -45,21 +41,13 @@ export async function askAssistant(
         context.map((c) => `- [${c.title}](/ideas/${c.id}) (${c.niche}): ${c.teaser}`).join("\n")
       : "";
 
-  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model,
-      temperature: 0.4,
-      max_tokens: 500,
-      messages: [
-        { role: "system", content: SYSTEM + contextBlock },
-        ...history.slice(-8).map((m) => ({ role: m.role, content: m.content.slice(0, 800) })),
-      ],
-    }),
+  const { chatLlm } = await import("./llm");
+  const { text } = await chatLlm({
+    system: SYSTEM + contextBlock,
+    messages: history.slice(-8).map((m) => ({ role: m.role, content: m.content.slice(0, 800) })),
+    temperature: 0.4,
+    maxTokens: 500,
   });
-  if (!res.ok) throw new Error(`Groq ${res.status}`);
-  const body = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-  const reply = body.choices?.[0]?.message?.content?.trim() ?? "I couldn't answer that — try rephrasing.";
+  const reply = text.trim() || "I couldn't answer that — try rephrasing.";
   return { reply, ideas: context.map(({ id, title }) => ({ id, title })) };
 }
