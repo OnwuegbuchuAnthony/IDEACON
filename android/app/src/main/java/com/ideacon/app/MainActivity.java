@@ -168,12 +168,18 @@ public class MainActivity extends Activity {
         String token = getSharedPreferences("ideacon", MODE_PRIVATE).getString("fcm_token", null);
         if (token == null || token.isEmpty() || webView == null) return;
         String quotedToken = org.json.JSONObject.quote(token);
-        String script = "(async()=>{const token=" + quotedToken + ";" +
+        String script = "(function(){const token=" + quotedToken + ";" +
+            "window.__ideaconPushToken=token;" +
             "window.dispatchEvent(new CustomEvent('ideacon:push-token',{detail:{token}}));" +
-            "try{const r=await fetch('/api/push/register',{method:'POST',credentials:'same-origin'," +
+            "const register=async()=>{try{const r=await fetch('/api/push/register',{method:'POST',credentials:'same-origin'," +
             "headers:{'Content-Type':'application/json'},body:JSON.stringify({token})});" +
             "if(!r.ok&&r.status!==401)console.warn('IDEACON push registration failed',r.status);" +
-            "}catch(e){console.warn('IDEACON push registration unavailable');}})();";
+            "}catch(e){console.warn('IDEACON push registration unavailable');}};" +
+            "window.__ideaconRegisterPush=register;window.addEventListener('popstate',register);" +
+            "if(!window.__ideaconHistoryHooked){window.__ideaconHistoryHooked=true;" +
+            "['pushState','replaceState'].forEach(k=>{const original=history[k];history[k]=function(){" +
+            "const result=original.apply(this,arguments);setTimeout(()=>window.__ideaconRegisterPush&&window.__ideaconRegisterPush(),0);return result;};});}" +
+            "register();})();";
         webView.evaluateJavascript(script, null);
     }
 
