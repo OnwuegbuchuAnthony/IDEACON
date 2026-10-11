@@ -3,3 +3,6 @@
 ~$*.docx
 .DS_Store
 Thumbs.db
+# Local secret imports (Vercel dashboard .env import) — NEVER commit
+vercel-import.env
+*.import.env
