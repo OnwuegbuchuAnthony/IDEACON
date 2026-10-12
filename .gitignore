@@ -6,3 +6,7 @@ Thumbs.db
 # Local secret imports (Vercel dashboard .env import) — NEVER commit
 vercel-import.env
 *.import.env
+# Firebase Android config contains an API key — NEVER commit (use the
+# ANDROID_GOOGLE_SERVICES_JSON repo secret for builds instead)
+google-services.json
+**/google-services.json
