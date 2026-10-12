@@ -27,6 +27,7 @@ model User {
   reviews      Review[]
   votes        Vote[]
   notifications Notification[]
+  pushTokens    PushToken[]
   auditEvents  AuditEvent[] @relation("EventActor")
 
   @@map("user")
@@ -398,4 +399,19 @@ model WaitlistEntry {
   consentedAt DateTime?
   invited     Boolean  @default(false)
   createdAt   DateTime @default(now())
+}
+
+
+// Android/iOS push registration. Tokens are private and always tied to an authenticated user.
+model PushToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform  String   @default("android")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("push_token")
 }

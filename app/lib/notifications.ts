@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { sendPushToUsers } from "./push";
 
 /** Broker-mediated inbox. Call alongside audit events on key transitions. */
 export async function notify(input: {
@@ -12,6 +13,17 @@ export async function notify(input: {
   const row = await db.notification.create({
     data: { userId: input.userId, kind: input.kind, title: input.title, link: input.link },
   });
+  // Deliver a best-effort Android push when this account has registered a device.
+  try {
+    await sendPushToUsers({
+      userIds: [input.userId],
+      title: input.title,
+      body: "You have a new update in your IDEACON inbox.",
+      path: input.link ?? "/notifications",
+    });
+  } catch (e) {
+    console.warn("[notify-push]", e instanceof Error ? e.message : e);
+  }
   // Mirror essential events to email. Failures never break the flow.
   if (input.emailSubject && input.emailHtml) {
     try {

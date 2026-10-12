@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.ideacon.app'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.ideacon.app'
+        minSdk 24
+        targetSdk 35
+        versionCode 2
+        versionName '1.1.0'
+    }
+
+    buildTypes {
+        debug {
+            // Keep the same application ID as release so test installs can be upgraded.
+        }
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core:1.15.0'
+    implementation 'com.google.firebase:firebase-messaging:24.1.2'
+}
+
+// Keep local/debug builds working before Firebase is configured. When the app
+// owner adds android/app/google-services.json, the Google Services plugin
+// generates the resources required for actual FCM registration.
+if (file('google-services.json').exists()) {
+    apply plugin: 'com.google.gms.google-services'
+}
