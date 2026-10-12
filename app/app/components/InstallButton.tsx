@@ -1,14 +1,57 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+
+type PromptEvent = Event & { prompt: () => void };
 
 /**
- * Visible install affordance. Registers the service worker, captures the
- * install prompt, and hides once installed. Falls back to manual steps
- * where the browser offers no prompt (notably iOS Safari).
+ * The deferred install prompt, captured ONCE at page load and shared by
+ * every InstallButton. Chrome fires `beforeinstallprompt` a single time
+ * shortly after load — a per-instance listener (e.g. inside the mobile
+ * menu, which mounts only when opened) would miss it forever.
+ */
+let deferredPrompt: PromptEvent | null = null;
+const listeners = new Set<() => void>();
+
+function notify() {
+  listeners.forEach((l) => l());
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e as PromptEvent;
+    notify();
+  });
+  window.addEventListener("appinstalled", () => {
+    deferredPrompt = null;
+    notify();
+  });
+}
+
+function subscribe(cb: () => void) {
+  listeners.add(cb);
+  return () => {
+    listeners.delete(cb);
+  };
+}
+
+function getPromptSnapshot(): PromptEvent | null {
+  return deferredPrompt;
+}
+
+function getServerSnapshot(): PromptEvent | null {
+  return null;
+}
+
+/**
+ * Visible install affordance. Tapping opens Chrome's native install dialog
+ * whenever a deferred prompt was captured; otherwise falls back to manual
+ * steps (iPhone, in-app browsers, Incognito, already-installed). Hides
+ * once running as an installed app. Same export — SiteHeader unchanged.
  */
 export function InstallButton({ compact = false }: { compact?: boolean }) {
-  const [promptEvent, setPromptEvent] = useState<Event & { prompt: () => void } | null>(null);
+  const promptEvent = useSyncExternalStore(subscribe, getPromptSnapshot, getServerSnapshot);
   const [installed, setInstalled] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
@@ -18,22 +61,7 @@ export function InstallButton({ compact = false }: { compact?: boolean }) {
     }
     if (window.matchMedia("(display-mode: standalone)").matches) {
       setInstalled(true);
-      return;
     }
-    const onPrompt = (e: Event) => {
-      e.preventDefault();
-      setPromptEvent(e as Event & { prompt: () => void });
-    };
-    const onInstalled = () => {
-      setInstalled(true);
-      setPromptEvent(null);
-    };
-    window.addEventListener("beforeinstallprompt", onPrompt);
-    window.addEventListener("appinstalled", onInstalled);
-    return () => {
-      window.removeEventListener("beforeinstallprompt", onPrompt);
-      window.removeEventListener("appinstalled", onInstalled);
-    };
   }, []);
 
   if (installed) return null;
