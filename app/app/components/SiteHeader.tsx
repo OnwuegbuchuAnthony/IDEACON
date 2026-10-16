@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { InstallButton } from "@/app/components/InstallButton";
+import "@/lib/install-prompt";
 
 const LINKS: { href: string; label: string }[] = [
   { href: "/about", label: "How it works" },
@@ -104,9 +104,6 @@ export function SiteHeader() {
           >
             {process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? "Join waitlist" : "Get started"}
           </Link>
-          <span className="hidden md:inline-block">
-            <InstallButton compact />
-          </span>
           <button
             ref={toggleRef}
             type="button"
@@ -153,11 +150,6 @@ export function SiteHeader() {
             >
               {process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? "Join waitlist" : "Get started"}
             </Link>
-            {open && (
-              <span className="mt-1">
-                <InstallButton compact />
-              </span>
-            )}
           </nav>
         </div>
       </header>

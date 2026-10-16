@@ -1,6 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { HeroCta } from "./HeroCta";
+import { InstallBanner } from "@/app/components/InstallBanner";
 
 const AskChat = dynamic(() => import("./ask/AskChat").then((m) => m.AskChat), {
   loading: () => <p className="text-sm text-ink/50">Loading assistant…</p>,
@@ -89,6 +90,8 @@ export default function Home() {
         </p>
 
         <HeroCta />
+
+        <InstallBanner />
 
         <TrustBlock />
 
