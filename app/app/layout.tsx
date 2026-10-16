@@ -64,6 +64,33 @@ export default function RootLayout({
       className={`${display.variable} ${sans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  name: "IDEACON",
+                  url: SITE_URL,
+                  logo: `${SITE_URL}/icon-512.png`,
+                  sameAs: [],
+                },
+                {
+                  "@type": "WebSite",
+                  name: "IDEACON",
+                  url: SITE_URL,
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: `${SITE_URL}/browse?q={query}`,
+                    "query-input": "required name=query",
+                  },
+                },
+              ],
+            }),
+          }}
+        />
         <Analytics />
         <SiteHeader />
         <div id="main-content" className="flex flex-1 flex-col">{children}</div>

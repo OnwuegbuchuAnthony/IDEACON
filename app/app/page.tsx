@@ -1,6 +1,10 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { HeroCta } from "./HeroCta";
-import { AskChat } from "./ask/AskChat";
+
+const AskChat = dynamic(() => import("./ask/AskChat").then((m) => m.AskChat), {
+  loading: () => <p className="text-sm text-ink/50">Loading assistant…</p>,
+});
 import { TrustBlock } from "@/app/components/TrustBlock";
 import { HowItWorks } from "@/app/components/HowItWorks";
 import { NicheShowcase } from "@/app/components/NicheShowcase";

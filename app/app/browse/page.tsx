@@ -3,6 +3,25 @@ import { listTeasers, type TeaserFilters } from "@/lib/ideas";
 import type { Niche } from "@prisma/client";
 import { SaveSearchButton } from "./SaveSearch";
 import { EmptyState } from "@/app/components/EmptyState";
+import { SITE_URL } from "@/lib/seo";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | undefined>>;
+}) {
+  const sp = await searchParams;
+  const label = [sp.niche, sp.stage, sp.q].filter(Boolean).join(" · ") || "All niches";
+  const title = `Discover ideas: ${label} — IDEACON`;
+  const og = `${SITE_URL}/og?title=${encodeURIComponent(label)}&sub=${encodeURIComponent("Vetted teasers, NDA-protected")}`;
+  return {
+    title,
+    description: "Browse vetted idea teasers by niche, stage, and problem.",
+    alternates: { canonical: `${SITE_URL}/browse` },
+    openGraph: { title, images: [{ url: og, width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image" as const, title, images: [og] },
+  };
+}
 
 export default async function BrowsePage({
   searchParams,

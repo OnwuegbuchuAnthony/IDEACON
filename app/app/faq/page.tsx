@@ -40,6 +40,20 @@ export default function FaqPage() {
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 px-6 py-12">
       <h1 className="font-display text-3xl font-extrabold">Questions, answered</h1>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQS.map(([q, a]) => ({
+              "@type": "Question",
+              name: q,
+              acceptedAnswer: { "@type": "Answer", text: a },
+            })),
+          }),
+        }}
+      />
       <FaqList items={FAQS} />
       <p className="text-sm">
         Still stuck? <Link href="/ask" className="font-bold text-primary-600 underline">Ask the AI</Link> or mail{" "}
