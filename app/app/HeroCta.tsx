@@ -67,7 +67,7 @@ export function HeroCta() {
         </a>
       </div>
       <div className="max-w-md">
-        <WaitlistForm compact />
+        <WaitlistForm variant="compact" />
       </div>
     </div>
   );

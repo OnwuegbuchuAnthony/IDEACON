@@ -4,8 +4,10 @@ import { AskChat } from "./ask/AskChat";
 import { TrustBlock } from "@/app/components/TrustBlock";
 import { HowItWorks } from "@/app/components/HowItWorks";
 import { NicheShowcase } from "@/app/components/NicheShowcase";
+import { isWaitlistMode } from "@/lib/launch";
 
 export default function Home() {
+  const waitlist = isWaitlistMode();
   return (
     <div className="flex flex-1 flex-col font-sans">
       <header className="bg-gradient-to-r from-primary-800 via-primary-600 to-teal-500 text-white">
@@ -14,18 +16,37 @@ export default function Home() {
             ◈ IDEACON
           </span>
           <nav className="flex gap-3 text-sm font-semibold">
-            <Link
-              href="/login"
-              className="rounded-full bg-white/15 px-4 py-2 hover:bg-white/25"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="rounded-full bg-white px-4 py-2 text-primary-800 hover:bg-primary-100"
-            >
-              Get started
-            </Link>
+            {waitlist ? (
+              <>
+                <Link
+                  href="/waitlist"
+                  className="rounded-full bg-white px-4 py-2 text-primary-800 hover:bg-primary-100"
+                >
+                  Join waitlist
+                </Link>
+                <Link
+                  href="/login"
+                  className="rounded-full bg-white/15 px-4 py-2 hover:bg-white/25"
+                >
+                  Member log in
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="rounded-full bg-white/15 px-4 py-2 hover:bg-white/25"
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/signup"
+                  className="rounded-full bg-white px-4 py-2 text-primary-800 hover:bg-primary-100"
+                >
+                  Get started
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       </header>
@@ -110,7 +131,7 @@ export default function Home() {
       </main>
 
       <footer className="px-6 py-6 text-center text-xs text-ink/50">
-        IDEACON · Phase 0 foundation build
+        © {new Date().getFullYear()} IDEACON. Ideas stay teaser-only until an NDA is signed.
       </footer>
     </div>
   );
