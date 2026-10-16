@@ -40,7 +40,7 @@ export function HeroCta() {
             type="button"
             aria-expanded={open}
             aria-haspopup="menu"
-            onClick={() => { trackEvent("hero_cta_click"); setOpen((v) => !v); }}
+            onClick={() => { trackEvent("cta_click", { location: "hero-get-started" }); setOpen((v) => !v); }}
             className="rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-6 py-3 text-sm font-bold text-white shadow-lg"
           >
             Get started ▾

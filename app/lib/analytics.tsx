@@ -1,6 +1,7 @@
 "use client";
 
 import Script from "next/script";
+import { useEffect, useState } from "react";
 
 declare global {
   interface Window {
@@ -9,12 +10,26 @@ declare global {
 }
 
 // Umami (self-hosted, cookie-free): pageviews automatic, custom events via
-// track(). Renders nothing until NEXT_PUBLIC_UMAMI_* are set. Loads only
-// after the page is interactive.
+// track(). Renders nothing until NEXT_PUBLIC_UMAMI_* are set AND the visitor
+// accepted analytics in the NDPR consent banner. Loads after interactive.
 export function Analytics() {
+  const [consented, setConsented] = useState(false);
+  useEffect(() => {
+    const check = () => {
+      try {
+        setConsented(localStorage.getItem("ideacon-consent") === "accepted");
+      } catch {
+        setConsented(false);
+      }
+    };
+    check();
+    window.addEventListener("ideacon-consent", check);
+    return () => window.removeEventListener("ideacon-consent", check);
+  }, []);
+
   const src = process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL;
   const websiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
-  if (!src || !websiteId) return null;
+  if (!src || !websiteId || !consented) return null;
   return (
     <Script
       id="umami"
@@ -25,9 +40,10 @@ export function Analytics() {
   );
 }
 
-/** Custom event. Props must NEVER contain personal data (see docs/analytics.md). */
+/** Custom event. No-ops unless analytics was accepted. Props must NEVER contain personal data (see docs/analytics.md). */
 export function trackEvent(event: string, data?: Record<string, string>) {
   try {
+    if (localStorage.getItem("ideacon-consent") !== "accepted") return;
     window.umami?.track(event, data);
   } catch {
     /* analytics must never break the app */

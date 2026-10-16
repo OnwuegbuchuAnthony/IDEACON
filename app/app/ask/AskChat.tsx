@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { trackEvent } from "@/lib/analytics";
+import { Turnstile } from "@/app/components/Turnstile";
 
 type Msg = { role: "user" | "assistant"; content: string };
 type Idea = { id: string; title: string };
@@ -20,6 +22,7 @@ export function AskChat() {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [token, setToken] = useState("");
 
   async function send(text: string) {
     const q = text.trim();
@@ -29,11 +32,12 @@ export function AskChat() {
     const next = [...msgs, { role: "user" as const, content: q }];
     setMsgs(next);
     setInput("");
+    trackEvent("ask_query");
     try {
       const res = await fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify({ messages: next, turnstileToken: token || undefined }),
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.error ?? "Assistant failed");
@@ -78,6 +82,7 @@ export function AskChat() {
           </button>
         ))}
       </div>
+      <Turnstile onVerify={setToken} />
       <form
         className="flex gap-2"
         onSubmit={(e) => { e.preventDefault(); send(input); }}

@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { joinWaitlistAction } from "@/lib/actions-waitlist";
 import { trackEvent } from "@/lib/analytics";
 import { NIGERIAN_STATES } from "@/lib/nigerian-states";
+import { Turnstile } from "@/app/components/Turnstile";
 import type { Niche } from "@prisma/client";
 
 const ROLES = ["creator", "company", "student", "other"] as const;
@@ -34,6 +35,7 @@ export function WaitlistForm({
   const [done, setDone] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [token, setToken] = useState("");
 
   if (done) {
     return (
@@ -52,9 +54,10 @@ export function WaitlistForm({
         name: String(fd.get("name") ?? ""),
         role: variant === "minimal" ? "other" : role,
         state: String(fd.get("state") ?? ""),
-        niche: (String(fd.get("niche") ?? "") || undefined) as Niche | undefined,
-        consent: fd.get("consent") === "on",
-      });
+            niche: (String(fd.get("niche") ?? "") || undefined) as Niche | undefined,
+            consent: fd.get("consent") === "on",
+            turnstileToken: token || undefined,
+          });
       setDone(
         res.already
           ? "Already on the list — preferences updated."
@@ -156,6 +159,7 @@ export function WaitlistForm({
       {error && (
         <p aria-live="polite" className="text-sm text-red-600">{error}</p>
       )}
+      <Turnstile onVerify={setToken} />
       <div aria-live="polite" className="sr-only">{busy ? "Joining the waitlist…" : ""}</div>
       <div className="flex gap-2">
         {step === 2 && variant !== "minimal" && (
