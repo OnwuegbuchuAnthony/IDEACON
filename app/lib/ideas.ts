@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { db } from "./db";
 import { recordEvent } from "./audit";
+import { checkRequestQuota } from "./billing";
 import { assertTransition } from "./idea-status";
 import type { IdeaStatus, Niche } from "@prisma/client";
 
@@ -152,7 +153,6 @@ export async function requestAccess(input: {
   });
   if (existing) return existing;
 
-  const { checkRequestQuota } = await import("./billing");
   const quota = await checkRequestQuota(input.companyId);
   if (!quota.ok) {
     throw new Error(

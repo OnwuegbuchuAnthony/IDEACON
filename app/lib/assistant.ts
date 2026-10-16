@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { chatLlm } from "./llm";
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -41,7 +42,6 @@ export async function askAssistant(
         context.map((c) => `- [${c.title}](/ideas/${c.id}) (${c.niche}): ${c.teaser}`).join("\n")
       : "";
 
-  const { chatLlm } = await import("./llm");
   const { text } = await chatLlm({
     system: SYSTEM + contextBlock,
     messages: history.slice(-8).map((m) => ({ role: m.role, content: m.content.slice(0, 800) })),

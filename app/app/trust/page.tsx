@@ -52,7 +52,7 @@ export default async function TrustPage() {
             <span key={c.name} className="inline-flex items-center gap-1.5 rounded-full bg-primary-100 px-3 py-1 text-sm font-bold text-primary-800">
               {logos.get(c.name) ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={logos.get(c.name)!} alt={`${c.name} logo`} className="h-5 w-5 rounded-full object-cover" />
+                <img src={logos.get(c.name)!} alt={`${c.name} logo`} width={20} height={20} className="h-5 w-5 rounded-full object-cover" />
               ) : null}
               {c.name}{c.state ? ` · ${c.state}` : ""} <GoldBadge />
             </span>

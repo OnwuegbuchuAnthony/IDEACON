@@ -5,6 +5,7 @@ import { communityScore } from "@/lib/voting";
 import { similarIdeas } from "@/lib/similar";
 import { RequestAccessButton, SignNdaForm } from "../IdeaActions";
 import { VoteButtons } from "../VoteButtons";
+import { RowLink } from "@/app/components/ui";
 
 export default async function IdeaPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -52,9 +53,9 @@ export default async function IdeaPage({ params }: { params: Promise<{ id: strin
           <h2 className="font-display font-bold">Similar ideas</h2>
           <div className="mt-2 grid gap-2">
             {similar.map((s) => (
-              <Link key={s.id} href={`/ideas/${s.id}`} className="card-hover rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
+              <RowLink key={s.id} href={`/ideas/${s.id}`}>
                 <b>{s.title}</b> <span className="text-ink/50">· {s.niche} · {Math.round(s.sim * 100)}% alike</span>
-              </Link>
+              </RowLink>
             ))}
           </div>
         </section>

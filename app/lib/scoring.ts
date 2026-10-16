@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { chatLlm } from "./llm";
 import { transitionIdea } from "./ideas";
 import { recordEvent } from "./audit";
 
@@ -66,7 +67,6 @@ export async function scoreIdeaLlm(input: {
   fullDetail: string;
   stage: string;
 }): Promise<ScoreBands> {
-  const { chatLlm } = await import("./llm");
   const { text, model } = await chatLlm({
     system:
       "You score startup ideas for an African innovation broker. Reply with ONLY a JSON object: " +

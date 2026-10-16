@@ -34,10 +34,10 @@ export function DealForm({ ideaId, companyId }: { ideaId: string; companyId: str
   const [jurisdiction, setJurisdiction] = useState("NG");
   return (
     <form className="flex items-center gap-2" action={() => createDealAction({ ideaId, companyId, template, jurisdiction })}>
-      <select value={template} aria-label="Deal template" onChange={(e) => setTemplate(e.target.value as DealTemplate)} style={{ maxWidth: 150 }}>
+      <select value={template} aria-label="Deal template" onChange={(e) => setTemplate(e.target.value as DealTemplate)} className="max-w-[150px]">
         {DEAL_TEMPLATES.map((t) => <option key={t} value={t}>{t}</option>)}
       </select>
-      <select value={jurisdiction} aria-label="Governing law" onChange={(e) => setJurisdiction(e.target.value)} style={{ maxWidth: 130 }}>
+      <select value={jurisdiction} aria-label="Governing law" onChange={(e) => setJurisdiction(e.target.value)} className="max-w-[130px]">
         {Object.entries(JURISDICTIONS).map(([code, j]) => <option key={code} value={code}>{code} · {j.label}</option>)}
       </select>
       <button className="rounded-full bg-primary-600 px-4 py-1 text-xs font-bold text-white" type="submit">

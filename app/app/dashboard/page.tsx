@@ -4,6 +4,7 @@ import { requireUser, myCompanyId } from "@/lib/session";
 import { unreadCount } from "@/lib/notifications";
 import { logoUrl } from "@/lib/media";
 import { GoldBadge } from "@/app/components/Badges";
+import { RowLink } from "@/app/components/ui";
 
 // Phase 6: real role dashboards (replaces the Phase 0 shell).
 export default async function DashboardPage() {
@@ -79,9 +80,9 @@ export default async function DashboardPage() {
         </div>
         <div className="mt-2 flex flex-col gap-2">
           {myIdeas.map((i) => (
-            <Link key={i.id} href={`/ideas/${i.id}`} className="card-hover rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
+            <RowLink key={i.id} href={`/ideas/${i.id}`}>
               <b>{i.title}</b> <span className="text-ink/50">· {i.niche} · {i.status}</span>
-            </Link>
+            </RowLink>
           ))}
           {myIdeas.length === 0 && <p className="text-sm text-ink/50">Nothing submitted yet.</p>}
         </div>
@@ -93,15 +94,15 @@ export default async function DashboardPage() {
             <h2 className="flex items-center gap-2 font-display text-xl font-bold">
               {companyLogo ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={companyLogo} alt={`${company.name} logo`} className="h-8 w-8 rounded-lg object-cover" />
+                <img src={companyLogo} alt={`${company.name} logo`} width={32} height={32} className="h-8 w-8 rounded-lg object-cover" />
               ) : null}
               {company.name} {company.verified && <GoldBadge />} — requests
             </h2>
             <div className="mt-2 flex flex-col gap-2">
               {company.matches.map((m) => (
-                <Link key={m.id} href={`/ideas/${m.idea.id}`} className="card-hover rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
+                <RowLink key={m.id} href={`/ideas/${m.idea.id}`}>
                   <b>{m.idea.title}</b> <span className="text-ink/50">· {m.source} · {m.createdAt.toISOString().slice(0, 10)}</span>
-                </Link>
+                </RowLink>
               ))}
               {company.matches.length === 0 && <p className="text-sm text-ink/50">No access requests yet — <Link href="/browse" className="underline">browse teasers</Link>.</p>}
             </div>
@@ -111,9 +112,9 @@ export default async function DashboardPage() {
             <h2 className="font-display text-xl font-bold">Active NDA grants ({grants.length})</h2>
             <div className="mt-2 flex flex-col gap-2">
               {grants.map((g) => (
-                <Link key={g.id} href={`/ideas/${g.ideaId}`} className="card-hover rounded-xl border border-mint-500 bg-white px-4 py-2 text-sm shadow">
+                <RowLink key={g.id} href={`/ideas/${g.ideaId}`}>
                   Idea <code>{g.ideaId.slice(0, 8)}</code> · {g.templateVersion} · expires {g.expiresAt.toISOString().slice(0, 10)}
-                </Link>
+                </RowLink>
               ))}
               {grants.length === 0 && <p className="text-sm text-ink/50">No active grants.</p>}
             </div>
@@ -123,9 +124,9 @@ export default async function DashboardPage() {
             <h2 className="font-display text-xl font-bold">Deals ({deals.length})</h2>
             <div className="mt-2 flex flex-col gap-2">
               {deals.map((d) => (
-                <Link key={d.id} href={`/deals/${d.id}`} className="card-hover rounded-xl border border-primary-100 bg-white px-4 py-2 text-sm shadow">
+                <RowLink key={d.id} href={`/deals/${d.id}`}>
                   <b>{d.template}</b> <span className="text-ink/50">· {d.status} · {d.currency}</span>
-                </Link>
+                </RowLink>
               ))}
               {deals.length === 0 && <p className="text-sm text-ink/50">No deals yet.</p>}
             </div>
