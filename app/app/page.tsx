@@ -4,7 +4,12 @@ import { AskChat } from "./ask/AskChat";
 import { TrustBlock } from "@/app/components/TrustBlock";
 import { HowItWorks } from "@/app/components/HowItWorks";
 import { NicheShowcase } from "@/app/components/NicheShowcase";
+import { FeaturedTeasers } from "@/app/components/FeaturedTeasers";
+import { StatsRow, BoardStrip } from "@/app/components/TrustSections";
+import { PricingTeaser, NdaFlow } from "@/app/components/ConversionSections";
 import { isWaitlistMode } from "@/lib/launch";
+
+export const revalidate = 3600;
 
 export default function Home() {
   const waitlist = isWaitlistMode();
@@ -83,6 +88,8 @@ export default function Home() {
 
         <TrustBlock />
 
+        <FeaturedTeasers />
+
         <HowItWorks />
 
         <NicheShowcase />
@@ -112,6 +119,14 @@ export default function Home() {
             <AskChat />
           </div>
         </section>
+
+        <BoardStrip />
+
+        <StatsRow />
+
+        <PricingTeaser />
+
+        <NdaFlow />
 
         <div className="grid w-full gap-4 sm:grid-cols-3">
           {[
