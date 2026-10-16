@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { InstallButton } from "@/app/components/InstallButton";
+import "@/lib/install-prompt";
 
-const LINKS: { href: string; label: string; key?: string }[] = [
+const LINKS: { href: string; label: string }[] = [
   { href: "/about", label: "How it works" },
   { href: "/submit", label: "For Creators" },
-  { href: "/browse", label: "For Companies" },
-  { href: "/browse", label: "Niches", key: "niches" },
+  { href: "/companies", label: "For Companies" },
+  { href: "/discover", label: "Niches" },
   { href: "/faq", label: "FAQ" },
 ];
 
@@ -67,10 +67,7 @@ export function SiteHeader() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open ]);
 
-  // "Niches" shares the /browse target with "For Companies", so only the
-  // latter takes the active state — avoids two links highlighting at once.
-  const isActive = (href: string, key?: string) =>
-    key === "niches" ? false : pathname === href;
+  const isActive = (href: string) => pathname === href;
 
   return (
     <>
@@ -90,9 +87,9 @@ export function SiteHeader() {
               <Link
                 key={l.label + l.href}
                 href={l.href}
-                aria-current={isActive(l.href, l.key) ? "page" : undefined}
+                aria-current={isActive(l.href) ? "page" : undefined}
                 className={
-                  isActive(l.href, l.key)
+                  isActive(l.href)
                     ? "text-primary-600 underline underline-offset-4"
                     : "text-ink/70 hover:text-primary-600"
                 }
@@ -102,14 +99,11 @@ export function SiteHeader() {
             ))}
           </nav>
           <Link
-            href="/signup"
+            href={process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? "/waitlist" : "/signup"}
             className="ml-auto hidden rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-sm font-bold text-white md:inline-block"
           >
-            Get started
+            {process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? "Join waitlist" : "Get started"}
           </Link>
-          <span className="hidden md:inline-block">
-            <InstallButton compact />
-          </span>
           <button
             ref={toggleRef}
             type="button"
@@ -140,27 +134,22 @@ export function SiteHeader() {
               <Link
                 key={l.label + l.href}
                 href={l.href}
-                aria-current={isActive(l.href, l.key) ? "page" : undefined}
+                aria-current={isActive(l.href) ? "page" : undefined}
                 tabIndex={open ? undefined : -1}
                 className={`rounded-lg px-3 py-2 text-sm font-bold ${
-                  isActive(l.href, l.key) ? "bg-primary-100/60 text-primary-600" : "text-ink/70"
+                  isActive(l.href) ? "bg-primary-100/60 text-primary-600" : "text-ink/70"
                 }`}
               >
                 {l.label}
               </Link>
             ))}
             <Link
-              href="/signup"
+              href={process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? "/waitlist" : "/signup"}
               tabIndex={open ? undefined : -1}
               className="mt-1 rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-center text-sm font-bold text-white"
             >
-              Get started
+              {process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? "Join waitlist" : "Get started"}
             </Link>
-            {open && (
-              <span className="mt-1">
-                <InstallButton compact />
-              </span>
-            )}
           </nav>
         </div>
       </header>

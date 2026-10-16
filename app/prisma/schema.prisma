@@ -397,10 +397,21 @@ model WaitlistEntry {
   niche       Niche?
   consent     Boolean  @default(false)
   consentedAt DateTime?
+  verifyToken String?  @unique
+  verified    Boolean  @default(false)
+  verifiedAt  DateTime?
   invited     Boolean  @default(false)
   createdAt   DateTime @default(now())
 }
 
+
+// Questions the assistant failed to answer — feeds the content backlog (admin only).
+model UnansweredQuery {
+  id        String   @id @default(cuid())
+  question  String
+  reason    String   @default("")
+  createdAt DateTime @default(now())
+}
 
 // Android/iOS push registration. Tokens are private and always tied to an authenticated user.
 model PushToken {

@@ -48,15 +48,15 @@ export function ReviewForm({ ideaId }: { ideaId: string }) {
     >
       {[["o", "Orig"], ["f", "Feas"], ["m", "Fit"]].map(([n, l]) => (
         <label key={n} className="text-xs font-bold">{l}
-          <input name={n} type="number" min={1} max={10} defaultValue={7} style={{ maxWidth: 70 }} />
+          <input name={n} aria-label={`${l} score`} type="number" min={1} max={10} defaultValue={7} className="max-w-[70px]" />
         </label>
       ))}
-      <select value={verdict} aria-label="Verdict" onChange={(e) => setVerdict(e.target.value as typeof verdict)} style={{ maxWidth: 170 }}>
+      <select value={verdict} aria-label="Verdict" onChange={(e) => setVerdict(e.target.value as typeof verdict)} className="max-w-[170px]">
         <option value="approve">Approve</option>
         <option value="flag">Flag</option>
         <option value="request-changes">Request changes</option>
       </select>
-      <input name="note" aria-label="Review note" placeholder="Note (optional)" style={{ maxWidth: 220 }} />
+      <input name="note" aria-label="Review note" placeholder="Note (optional)" className="max-w-[220px]" />
       <button className="rounded-full bg-primary-600 px-4 py-2 text-xs font-bold text-white" type="submit">
         Submit review
       </button>

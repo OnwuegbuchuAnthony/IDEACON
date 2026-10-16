@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { joinWaitlistAction } from "@/lib/actions-waitlist";
 import { trackEvent } from "@/lib/analytics";
+import { Turnstile } from "@/app/components/Turnstile";
 import { NIGERIAN_STATES } from "@/lib/nigerian-states";
 import { NIGERIAN_UNIVERSITIES } from "@/lib/nigerian-universities";
 
@@ -11,6 +12,7 @@ export function StudentWaitlistForm() {
   const [done, setDone] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [token, setToken] = useState("");
   const [uni, setUni] = useState("");
 
   if (done) {
@@ -44,8 +46,9 @@ export function StudentWaitlistForm() {
                 : uni,
             department: String(fd.get("department") ?? ""),
             consent: fd.get("consent") === "on",
+            turnstileToken: token || undefined,
           });
-          setDone(res.already ? "Already registered — details updated." : "You're in! Watch your inbox at launch.");
+          setDone(res.already ? "Already registered — details updated. Confirm via email if you haven't yet." : "You're in! Check your email to confirm your spot.");
           trackEvent("waitlist_submit", { variant: "student" });
         } catch (e) {
           setError(e instanceof Error ? e.message : "Something went wrong");
@@ -94,6 +97,7 @@ export function StudentWaitlistForm() {
         </span>
       </label>
       {error && <p aria-live="polite" className="text-sm text-red-600">{error}</p>}
+      <Turnstile onVerify={setToken} />
       <div aria-live="polite" className="sr-only">{busy ? "Joining…" : ""}</div>
       <button disabled={busy} type="submit" className="rounded-full bg-gradient-to-r from-primary-600 to-teal-500 px-6 py-2.5 text-sm font-bold text-white disabled:opacity-50">
         {busy ? "Joining…" : "Join as a student"}

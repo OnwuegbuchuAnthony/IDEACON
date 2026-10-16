@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { recordEvent } from "./audit";
 import { transitionIdea } from "./ideas";
+import { notify } from "./notifications";
 import { jurisdictionPack } from "./jurisdictions";
 import type { DealTemplate } from "./deal-templates";
 
@@ -18,7 +19,6 @@ export async function approveMatch(matchId: string, actorId: string) {
     ideaId: match.ideaId,
     payload: { matchId, companyId: match.companyId },
   });
-  const { notify } = await import("./notifications");
   const members = await db.companyMember.findMany({ where: { companyId: match.companyId }, select: { userId: true } });
   const idea = await db.idea.findUnique({ where: { id: match.ideaId }, select: { title: true } });
   for (const m of members) {
@@ -74,7 +74,6 @@ export async function signNda(input: {
       templateVersion: grant.templateVersion,
     },
   });
-  const { notify } = await import("./notifications");
   const ideaOwner = await db.idea.findUnique({
     where: { id: input.ideaId },
     select: { title: true, creator: { select: { userId: true } } },
@@ -124,13 +123,12 @@ export async function createDeal(input: {
     ideaId: input.ideaId,
     payload: { dealId: deal.id, template: input.template, jurisdiction: deal.jurisdiction },
   });
-  const { notify: notifyParties } = await import("./notifications");
   const parties = await db.companyMember.findMany({
     where: { companyId: input.companyId },
     select: { userId: true },
   });
   for (const p of parties) {
-    await notifyParties({
+    await notify({
       userId: p.userId,
       kind: "deal.opened",
       title: `Deal opened (${input.template})`,

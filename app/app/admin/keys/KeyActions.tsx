@@ -17,10 +17,10 @@ export function IssueKeyForm({ companies }: { companies: { id: string; name: str
           setSecret(res.secret);
         }}
       >
-        <select value={companyId} aria-label="Company" onChange={(e) => setCompanyId(e.target.value)} style={{ maxWidth: 220 }}>
+        <select value={companyId} aria-label="Company" onChange={(e) => setCompanyId(e.target.value)} className="max-w-[220px]">
           {companies.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
-        <input aria-label="Key name" placeholder="Key name (e.g. data-warehouse)" value={name} onChange={(e) => setName(e.target.value)} required style={{ maxWidth: 240 }} />
+        <input aria-label="Key name" placeholder="Key name (e.g. data-warehouse)" value={name} onChange={(e) => setName(e.target.value)} required className="max-w-[240px]" />
         <button className="rounded-full bg-primary-600 px-4 py-2 text-xs font-bold text-white" type="submit">Issue</button>
       </form>
       {secret && (

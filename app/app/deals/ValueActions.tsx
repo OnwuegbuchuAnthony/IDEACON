@@ -11,8 +11,8 @@ export function ValueForm({ dealId }: { dealId: string }) {
         await bookDealCurrencyAction(dealId, Number(fd.get("amount")), String(fd.get("currency")));
       }}
     >
-      <input name="amount" aria-label="Deal value" type="number" min={1} placeholder="Deal value" required style={{ maxWidth: 160 }} />
-      <select name="currency" aria-label="Currency" defaultValue="NGN" style={{ maxWidth: 110 }}>
+      <input name="amount" aria-label="Deal value" type="number" min={1} placeholder="Deal value" required className="max-w-[160px]" />
+      <select name="currency" aria-label="Currency" defaultValue="NGN" className="max-w-[110px]">
         <option value="NGN">NGN ₦</option>
         <option value="USD">USD $</option>
       </select>

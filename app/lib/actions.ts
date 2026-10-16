@@ -7,6 +7,7 @@ import { requireRole, requireUser, myCompanyId } from "./session";
 import { submitIdea, requestAccess, transitionIdea } from "./ideas";
 import { runScoring } from "./scoring";
 import { approveMatch, signNda, createDeal, postDealMessage, type DealTemplate } from "./deals";
+import { notify } from "./notifications";
 import { recordEvent } from "./audit";
 
 /** Ensure the caller has a creator profile (creates a stub on first submit). */
@@ -96,7 +97,6 @@ export async function reviewAction(input: {
     select: { title: true, creator: { select: { userId: true } } },
   });
   if (created) {
-    const { notify } = await import("./notifications");
     await notify({
       userId: created.creator.userId,
       kind: "review.verdict",

@@ -45,7 +45,7 @@ export function SiteFooter() {
           <p className="font-display text-base font-extrabold">◈ IDEACON</p>
           <p className="mt-2 text-sm text-ink/60">Nigeria-first, global by design.</p>
           <div className="mt-3">
-            <WaitlistForm compact />
+            <WaitlistForm variant="minimal" />
           </div>
         </div>
         {COLUMNS.map((col) => (

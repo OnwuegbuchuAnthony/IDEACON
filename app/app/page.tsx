@@ -1,11 +1,23 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { HeroCta } from "./HeroCta";
-import { AskChat } from "./ask/AskChat";
+import { InstallBanner } from "@/app/components/InstallBanner";
+
+const AskChat = dynamic(() => import("./ask/AskChat").then((m) => m.AskChat), {
+  loading: () => <p className="text-sm text-ink/50">Loading assistant…</p>,
+});
 import { TrustBlock } from "@/app/components/TrustBlock";
 import { HowItWorks } from "@/app/components/HowItWorks";
 import { NicheShowcase } from "@/app/components/NicheShowcase";
+import { FeaturedTeasers } from "@/app/components/FeaturedTeasers";
+import { StatsRow, BoardStrip } from "@/app/components/TrustSections";
+import { PricingTeaser, NdaFlow } from "@/app/components/ConversionSections";
+import { isWaitlistMode } from "@/lib/launch";
+
+export const revalidate = 3600;
 
 export default function Home() {
+  const waitlist = isWaitlistMode();
   return (
     <div className="flex flex-1 flex-col font-sans">
       <header className="bg-gradient-to-r from-primary-800 via-primary-600 to-teal-500 text-white">
@@ -14,18 +26,37 @@ export default function Home() {
             ◈ IDEACON
           </span>
           <nav className="flex gap-3 text-sm font-semibold">
-            <Link
-              href="/login"
-              className="rounded-full bg-white/15 px-4 py-2 hover:bg-white/25"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="rounded-full bg-white px-4 py-2 text-primary-800 hover:bg-primary-100"
-            >
-              Get started
-            </Link>
+            {waitlist ? (
+              <>
+                <Link
+                  href="/waitlist"
+                  className="rounded-full bg-white px-4 py-2 text-primary-800 hover:bg-primary-100"
+                >
+                  Join waitlist
+                </Link>
+                <Link
+                  href="/login"
+                  className="rounded-full bg-white/15 px-4 py-2 hover:bg-white/25"
+                >
+                  Member log in
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="rounded-full bg-white/15 px-4 py-2 hover:bg-white/25"
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/signup"
+                  className="rounded-full bg-white px-4 py-2 text-primary-800 hover:bg-primary-100"
+                >
+                  Get started
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       </header>
@@ -60,7 +91,11 @@ export default function Home() {
 
         <HeroCta />
 
+        <InstallBanner />
+
         <TrustBlock />
+
+        <FeaturedTeasers />
 
         <HowItWorks />
 
@@ -92,6 +127,14 @@ export default function Home() {
           </div>
         </section>
 
+        <BoardStrip />
+
+        <StatsRow />
+
+        <PricingTeaser />
+
+        <NdaFlow />
+
         <div className="grid w-full gap-4 sm:grid-cols-3">
           {[
             ["Teased, never exposed", "Ideas show niche, uniqueness & scale — full detail only behind NDA."],
@@ -110,7 +153,7 @@ export default function Home() {
       </main>
 
       <footer className="px-6 py-6 text-center text-xs text-ink/50">
-        IDEACON · Phase 0 foundation build
+        © {new Date().getFullYear()} IDEACON. Ideas stay teaser-only until an NDA is signed.
       </footer>
     </div>
   );

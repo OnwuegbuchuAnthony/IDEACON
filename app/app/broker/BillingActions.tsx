@@ -9,7 +9,7 @@ export function TierForm({ companyId, companyName }: { companyId: string; compan
   return (
     <form className="flex items-center gap-2 text-sm" action={() => setTierAction(companyId, tier)}>
       <span className="font-bold">{companyName}</span>
-      <select value={tier} aria-label="Subscription tier" onChange={(e) => setTier(e.target.value as TierName)} style={{ maxWidth: 150 }}>
+      <select value={tier} aria-label="Subscription tier" onChange={(e) => setTier(e.target.value as TierName)} className="max-w-[150px]">
         {(Object.keys(TIERS) as TierName[]).map((t) => <option key={t} value={t}>{t}</option>)}
       </select>
       <button className="rounded-full bg-primary-600 px-3 py-1 text-xs font-bold text-white" type="submit">Set tier</button>

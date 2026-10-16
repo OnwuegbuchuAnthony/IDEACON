@@ -3,7 +3,8 @@
 import { redirect } from "next/navigation";
 import { db } from "./db";
 import { requireRole, requireUser } from "./session";
-import { TIERS, bookDealValue, type TierName } from "./billing";
+import { TIERS, bookDealValue, bookDealValueIn, type TierName } from "./billing";
+import { issueApiKey, revokeApiKey } from "./api-keys";
 import { sendEmail } from "./email";
 import { suggestMatches } from "./matching";
 import { recordEvent } from "./audit";
@@ -38,7 +39,6 @@ export async function bookDealCurrencyAction(dealId: string, amountMajor: number
   const user = await requireRole("BROKER", "ADMIN");
   if (!Number.isFinite(amountMajor) || amountMajor <= 0) throw new Error("Invalid amount");
   if (!["NGN", "USD"].includes(currency)) throw new Error("Unsupported currency");
-  const { bookDealValueIn } = await import("./billing");
   await bookDealValueIn(dealId, BigInt(Math.round(amountMajor * 100)), currency, user.id);
   redirect(`/deals/${dealId}`);
 }
@@ -116,7 +116,6 @@ export async function sendDigestsAction() {
 /** Issue a public API key for a company. Secret is shown ONCE. */
 export async function issueKeyAction(companyId: string, name: string) {
   const user = await requireRole("BROKER", "ADMIN");
-  const { issueApiKey } = await import("./api-keys");
   const { key, secret } = await issueApiKey({ companyId, name });
   await recordEvent({
     type: "apikey.issued",
@@ -130,7 +129,6 @@ export async function issueKeyAction(companyId: string, name: string) {
 /** Revoke a public API key. */
 export async function revokeKeyAction(keyId: string) {
   const user = await requireRole("BROKER", "ADMIN");
-  const { revokeApiKey } = await import("./api-keys");
   await revokeApiKey(keyId);
   await recordEvent({ type: "apikey.revoked", actorId: user.id, payload: { keyId } });
   redirect("/admin/keys");

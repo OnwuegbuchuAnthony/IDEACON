@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { sendEmail } from "./email";
 import { sendPushToUsers } from "./push";
 
 /** Broker-mediated inbox. Call alongside audit events on key transitions. */
@@ -29,7 +30,6 @@ export async function notify(input: {
     try {
       const user = await db.user.findUnique({ where: { id: input.userId } });
       if (user) {
-        const { sendEmail } = await import("./email");
         const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
         await sendEmail({
           to: user.email,

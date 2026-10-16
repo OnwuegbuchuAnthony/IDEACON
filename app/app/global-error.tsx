@@ -3,12 +3,12 @@
 export default function GlobalError({ reset }: { reset: () => void }) {
   return (
     <html lang="en">
-      <body style={{ fontFamily: "system-ui", padding: 48, textAlign: "center" }}>
+      <body className="bg-surface p-12 text-center font-sans text-ink">
         <h1>◈ IDEACON — something went wrong</h1>
         <p>The team has been notified. Your ideas and deals are safe.</p>
         <button
           onClick={reset}
-          style={{ background: "var(--color-azure)", color: "var(--color-surface)", border: 0, borderRadius: 999, padding: "10px 24px", fontWeight: 700 }}
+          className="rounded-full bg-azure px-6 py-2.5 text-sm font-bold text-surface"
         >
           Try again
         </button>

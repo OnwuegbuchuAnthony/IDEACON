@@ -3,6 +3,25 @@ import { listTeasers, type TeaserFilters } from "@/lib/ideas";
 import type { Niche } from "@prisma/client";
 import { SaveSearchButton } from "./SaveSearch";
 import { EmptyState } from "@/app/components/EmptyState";
+import { SITE_URL } from "@/lib/seo";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | undefined>>;
+}) {
+  const sp = await searchParams;
+  const label = [sp.niche, sp.stage, sp.q].filter(Boolean).join(" · ") || "All niches";
+  const title = `Discover ideas: ${label} — IDEACON`;
+  const og = `${SITE_URL}/og?title=${encodeURIComponent(label)}&sub=${encodeURIComponent("Vetted teasers, NDA-protected")}`;
+  return {
+    title,
+    description: "Browse vetted idea teasers by niche, stage, and problem.",
+    alternates: { canonical: `${SITE_URL}/browse` },
+    openGraph: { title, images: [{ url: og, width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image" as const, title, images: [og] },
+  };
+}
 
 export default async function BrowsePage({
   searchParams,
@@ -22,14 +41,14 @@ export default async function BrowsePage({
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-6 py-12">
       <h1 className="font-display text-3xl font-extrabold">Discover ideas</h1>
       <form className="flex flex-wrap gap-2" method="get">
-        <input name="q" aria-label="Search teasers" placeholder="Search teasers…" defaultValue={sp.q ?? ""} style={{ maxWidth: 220 }} />
-        <select name="niche" aria-label="Niche filter" defaultValue={sp.niche ?? ""} style={{ maxWidth: 170 }}>
+        <input name="q" aria-label="Search teasers" placeholder="Search teasers…" defaultValue={sp.q ?? ""} className="max-w-[220px]" />
+        <select name="niche" aria-label="Niche filter" defaultValue={sp.niche ?? ""} className="max-w-[170px]">
           <option value="">All niches</option>
           {["HEALTHTECH", "AGROTECH", "FINTECH", "BUSINESS", "OTHER"].map((n) => (
             <option key={n} value={n}>{n}</option>
           ))}
         </select>
-        <select name="stage" aria-label="Stage filter" defaultValue={sp.stage ?? ""} style={{ maxWidth: 170 }}>
+        <select name="stage" aria-label="Stage filter" defaultValue={sp.stage ?? ""} className="max-w-[170px]">
           <option value="">Any stage</option>
           {["concept", "prototype", "ready-to-scale"].map((s) => (
             <option key={s} value={s}>{s}</option>

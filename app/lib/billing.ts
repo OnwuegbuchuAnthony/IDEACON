@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { recordEvent } from "./audit";
 import { TIERS, type TierName } from "./tiers";
 
 export { TIERS, type TierName };
@@ -53,7 +54,6 @@ export async function bookDealValueIn(
     where: { id: dealId },
     data: { amountKobo: amountMinor, commissionKobo: commissionMinor, currency, status: "invoiced" },
   });
-  const { recordEvent } = await import("./audit");
   await recordEvent({
     type: "deal.invoiced",
     actorId,

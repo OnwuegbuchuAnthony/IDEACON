@@ -58,7 +58,6 @@ export const auth = betterAuth({
           }
           // Automatic welcome email (non-blocking).
           try {
-            const { sendEmail } = await import("./email");
             const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
             await sendEmail({
               to: user.email,
