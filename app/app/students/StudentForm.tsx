@@ -48,7 +48,7 @@ export function StudentWaitlistForm() {
             consent: fd.get("consent") === "on",
             turnstileToken: token || undefined,
           });
-          setDone(res.already ? "Already registered — details updated." : "You're in! Watch your inbox at launch.");
+          setDone(res.already ? "Already registered — details updated. Confirm via email if you haven't yet." : "You're in! Check your email to confirm your spot.");
           trackEvent("waitlist_submit", { variant: "student" });
         } catch (e) {
           setError(e instanceof Error ? e.message : "Something went wrong");

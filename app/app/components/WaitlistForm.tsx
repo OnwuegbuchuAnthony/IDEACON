@@ -60,8 +60,8 @@ export function WaitlistForm({
           });
       setDone(
         res.already
-          ? "Already on the list — preferences updated."
-          : "You're on the list. Watch your inbox at launch.",
+          ? "Already on the list — preferences updated. Check your email to confirm if you haven't yet."
+          : "You're on the list — check your email to confirm your spot.",
       );
       trackEvent("waitlist_submit", { variant });
     } catch (e) {

@@ -397,6 +397,9 @@ model WaitlistEntry {
   niche       Niche?
   consent     Boolean  @default(false)
   consentedAt DateTime?
+  verifyToken String?  @unique
+  verified    Boolean  @default(false)
+  verifiedAt  DateTime?
   invited     Boolean  @default(false)
   createdAt   DateTime @default(now())
 }
