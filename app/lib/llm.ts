@@ -83,3 +83,92 @@ export async function chatLlm(input: ChatInput): Promise<{ text: string; model: 
   }
   throw new Error(lastError || "all LLM providers failed");
 }
+
+function streamEndpoint(name: string): { url: string; key: string } {
+  if (name === "groq") {
+    return { url: "https://api.groq.com/openai/v1/chat/completions", key: process.env.GROQ_API_KEY ?? "" };
+  }
+  return {
+    url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+    key: process.env.GEMINI_API_KEY ?? "",
+  };
+}
+
+function streamHeaders(name: string, key: string): Record<string, string> {
+  return {
+    "Content-Type": "application/json",
+    ...(name === "groq" ? { Authorization: `Bearer ${key}` } : { "x-goog-api-key": key }),
+  };
+}
+
+/** OpenAI-compatible SSE → ReadableStream of text deltas. Throws if the stream can't start. */
+async function sseTextStream(p: Provider, input: ChatInput): Promise<ReadableStream<string>> {
+  const { url, key } = streamEndpoint(p.name);
+  if (!key) throw new Error(`${p.name}: API key missing`);
+  const res = await fetch(url, {
+    method: "POST",
+    headers: streamHeaders(p.name, key),
+    body: JSON.stringify({
+      model: p.model,
+      stream: true,
+      temperature: input.temperature ?? 0.3,
+      ...(input.maxTokens ? { max_tokens: input.maxTokens } : {}),
+      messages: [{ role: "system", content: input.system }, ...input.messages],
+    }),
+  });
+  if (!res.ok || !res.body) throw new Error(`${p.name} ${res.status}`);
+  const body = res.body;
+  return new ReadableStream<string>({
+    async start(controller) {
+      const reader = body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+      try {
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buf += decoder.decode(value, { stream: true });
+          const lines = buf.split("\n");
+          buf = lines.pop() ?? "";
+          for (const line of lines) {
+            const t = line.trim();
+            if (!t.startsWith("data:")) continue;
+            const data = t.slice(5).trim();
+            if (!data || data === "[DONE]") continue;
+            try {
+              const json = JSON.parse(data) as {
+                choices?: { delta?: { content?: string } }[];
+              };
+              const delta = json.choices?.[0]?.delta?.content ?? "";
+              if (delta) controller.enqueue(delta);
+            } catch {
+              // Partial SSE frame — next chunk completes it.
+            }
+          }
+        }
+        controller.close();
+      } catch (e) {
+        controller.error(e);
+      }
+    },
+  });
+}
+
+/**
+ * Streaming chat across providers (Groq → Gemini). Resolves once the first
+ * provider accepts the stream; per-token errors afterwards surface on read.
+ */
+export async function chatLlmStream(input: ChatInput): Promise<{ stream: ReadableStream<string>; model: string }> {
+  const available = providers();
+  if (available.length === 0) throw new Error("no LLM provider configured");
+  let lastError = "";
+  for (const p of available) {
+    try {
+      const stream = await sseTextStream(p, input);
+      return { stream, model: `${p.name}/${p.model}` };
+    } catch (e) {
+      lastError = `${p.name}: ${e instanceof Error ? e.message : e}`;
+    }
+  }
+  throw new Error(lastError || "all LLM providers failed");
+}

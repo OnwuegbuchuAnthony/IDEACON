@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { chatLlm } from "./llm";
+import { chatLlm, chatLlmStream } from "./llm";
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -50,4 +50,27 @@ export async function askAssistant(
   });
   const reply = text.trim() || "I couldn't answer that — try rephrasing.";
   return { reply, ideas: context.map(({ id, title }) => ({ id, title })) };
+}
+
+/**
+ * Streaming variant: resolves ideas up-front (sent as the response header
+ * line) plus a live text stream. Same teaser-only guardrails as askAssistant.
+ */
+export async function askAssistantStream(
+  history: ChatMessage[],
+): Promise<{ ideas: { id: string; title: string }[]; stream: ReadableStream<string> }> {
+  const lastUser = [...history].reverse().find((m) => m.role === "user")?.content ?? "";
+  const context = await teaserContext(lastUser.slice(0, 500));
+  const contextBlock =
+    context.length > 0
+      ? "\n\nLive teasers relevant to the question:\n" +
+        context.map((c) => `- [${c.title}](/ideas/${c.id}) (${c.niche}): ${c.teaser}`).join("\n")
+      : "";
+  const { stream } = await chatLlmStream({
+    system: SYSTEM + contextBlock,
+    messages: history.slice(-8).map((m) => ({ role: m.role, content: m.content.slice(0, 800) })),
+    temperature: 0.4,
+    maxTokens: 500,
+  });
+  return { ideas: context.map(({ id, title }) => ({ id, title })), stream };
 }

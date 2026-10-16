@@ -23,12 +23,14 @@ export function AskChat() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [token, setToken] = useState("");
+  const [followups, setFollowups] = useState<string[]>([]);
 
   async function send(text: string) {
     const q = text.trim();
     if (!q || busy) return;
     setBusy(true);
     setError("");
+    setFollowups([]);
     const next = [...msgs, { role: "user" as const, content: q }];
     setMsgs(next);
     setInput("");
@@ -39,10 +41,48 @@ export function AskChat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: next, turnstileToken: token || undefined }),
       });
-      const body = await res.json();
-      if (!res.ok) throw new Error(body.error ?? "Assistant failed");
-      setMsgs([...next, { role: "assistant" as const, content: body.reply }]);
-      setIdeas(body.ideas ?? []);
+      const ct = res.headers.get("content-type") ?? "";
+      if (!res.ok || !ct.startsWith("text/plain")) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error((body as { error?: string }).error ?? "Assistant failed");
+      }
+      if (!res.body) throw new Error("empty stream");
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+      let headerDone = false;
+      let text = "";
+      let found: Idea[] = [];
+      setMsgs([...next, { role: "assistant" as const, content: "" }]);
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        if (!headerDone) {
+          const nl = buf.indexOf("\n");
+          if (nl === -1) continue;
+          try {
+            found = (JSON.parse(buf.slice(0, nl)) as { ideas?: Idea[] }).ideas ?? [];
+          } catch {
+            found = [];
+          }
+          setIdeas(found);
+          buf = buf.slice(nl + 1);
+          headerDone = true;
+        }
+        text += buf;
+        buf = "";
+        const snapshot = text;
+        setMsgs([...next, { role: "assistant" as const, content: snapshot }]);
+      }
+      if (!text.trim()) {
+        setMsgs([...next, { role: "assistant" as const, content: "I couldn't answer that — try rephrasing." }]);
+      }
+      setFollowups([
+        ...(found[0] ? [`Tell me more about ${found[0].title}`] : ["What kind of ideas are listed?"]),
+        "How do NDAs work here?",
+        "What does it cost?",
+      ]);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Assistant failed");
     } finally {
@@ -76,7 +116,7 @@ export function AskChat() {
       </div>
       {error && <p className="text-sm text-red-600">{error} — <Link href="/login" className="underline">log in</Link> to use the assistant.</p>}
       <div className="flex flex-wrap gap-1">
-        {SUGGESTIONS.map((s) => (
+        {(followups.length > 0 ? followups : SUGGESTIONS).map((s) => (
           <button key={s} onClick={() => send(s)} className="rounded-full border border-primary-200 px-3 py-1 text-xs font-bold text-primary-700">
             {s}
           </button>
