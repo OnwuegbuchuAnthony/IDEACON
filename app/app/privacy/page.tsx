@@ -1,3 +1,4 @@
+import { Container, PageIntro, Section } from "@/app/components/Container";
 import { pageMeta } from "@/lib/seo";
 
 const SECTIONS: [string, string[]][] = [
@@ -68,28 +69,44 @@ export const metadata = pageMeta({
 
 export default function PrivacyPage() {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 px-6 py-12">
-      <div className="rounded-2xl border-2 border-sun-500 bg-sun-100 p-4 text-sm font-bold" role="note">
-        Draft — pending review by Nigerian counsel. Not yet binding; current practice is minimum-necessary collection with export on demand.
-      </div>
-      <p className="text-sm font-bold text-primary-600">Legal · Privacy</p>
-      <h1 className="font-display text-3xl font-extrabold">Privacy notice</h1>
-      {SECTIONS.map(([h, points]) => (
-        <section key={h} className="rounded-2xl border border-primary-100 bg-white p-5 shadow">
-          <h2 className="font-display font-bold">{h}</h2>
-          <ul className="mt-1 flex list-disc flex-col gap-1 pl-5 text-sm text-ink/70">
-            {points.map((p) => (
-              <li key={p.slice(0, 24)}>{p}</li>
+    <main className="flex flex-1 flex-col">
+      <PageIntro eyebrow="Legal · Privacy" title="Privacy notice" />
+
+      <Section ariaLabel="Privacy notice">
+        <Container>
+          <div
+            className="mb-4 rounded-2xl border-2 border-sun-500 bg-sun-100 p-4 text-sm font-bold"
+            role="note"
+          >
+            Draft — pending review by Nigerian counsel. Not yet binding; current
+            practice is minimum-necessary collection with export on demand.
+          </div>
+          <div className="grid gap-4">
+            {SECTIONS.map(([h, points]) => (
+              <section
+                key={h}
+                className="rounded-2xl border border-primary-100 bg-white p-5 shadow"
+              >
+                <h2 className="font-display font-bold">{h}</h2>
+                <ul className="mt-1 flex list-disc flex-col gap-1 pl-5 text-sm text-ink/70">
+                  {points.map((p) => (
+                    <li key={p.slice(0, 24)}>{p}</li>
+                  ))}
+                </ul>
+              </section>
             ))}
-          </ul>
-        </section>
-      ))}
-      <p className="text-sm text-ink/70">
-        Data questions or export requests?{" "}
-        <a href="mailto:ideaconnectglobal@gmail.com" className="font-bold text-primary-600 underline">
-          ideaconnectglobal@gmail.com
-        </a>
-      </p>
+          </div>
+          <p className="mt-4 text-sm text-ink/70">
+            Data questions or export requests?{" "}
+            <a
+              href="mailto:ideaconnectglobal@gmail.com"
+              className="font-bold text-primary-600 underline"
+            >
+              ideaconnectglobal@gmail.com
+            </a>
+          </p>
+        </Container>
+      </Section>
     </main>
   );
 }

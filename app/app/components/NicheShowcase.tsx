@@ -9,7 +9,7 @@ export function NicheShowcase() {
         {[
           {
             name: "HealthTech",
-            slug: "healthtech",
+            slug: "HEALTHTECH",
             color: "bg-coral",
             desc: "Clinics and medtech teams source diagnostics, patient tools and device ideas.",
             icon: (
@@ -21,7 +21,7 @@ export function NicheShowcase() {
           },
           {
             name: "AgroTech",
-            slug: "agrotech",
+            slug: "AGROTECH",
             color: "bg-teal",
             desc: "Agribusinesses find sensors, irrigation and post-harvest loss ideas.",
             icon: (
@@ -33,7 +33,7 @@ export function NicheShowcase() {
           },
           {
             name: "FinTech",
-            slug: "fintech",
+            slug: "FINTECH",
             color: "bg-violet",
             desc: "Banks and payment startups source inclusion, fraud and credit ideas.",
             icon: (
@@ -45,7 +45,7 @@ export function NicheShowcase() {
           },
           {
             name: "Business",
-            slug: "business",
+            slug: "BUSINESS",
             color: "bg-azure",
             desc: "SMEs and corporates find operational and product-line innovations.",
             icon: (

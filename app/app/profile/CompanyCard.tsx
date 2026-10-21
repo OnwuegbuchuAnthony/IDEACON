@@ -1,9 +1,8 @@
-import type { CompanyMember, CompanyProfile, Niche } from "@prisma/client";
+import type { CompanyMember, CompanyProfile } from "@prisma/client";
 import { GoldBadge, BlueBadge } from "@/app/components/Badges";
 import { ImageUploader } from "@/app/components/ImageUploader";
 import { Card } from "@/app/components/ui";
-
-const NICHES: Niche[] = ["HEALTHTECH", "AGROTECH", "FINTECH", "BUSINESS", "OTHER"];
+import { NICHES, parseNiche } from "@/lib/niche";
 
 type Membership = CompanyMember & { company: CompanyProfile };
 
@@ -25,7 +24,7 @@ export function CompanyCard({
           await u({
             companyId: String(fd.get("companyId")),
             name: String(fd.get("name")),
-            niche: String(fd.get("niche")) as Niche,
+            niche: parseNiche(fd.get("niche")) ?? "OTHER",
             state: String(fd.get("state") ?? ""),
             country: String(fd.get("country") ?? ""),
           });

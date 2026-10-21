@@ -2,7 +2,7 @@
 
 ## Daily ops
 - App: `cd app` → `npm.cmd run dev` (dev) or `npm.cmd run build` + `npm.cmd run start` (prod, :3000).
-- Health: `/browse` → 200. Auth: `/api/auth/get-session` → 200.
+- Health: `/discover` → 200. Auth: `/api/auth/get-session` → 200.
 - Pilot gate: `node scripts/e2e.mjs` → expect `E2E ALL PASS`.
 
 ## Backups
