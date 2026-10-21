@@ -17,6 +17,11 @@ jobs:
     env:
       # Prisma config requires DATABASE_URL during generate; CI does not connect to this placeholder.
       DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ideacon_ci
+      # Better Auth validates these at module load while collecting page data.
+      # Build-only placeholders (never used to sign real sessions).
+      BETTER_AUTH_SECRET: ci-build-only-placeholder-secret-not-a-real-key
+      BETTER_AUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
