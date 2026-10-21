@@ -1,9 +1,14 @@
-/** Homepage trust block. Shared with audience pages. */
-export function TrustBlock() {
+/**
+ * Homepage trust block. Shared with audience pages.
+ *
+ * The four cards are the single place we describe what protects an idea, so
+ * the same protection messaging is not repeated in a second section.
+ */
+export function TrustBlock({ title = "Why you can trust IDEACON" }: { title?: string }) {
   return (
-    <section aria-label="Why you can trust IDEACON" className="w-full">
+    <section aria-label={title} className="w-full">
       <h2 className="font-display text-2xl font-extrabold tracking-tight">
-        Why you can trust IDEACON
+        {title}
       </h2>
       <div className="mt-4 grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
