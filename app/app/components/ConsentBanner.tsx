@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useLayoutEffect, useRef, useSyncExternalStore } from "react";
 
 const KEY = "ideacon-consent";
 
@@ -45,8 +45,36 @@ export function useConsent(): Consent {
  * NDPR consent banner. Analytics + tracker load only after explicit accept.
  * No tracking scripts run before choice; decline keeps everything local.
  */
+/**
+ * Publish our height so fixed bottom-right UI (the assistant launcher) can
+ * sit above us instead of underneath the banner.
+ */
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export function ConsentBanner() {
   const choice = useConsent();
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Publish our height so fixed bottom-right UI (the assistant launcher) can
+  // sit above us instead of underneath the banner.
+  useIsomorphicLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      document.documentElement.style.setProperty(
+        "--consent-banner-h",
+        `${el.offsetHeight + 16}px`,
+      );
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      document.documentElement.style.setProperty("--consent-banner-h", "0px");
+    };
+  }, []);
 
   function pick(v: "accepted" | "declined") {
     try {
@@ -61,6 +89,8 @@ export function ConsentBanner() {
 
   return (
     <div
+      ref={ref}
+      id="consent-banner"
       role="dialog"
       aria-live="polite"
       aria-label="Privacy choice"

@@ -8,6 +8,21 @@ export async function StatsRow() {
     db.ndaGrant.count(),
     db.deal.count(),
   ]);
+
+  // Before launch every counter reads zero, and a row of zeros reads as a
+  // dead product rather than a new one. Show a launch badge until there is
+  // something real to count.
+  if (ideas + companies + grants + deals === 0) {
+    return (
+      <div className="w-full">
+        <p className="inline-flex items-center gap-2 rounded-full border border-primary-100 bg-primary-100/60 px-4 py-2 text-sm font-bold text-primary-800">
+          <span aria-hidden="true" className="font-display">◈</span>
+          Launching in Lagos and Abuja
+        </p>
+      </div>
+    );
+  }
+
   const stats: [string, string][] = [
     [String(ideas), "ideas vetted live"],
     [String(companies), "companies verified"],
@@ -15,7 +30,7 @@ export async function StatsRow() {
     [String(deals), "brokered deals"],
   ];
   return (
-    <section aria-label="Platform stats" className="w-full">
+    <div className="w-full">
       <div className="grid gap-3 sm:grid-cols-4">
         {stats.map(([n, l]) => (
           <div key={l} className="rounded-2xl border border-primary-100 bg-white p-4 text-center shadow">
@@ -24,7 +39,7 @@ export async function StatsRow() {
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 }
 

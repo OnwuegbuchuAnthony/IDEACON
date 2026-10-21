@@ -3,7 +3,6 @@ import { Container, Section } from "@/app/components/Container";
 import { HowItWorks } from "@/app/components/HowItWorks";
 import { TrustBlock } from "@/app/components/TrustBlock";
 import { BoardStrip } from "@/app/components/TrustSections";
-import { NdaFlow } from "@/app/components/ConversionSections";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -33,12 +32,6 @@ export default function HowItWorksPage() {
       <Section ariaLabel="The four steps">
         <Container>
           <HowItWorks />
-        </Container>
-      </Section>
-
-      <Section ariaLabel="NDA and proof of origin">
-        <Container>
-          <NdaFlow />
         </Container>
       </Section>
 
