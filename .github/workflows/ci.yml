@@ -3,9 +3,11 @@ on:
   push:
     paths:
       - "app/**"
+      - ".github/workflows/ci.yml"
   pull_request:
     paths:
       - "app/**"
+      - ".github/workflows/ci.yml"
   workflow_dispatch:
 
 defaults:
@@ -15,8 +17,25 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Public marketing pages are prerendered at build time and read live
+    # counters from Postgres, so the build needs a reachable database.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ideacon_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d ideacon_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
     env:
-      # Prisma config requires DATABASE_URL during generate; CI does not connect to this placeholder.
+      # Points at the Postgres service defined above. The build connects to it
+      # while prerendering the marketing pages.
       DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ideacon_ci
       # Better Auth validates these at module load while collecting page data.
       # Build-only placeholders (never used to sign real sessions).
@@ -32,4 +51,8 @@ jobs:
           cache-dependency-path: app/package-lock.json
       - run: npm ci --no-audit --no-fund
       - run: npx tsc --noEmit
+      # Create the schema from schema.prisma. The migrations folder only covers
+      # the tables added after the base schema (it was originally applied with
+      # `db push`), so `migrate deploy` cannot reproduce a full database here.
+      - run: npx prisma db push
       - run: npm run build
