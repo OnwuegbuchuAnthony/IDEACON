@@ -1,3 +1,4 @@
+import { Container, PageIntro, Section } from "@/app/components/Container";
 import { pageMeta } from "@/lib/seo";
 
 const SECTIONS: [string, string][] = [
@@ -51,24 +52,40 @@ export const metadata = pageMeta({
 
 export default function TermsPage() {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 px-6 py-12">
-      <div className="rounded-2xl border-2 border-sun-500 bg-sun-100 p-4 text-sm font-bold" role="note">
-        Draft — pending review by Nigerian counsel. Not yet binding; the brokered process described in-app governs until final terms publish.
-      </div>
-      <p className="text-sm font-bold text-primary-600">Legal · Terms</p>
-      <h1 className="font-display text-3xl font-extrabold">Terms of use</h1>
-      {SECTIONS.map(([h, b]) => (
-        <section key={h} className="rounded-2xl border border-primary-100 bg-white p-5 shadow">
-          <h2 className="font-display font-bold">{h}</h2>
-          <p className="mt-1 text-sm text-ink/70">{b}</p>
-        </section>
-      ))}
-      <p className="text-sm text-ink/70">
-        Questions about these terms?{" "}
-        <a href="mailto:ideaconnectglobal@gmail.com" className="font-bold text-primary-600 underline">
-          ideaconnectglobal@gmail.com
-        </a>
-      </p>
+    <main className="flex flex-1 flex-col">
+      <PageIntro eyebrow="Legal · Terms" title="Terms of use" />
+
+      <Section ariaLabel="Terms of use">
+        <Container>
+          <div
+            className="mb-4 rounded-2xl border-2 border-sun-500 bg-sun-100 p-4 text-sm font-bold"
+            role="note"
+          >
+            Draft — pending review by Nigerian counsel. Not yet binding; the
+            brokered process described in-app governs until final terms publish.
+          </div>
+          <div className="grid gap-4">
+            {SECTIONS.map(([h, b]) => (
+              <section
+                key={h}
+                className="rounded-2xl border border-primary-100 bg-white p-5 shadow"
+              >
+                <h2 className="font-display font-bold">{h}</h2>
+                <p className="mt-1 text-sm text-ink/70">{b}</p>
+              </section>
+            ))}
+          </div>
+          <p className="mt-4 text-sm text-ink/70">
+            Questions about these terms?{" "}
+            <a
+              href="mailto:ideaconnectglobal@gmail.com"
+              className="font-bold text-primary-600 underline"
+            >
+              ideaconnectglobal@gmail.com
+            </a>
+          </p>
+        </Container>
+      </Section>
     </main>
   );
 }

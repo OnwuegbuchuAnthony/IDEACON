@@ -61,7 +61,7 @@ export default async function TrustPage() {
         </div>
       </section>
 
-      <p className="text-sm"><Link href="/browse" className="font-bold text-primary-600 underline">Browse vetted ideas →</Link></p>
+      <p className="text-sm"><Link href="/discover" className="font-bold text-primary-600 underline">Browse vetted ideas →</Link></p>
     </main>
   );
 }

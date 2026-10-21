@@ -11,7 +11,7 @@ export async function FeaturedTeasers() {
         <h2 className="font-display text-2xl font-extrabold tracking-tight">
           Featured teasers
         </h2>
-        <Link href="/browse" className="text-sm font-bold text-primary-600 underline underline-offset-4">
+        <Link href="/discover" className="text-sm font-bold text-primary-600 underline underline-offset-4">
           All teasers →
         </Link>
       </div>

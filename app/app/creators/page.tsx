@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Container, PageIntro, Section } from "@/app/components/Container";
 import { TrustBlock } from "@/app/components/TrustBlock";
 import { HowItWorks } from "@/app/components/HowItWorks";
 import { pageMeta } from "@/lib/seo";
@@ -30,38 +31,51 @@ export const metadata = pageMeta({
 
 export default function CreatorsPage() {
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-start gap-8 px-6 py-16">
-      <div className="max-w-2xl">
-        <p className="text-sm font-bold text-primary-600">For creators</p>
-        <h1 className="mt-2 font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-          Ideas die with the semester. Or on the shelf. Not here.
-        </h1>
-        <p className="mt-3 max-w-xl text-lg text-ink/70">
-          Visibility to the right industry, protection before anything is shared,
-          and a pay path that doesn&apos;t require you to become a business person.
-        </p>
-        <Link
-          href="/submit"
-          className="mt-5 inline-block rounded-full bg-gradient-to-r from-coral-500 to-orange-400 px-6 py-3 text-sm font-bold text-white shadow-lg"
-        >
-          Submit an idea
-        </Link>
-      </div>
+    <main className="flex flex-1 flex-col">
+      <PageIntro
+        eyebrow="For creators"
+        title="Ideas die with the semester. Or on the shelf. Not here."
+        lede="Visibility to the right industry, protection before anything is shared, and a pay path that doesn’t require you to become a business person."
+        actions={
+          <Link
+            href="/submit"
+            className="rounded-full bg-gradient-to-r from-coral-500 to-orange-400 px-6 py-3 text-sm font-bold text-white shadow-lg"
+          >
+            Submit an idea
+          </Link>
+        }
+      />
 
-      <section aria-label="Creator personas" className="w-full">
-        <h2 className="font-display text-2xl font-extrabold tracking-tight">Which one are you?</h2>
-        <div className="mt-4 grid w-full gap-4 sm:grid-cols-2">
-          {PERSONAS.map(([t, d]) => (
-            <div key={t} className="rounded-2xl border border-border bg-surface p-5 shadow">
-              <h3 className="font-display text-base font-bold">{t}</h3>
-              <p className="mt-1 text-sm text-ink-muted">{d}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <Section ariaLabel="Creator personas">
+        <Container>
+          <h2 className="font-display text-2xl font-extrabold tracking-tight">
+            Which one are you?
+          </h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {PERSONAS.map(([t, d]) => (
+              <div
+                key={t}
+                className="rounded-2xl border border-border bg-surface p-5 shadow"
+              >
+                <h3 className="font-display text-base font-bold">{t}</h3>
+                <p className="mt-1 text-sm text-ink-muted">{d}</p>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </Section>
 
-      <TrustBlock />
-      <HowItWorks />
+      <Section>
+        <Container>
+          <TrustBlock />
+        </Container>
+      </Section>
+
+      <Section>
+        <Container>
+          <HowItWorks />
+        </Container>
+      </Section>
     </main>
   );
 }
