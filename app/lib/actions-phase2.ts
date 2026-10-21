@@ -85,7 +85,7 @@ export async function bulkIntakeAction(form: { universityId: string; lines: stri
       payload: { universityId: form.universityId, title },
     });
   }
-  redirect("/browse");
+  redirect("/discover");
 }
 
 /** Broker-triggered match digest emails to verified companies. */

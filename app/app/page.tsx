@@ -20,16 +20,16 @@ export default function Home() {
   const waitlist = isWaitlistMode();
   return (
     <div className="flex flex-1 flex-col font-sans">
-      <header className="bg-gradient-to-r from-primary-800 via-primary-600 to-teal-500 text-white">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-          <span className="font-display text-xl font-extrabold tracking-tight">
-            ◈ IDEACON
-          </span>
-          <nav className="flex gap-3 text-sm font-semibold">
+      <section
+        aria-label="Get started"
+        className="bg-gradient-to-r from-primary-800 via-primary-600 to-teal-500 text-white"
+      >
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-end px-6 py-4">
+          <nav aria-label="Get started" className="flex gap-3 text-sm font-semibold">
             <HomeAuthNav waitlist={waitlist} />
           </nav>
         </div>
-      </header>
+      </section>
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-start gap-8 px-6 py-16">
         <div className="flex flex-wrap gap-2 text-xs font-bold">
@@ -121,10 +121,6 @@ export default function Home() {
           ))}
         </div>
       </main>
-
-      <footer className="px-6 py-6 text-center text-xs text-ink/50">
-        © {new Date().getFullYear()} IDEACON. Ideas stay teaser-only until an NDA is signed.
-      </footer>
     </div>
   );
 }

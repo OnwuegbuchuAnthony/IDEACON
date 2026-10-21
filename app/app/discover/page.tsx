@@ -1,62 +1,85 @@
 import Link from "next/link";
+import { listTeasers, type TeaserFilters } from "@/lib/ideas";
+import type { Niche } from "@prisma/client";
+import { SaveSearchButton } from "./SaveSearch";
+import { EmptyState } from "@/app/components/EmptyState";
+import { SITE_URL } from "@/lib/seo";
 
-const NICHES: Record<string, { name: string; blurb: string }> = {
-  healthtech: {
-    name: "HealthTech",
-    blurb: "Diagnostics, patient tools and medical-device ideas — live catalog wiring lands here next.",
-  },
-  agrotech: {
-    name: "AgroTech",
-    blurb: "Sensors, irrigation and post-harvest ideas — live catalog wiring lands here next.",
-  },
-  fintech: {
-    name: "FinTech",
-    blurb: "Inclusion, fraud-prevention and credit ideas — live catalog wiring lands here next.",
-  },
-  business: {
-    name: "Business",
-    blurb: "Operational and product-line innovations — live catalog wiring lands here next.",
-  },
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | undefined>>;
+}) {
+  const sp = await searchParams;
+  const label = [sp.niche, sp.stage, sp.q].filter(Boolean).join(" · ") || "All niches";
+  const title = `Discover ideas: ${label} — IDEACON`;
+  const og = `${SITE_URL}/og?title=${encodeURIComponent(label)}&sub=${encodeURIComponent("Vetted teasers, NDA-protected")}`;
+  return {
+    title,
+    description: "Discover vetted idea teasers by niche, stage, and problem.",
+    alternates: { canonical: `${SITE_URL}/discover` },
+    openGraph: { title, images: [{ url: og, width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image" as const, title, images: [og] },
+  };
+}
 
-// Stub: reads ?niche= and shows placeholder cards until live data is wired.
 export default async function DiscoverPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const sp = await searchParams;
-  const slug = (sp.niche ?? "").toLowerCase();
-  const niche = NICHES[slug];
+  const filters: TeaserFilters = {
+    ...(sp.niche ? { niche: sp.niche as Niche } : {}),
+    ...(sp.stage ? { stage: sp.stage } : {}),
+    ...(sp.problemType ? { problemType: sp.problemType } : {}),
+    ...(sp.q ? { q: sp.q } : {}),
+  };
+  const ideas = await listTeasers(filters);
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 px-6 py-12">
-      <p className="text-sm font-bold text-primary-600">
-        Discover{niche ? ` · ${niche.name}` : ""}
-      </p>
-      <h1 className="font-display text-3xl font-extrabold">
-        {niche ? `${niche.name} ideas` : "Discover ideas by niche"}
-      </h1>
-      <p className="text-sm text-ink-muted">
-        {niche ? niche.blurb : "Pick a niche to preview what companies here will find."}
-      </p>
-      <div className="grid gap-3 sm:grid-cols-3">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="rounded-2xl border border-dashed border-primary-400 bg-primary-100/40 p-5">
-            <p className="font-display text-sm font-bold">
-              {niche ? `${niche.name} teaser ${i}` : `Teaser ${i}`}
-            </p>
-            <p className="mt-1 text-xs text-ink-muted">
-              Placeholder card — real vetted teasers plug in here.
-            </p>
-          </div>
+    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-6 py-12">
+      <h1 className="font-display text-3xl font-extrabold">Discover ideas</h1>
+      <form className="flex flex-wrap gap-2" method="get">
+        <input name="q" aria-label="Search teasers" placeholder="Search teasers…" defaultValue={sp.q ?? ""} className="max-w-[220px]" />
+        <select name="niche" aria-label="Niche filter" defaultValue={sp.niche ?? ""} className="max-w-[170px]">
+          <option value="">All niches</option>
+          {["HEALTHTECH", "AGROTECH", "FINTECH", "BUSINESS", "OTHER"].map((n) => (
+            <option key={n} value={n}>{n}</option>
+          ))}
+        </select>
+        <select name="stage" aria-label="Stage filter" defaultValue={sp.stage ?? ""} className="max-w-[170px]">
+          <option value="">Any stage</option>
+          {["concept", "prototype", "ready-to-scale"].map((s) => (
+            <option key={s} value={s}>{s}</option>
+          ))}
+        </select>
+        <button className="rounded-full bg-primary-600 px-5 py-2 text-sm font-bold text-white" type="submit">
+          Filter
+        </button>
+        <SaveSearchButton niche={sp.niche} stage={sp.stage} q={sp.q} />
+      </form>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {ideas.map((idea) => (
+          <Link key={idea.id} href={`/ideas/${idea.id}`}
+            className="card-hover rounded-2xl border border-primary-100 bg-white p-5 shadow">
+            <div className="flex flex-wrap gap-1 text-[11px] font-bold">
+              <span className="rounded-full bg-primary-100 px-2 py-0.5 text-primary-800">{idea.niche}</span>
+              <span className="rounded-full bg-coral-100 px-2 py-0.5 text-coral-700">{idea.stage}</span>
+              {idea.aiScores[0] && (
+                <span className="rounded-full bg-mint-100 px-2 py-0.5 text-emerald-800">
+                  {Math.round(((idea.aiScores[0].originality + idea.aiScores[0].feasibility + idea.aiScores[0].marketFit) / 3) * 10) / 10} fit
+                </span>
+              )}
+            </div>
+            <h2 className="mt-2 font-display font-bold">{idea.title}</h2>
+            <p className="mt-1 text-sm text-ink/70">{idea.teaser}</p>
+            <p className="mt-2 text-xs text-ink/50">🔒 Full detail under NDA</p>
+          </Link>
         ))}
       </div>
-      <p className="text-sm">
-        <Link href="/browse" className="font-bold text-primary-600 underline">
-          Browse the live teaser catalog →
-        </Link>
-      </p>
+      {ideas.length === 0 && <EmptyState actionHref="/discover" actionLabel="Clear filters" />}
     </main>
   );
 }

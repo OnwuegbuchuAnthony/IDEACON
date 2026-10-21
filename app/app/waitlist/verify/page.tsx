@@ -43,7 +43,7 @@ export default async function WaitlistVerifyPage({
           <h1 className="font-display text-3xl font-extrabold">You&apos;re confirmed ✓</h1>
           <p className="text-ink/70">
             Your waitlist spot is locked in. We&apos;ll email you at launch — meanwhile,{" "}
-            <Link href="/browse" className="font-bold text-primary-600 underline">browse live teasers</Link>{" "}
+            <Link href="/discover" className="font-bold text-primary-600 underline">browse live teasers</Link>{" "}
             or <Link href="/about" className="font-bold text-primary-600 underline">see how IDEACON works</Link>.
           </p>
         </>

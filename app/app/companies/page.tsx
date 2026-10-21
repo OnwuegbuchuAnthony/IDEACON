@@ -37,7 +37,7 @@ export default function CompaniesPage() {
           origin, review status) that makes the deal defensible internally.
         </p>
         <Link
-          href="/browse"
+          href="/discover"
           className="mt-5 inline-block rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-6 py-3 text-sm font-bold text-white shadow-lg"
         >
           Request access

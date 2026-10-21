@@ -62,7 +62,7 @@ export const auth = betterAuth({
             await sendEmail({
               to: user.email,
               subject: "Welcome to IDEACON ◈",
-              html: `<p>Hi ${user.name},</p><p>Your account is ready. Creators: <a href="${appUrl}/submit">submit your first idea</a>. Companies: <a href="${appUrl}/browse">discover vetted teasers</a>.</p><p>Ideas stay teaser-only until an NDA is signed — your work is protected by design.</p>`,
+              html: `<p>Hi ${user.name},</p><p>Your account is ready. Creators: <a href="${appUrl}/submit">submit your first idea</a>. Companies: <a href="${appUrl}/discover">discover vetted teasers</a>.</p><p>Ideas stay teaser-only until an NDA is signed — your work is protected by design.</p>`,
               name: user.name,
             });
           } catch (e) {

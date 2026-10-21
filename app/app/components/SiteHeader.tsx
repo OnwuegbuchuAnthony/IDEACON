@@ -2,32 +2,54 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useAuthModal } from "@/app/components/AuthModalProvider";
+import { Logo } from "@/app/components/Logo";
 import "@/lib/install-prompt";
 
 const LINKS: { href: string; label: string }[] = [
   { href: "/about", label: "How it works" },
   { href: "/submit", label: "For Creators" },
   { href: "/companies", label: "For Companies" },
-  { href: "/discover", label: "Niches" },
+  { href: "/discover", label: "Discover" },
   { href: "/faq", label: "FAQ" },
 ];
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
+const MD_QUERY = "(min-width: 768px)";
+
+function subscribeMd(cb: () => void) {
+  const mq = window.matchMedia(MD_QUERY);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+}
+
+/** True on md+ viewports. Server snapshot is false (mobile-first). */
+function useIsDesktop() {
+  return useSyncExternalStore(
+    subscribeMd,
+    () => window.matchMedia(MD_QUERY).matches,
+    () => false,
+  );
+}
+
 /**
- * Sticky site header. Mobile (<768px, Tailwind md) collapses to a hamburger
- * toggle with a full-width slide-down panel: focus trap, Escape to close,
- * aria-expanded, focus returned to the toggle. No UI library.
+ * Sticky site header. Exactly one <Logo /> at the far left, and exactly one
+ * set of nav links in the DOM. On md+ the links sit in a horizontal row; below
+ * md the same single <nav> becomes a slide-down panel toggled by a hamburger.
+ * The toggle drives a data-open flag; visibility is entirely CSS, so there is
+ * never a second copy of the links. Focus trap, Escape-to-close, aria-expanded
+ * and focus restore behave as before.
  */
 export function SiteHeader() {
   const pathname = usePathname();
   const authModal = useAuthModal();
   const [open, setOpen] = useState(false);
+  const isDesktop = useIsDesktop();
   const toggleRef = useRef<HTMLButtonElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
   const [lastPath, setLastPath] = useState(pathname);
 
   // Close the panel on navigation (adjust during render, not in an effect).
@@ -36,7 +58,11 @@ export function SiteHeader() {
     if (open) setOpen(false);
   }
 
-  // Escape to close + focus trap while the panel is open.
+  // The desktop row is always visible; if the viewport grows past md while the
+  // mobile panel is open, drop the panel state so the row never inherits it.
+  if (isDesktop && open) setOpen(false);
+
+  // Escape to close + focus trap while the mobile panel is open.
   useEffect(() => {
     if (!open) return;
     const panel = panelRef.current;
@@ -49,6 +75,8 @@ export function SiteHeader() {
         return;
       }
       if (e.key !== "Tab" || !panel) return;
+      // Only trap focus when the panel is actually visible (below md).
+      if (window.matchMedia("(min-width: 768px)").matches) return;
       const items = [...panel.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
         (el) => el.offsetParent !== null,
       );
@@ -65,9 +93,11 @@ export function SiteHeader() {
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [open ]);
+  }, [open]);
 
+  const linksReachable = isDesktop || open;
   const isActive = (href: string) => pathname === href;
+  const waitlist = process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist";
 
   return (
     <>
@@ -79,50 +109,73 @@ export function SiteHeader() {
       </a>
       <header className="sticky top-0 z-50 border-b border-primary-100 bg-white/80 backdrop-blur">
         <div className="mx-auto flex w-full max-w-5xl items-center gap-4 px-6 py-2">
-          <Link href="/" className="font-display text-base font-extrabold" aria-label="IDEACON home">
-            ◈ IDEACON
-          </Link>
-          <nav aria-label="Primary" className="hidden items-center gap-4 text-sm font-bold md:flex">
-            {LINKS.map((l) => (
-              <Link
-                key={l.label + l.href}
-                href={l.href}
-                aria-current={isActive(l.href) ? "page" : undefined}
-                className={
-                  isActive(l.href)
-                    ? "text-primary-600 underline underline-offset-4"
-                    : "text-ink/70 hover:text-primary-600"
-                }
-              >
-                {l.label}
-              </Link>
-            ))}
-          </nav>
-          {process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? (
-            <Link
-              href="/waitlist"
-              className="ml-auto hidden rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-sm font-bold text-white md:inline-block"
+          <Logo className="text-ink" />
+
+          {/* One <nav>, one set of links. Desktop: inline row. Mobile: the
+              panel is revealed by data-open via CSS (md: overrides). */}
+          <div
+            ref={panelRef as React.RefObject<HTMLDivElement>}
+            id="site-menu"
+            className={`${
+              open ? "max-h-96 border-t border-primary-100" : "max-h-0"
+            } order-last w-full overflow-hidden bg-white transition-[max-height] duration-200 md:order-none md:flex md:max-h-none md:w-auto md:flex-1 md:items-center md:overflow-visible md:border-0 md:transition-none`}
+          >
+            <nav
+              aria-label="Primary"
+              className="flex flex-col gap-1 px-6 py-3 text-sm font-bold md:flex-row md:items-center md:gap-4 md:px-0 md:py-0"
             >
-              Join waitlist
-            </Link>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={(e) => authModal.open("login", e.currentTarget)}
-                className="ml-auto hidden text-sm font-bold text-ink/70 hover:text-primary-600 md:inline-block"
-              >
-                Log in
-              </button>
-              <button
-                type="button"
-                onClick={(e) => authModal.open("register", e.currentTarget)}
-                className="hidden rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-sm font-bold text-white md:inline-block"
-              >
-                Get started
-              </button>
-            </>
-          )}
+              {LINKS.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  aria-current={isActive(l.href) ? "page" : undefined}
+                  tabIndex={linksReachable ? undefined : -1}
+                  className={`rounded-lg px-3 py-2 md:rounded-none md:px-0 md:py-0 ${
+                    isActive(l.href)
+                      ? "bg-primary-100/60 text-primary-600 underline-offset-4 md:bg-transparent md:underline"
+                      : "text-ink/70 hover:text-primary-600"
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              ))}
+              {waitlist ? (
+                <Link
+                  href="/waitlist"
+                  tabIndex={linksReachable ? undefined : -1}
+                  className="mt-1 rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-center text-sm font-bold text-white md:ml-auto md:mt-0 md:text-left"
+                >
+                  Join waitlist
+                </Link>
+              ) : (
+                <div className="flex flex-col gap-1 md:ml-auto md:flex-row md:items-center md:gap-4">
+                  <button
+                    type="button"
+                    tabIndex={linksReachable ? undefined : -1}
+                    onClick={(e) => {
+                      setOpen(false);
+                      authModal.open("login", e.currentTarget);
+                    }}
+                    className="rounded-lg px-3 py-2 text-left text-sm font-bold text-ink/70 hover:text-primary-600 md:px-0 md:py-0 md:text-center"
+                  >
+                    Log in
+                  </button>
+                  <button
+                    type="button"
+                    tabIndex={linksReachable ? undefined : -1}
+                    onClick={(e) => {
+                      setOpen(false);
+                      authModal.open("register", e.currentTarget);
+                    }}
+                    className="rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-center text-sm font-bold text-white"
+                  >
+                    Get started
+                  </button>
+                </div>
+              )}
+            </nav>
+          </div>
+
           <button
             ref={toggleRef}
             type="button"
@@ -140,57 +193,6 @@ export function SiteHeader() {
               )}
             </svg>
           </button>
-        </div>
-        <div
-          id="site-menu"
-          ref={panelRef}
-          className={`overflow-hidden border-primary-100 bg-white transition-[max-height] duration-200 md:hidden ${
-            open ? "max-h-96 border-t" : "max-h-0"
-          }`}
-        >
-          <nav aria-label="Mobile" className="flex flex-col gap-1 px-6 py-3">
-            {LINKS.map((l) => (
-              <Link
-                key={l.label + l.href}
-                href={l.href}
-                aria-current={isActive(l.href) ? "page" : undefined}
-                tabIndex={open ? undefined : -1}
-                className={`rounded-lg px-3 py-2 text-sm font-bold ${
-                  isActive(l.href) ? "bg-primary-100/60 text-primary-600" : "text-ink/70"
-                }`}
-              >
-                {l.label}
-              </Link>
-            ))}
-            {process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? (
-              <Link
-                href="/waitlist"
-                tabIndex={open ? undefined : -1}
-                className="mt-1 rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-center text-sm font-bold text-white"
-              >
-                Join waitlist
-              </Link>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  tabIndex={open ? undefined : -1}
-                  onClick={(e) => { setOpen(false); authModal.open("login", e.currentTarget); }}
-                  className="mt-1 rounded-lg px-3 py-2 text-left text-sm font-bold text-ink/70"
-                >
-                  Log in
-                </button>
-                <button
-                  type="button"
-                  tabIndex={open ? undefined : -1}
-                  onClick={(e) => { setOpen(false); authModal.open("register", e.currentTarget); }}
-                  className="rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-center text-sm font-bold text-white"
-                >
-                  Get started
-                </button>
-              </>
-            )}
-          </nav>
         </div>
       </header>
     </>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/app/components/Logo";
 import { WaitlistForm } from "@/app/components/WaitlistForm";
 
 const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
@@ -6,7 +7,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     heading: "Product",
     links: [
       { label: "How it works", href: "/about" },
-      { label: "Niches", href: "/browse" },
+      { label: "Discover", href: "/discover" },
       { label: "Pricing", href: "/pricing" },
       { label: "FAQ", href: "/faq" },
     ],
@@ -15,7 +16,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     heading: "For you",
     links: [
       { label: "Creators", href: "/submit" },
-      { label: "Companies", href: "/browse" },
+      { label: "Companies", href: "/discover" },
       { label: "Students", href: "/students" },
     ],
   },
@@ -42,7 +43,7 @@ export function SiteFooter() {
     <footer className="border-t border-primary-100 bg-white">
       <div className="mx-auto grid w-full max-w-5xl gap-8 px-6 py-10 sm:grid-cols-2 md:grid-cols-5">
         <div className="md:col-span-1">
-          <p className="font-display text-base font-extrabold">◈ IDEACON</p>
+          <Logo bare className="text-ink" />
           <p className="mt-2 text-sm text-ink/60">Nigeria-first, global by design.</p>
           <div className="mt-3">
             <WaitlistForm variant="minimal" />

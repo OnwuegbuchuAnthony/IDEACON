@@ -47,7 +47,7 @@ export default function AboutPage() {
           real-world innovations.
         </p>
         <div className="mt-4 flex flex-wrap gap-2 text-sm font-bold">
-          <Link href="/browse" className="rounded-full bg-white px-5 py-2 text-primary-800">Discover ideas</Link>
+          <Link href="/discover" className="rounded-full bg-white px-5 py-2 text-primary-800">Discover ideas</Link>
           <Link href="/signup" className="rounded-full bg-white/20 px-5 py-2">Join IDEACON</Link>
         </div>
       </section>
