@@ -54,7 +54,12 @@ export default function Home() {
         </Container>
       </Section>
 
-      <InstallBanner />
+      {/* Contextual PWA install prompt. Wrapped in Container so it lines up
+          with the 1200px content grid; the surrounding sections supply the
+          vertical rhythm. */}
+      <Container>
+        <InstallBanner />
+      </Container>
 
       {/* Trust strip */}
       <Section ariaLabel="Trust strip">
