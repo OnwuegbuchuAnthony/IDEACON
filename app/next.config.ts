@@ -7,10 +7,14 @@ const nextConfig: NextConfig = {
     remotePatterns: [],
   },
   async redirects() {
-    // /browse was the old browsing route; /discover is canonical now.
-    // A permanent redirect preserves inbound links, bookmarks and any query
-    // string (e.g. /browse?niche=FINTECH -> /discover?niche=FINTECH).
-    return [{ source: "/browse", destination: "/discover", permanent: true }];
+    // /browse was the old browsing route and /niches an alias for the same
+    // catalogue; /discover is canonical now. A permanent redirect preserves
+    // inbound links, bookmarks and any query string
+    // (e.g. /browse?niche=FINTECH -> /discover?niche=FINTECH).
+    return [
+      { source: "/browse", destination: "/discover", permanent: true },
+      { source: "/niches", destination: "/discover", permanent: true },
+    ];
   },
 };
 

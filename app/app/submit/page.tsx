@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { submitIdeaAction } from "@/lib/actions";
-import type { Niche } from "@prisma/client";
+import { NICHES, parseNiche } from "@/lib/niche";
 
-const NICHES: Niche[] = ["HEALTHTECH", "AGROTECH", "FINTECH", "BUSINESS", "OTHER"];
 const STAGES = ["concept", "prototype", "ready-to-scale"];
 
 export default function SubmitPage() {
@@ -48,7 +47,7 @@ export default function SubmitPage() {
       title: String(formData.get("title")),
       teaser: String(formData.get("teaser")),
       fullDetail: String(formData.get("fullDetail")),
-      niche: String(formData.get("niche")) as Niche,
+      niche: parseNiche(formData.get("niche")) ?? "OTHER",
       problemType: String(formData.get("problemType") ?? ""),
       stage: String(formData.get("stage") ?? "concept"),
       files: uploaded,

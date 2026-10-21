@@ -6,6 +6,9 @@
   --font-display: "Sora", "Plus Jakarta Sans", system-ui, sans-serif;
   --font-sans: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
 
+  /* Standard marketing layout: one content width for every page. */
+  --container-content: 1200px;
+
   /* Brand hues (exact values from design.html brief). */
   --color-coral: #ff5c38;
   --color-sun: #ffb800;
@@ -52,13 +55,17 @@ body {
   outline-offset: 2px;
 }
 
-/* Minimum 44px touch target for compact controls. Apply alongside pills. */
-.tap {
-  min-height: 44px;
-  min-width: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* Minimum 44px touch target for compact controls. Apply alongside pills.
+   Declared in @layer components so Tailwind utilities (md:hidden, etc.)
+   can override it — unlayered rules outrank every utility. */
+@layer components {
+  .tap {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 /* Consistent press behavior for every button and button-like link. */
@@ -83,40 +90,44 @@ button:disabled {
 }
 
 /* Interactive cards (teasers, rows that navigate). */
-.card-hover {
-  transition:
-    box-shadow 200ms ease,
-    transform 200ms ease,
-    border-color 200ms ease;
-}
-.card-hover:hover {
-  box-shadow: 0 8px 28px rgba(15, 98, 254, 0.16);
-  transform: translateY(-2px);
-  border-color: var(--color-primary-400);
-}
-.card-hover:active {
-  transform: translateY(0);
+@layer components {
+  .card-hover {
+    transition:
+      box-shadow 200ms ease,
+      transform 200ms ease,
+      border-color 200ms ease;
+  }
+  .card-hover:hover {
+    box-shadow: 0 8px 28px rgba(15, 98, 254, 0.16);
+    transform: translateY(-2px);
+    border-color: var(--color-primary-400);
+  }
+  .card-hover:active {
+    transform: translateY(0);
+  }
 }
 
 /* Skeleton shimmer for loading states. */
-.skeleton {
-  position: relative;
-  overflow: hidden;
-  background: var(--color-primary-100);
-}
-.skeleton::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.7) 50%, transparent 70%);
-  animation: skeleton-sheen 1.4s ease infinite;
-}
-@keyframes skeleton-sheen {
-  from {
-    transform: translateX(-100%);
+@layer components {
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-primary-100);
   }
-  to {
-    transform: translateX(100%);
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.7) 50%, transparent 70%);
+    animation: skeleton-sheen 1.4s ease infinite;
+  }
+  @keyframes skeleton-sheen {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
   }
 }
 

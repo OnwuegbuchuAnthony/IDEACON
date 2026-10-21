@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { FaqList } from "./FaqList";
+import { Container, PageIntro, Section } from "@/app/components/Container";
+import { pageMeta } from "@/lib/seo";
 
 const FAQS: [string, string][] = [
   [
@@ -28,8 +30,6 @@ const FAQS: [string, string][] = [
   ],
 ];
 
-import { pageMeta } from "@/lib/seo";
-
 export const metadata = pageMeta({
   title: "FAQ — IDEACON",
   description: "How IDEACON works for creators and companies.",
@@ -38,30 +38,46 @@ export const metadata = pageMeta({
 
 export default function FaqPage() {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 px-6 py-12">
-      <h1 className="font-display text-3xl font-extrabold">Questions, answered</h1>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: FAQS.map(([q, a]) => ({
-              "@type": "Question",
-              name: q,
-              acceptedAnswer: { "@type": "Answer", text: a },
-            })),
-          }),
-        }}
+    <main className="flex flex-1 flex-col">
+      <PageIntro
+        eyebrow="FAQ"
+        title="Questions, answered"
+        lede="How IDEACON works for creators, companies and students — and how your idea stays protected."
       />
-      <FaqList items={FAQS} />
-      <p className="text-sm">
-        Still stuck? <Link href="/ask" className="font-bold text-primary-600 underline">Ask the AI</Link> or mail{" "}
-        <a href="mailto:ideaconnectglobal@gmail.com" className="font-bold text-primary-600 underline">
-          ideaconnectglobal@gmail.com
-        </a>
-        .
-      </p>
+
+      <Section ariaLabel="Frequently asked questions">
+        <Container>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: FAQS.map(([q, a]) => ({
+                  "@type": "Question",
+                  name: q,
+                  acceptedAnswer: { "@type": "Answer", text: a },
+                })),
+              }),
+            }}
+          />
+          <FaqList items={FAQS} />
+          <p className="mt-6 text-sm text-ink/70">
+            Still stuck?{" "}
+            <Link href="/ask" className="font-bold text-primary-600 underline">
+              Ask the AI
+            </Link>{" "}
+            or mail{" "}
+            <a
+              href="mailto:ideaconnectglobal@gmail.com"
+              className="font-bold text-primary-600 underline"
+            >
+              ideaconnectglobal@gmail.com
+            </a>
+            .
+          </p>
+        </Container>
+      </Section>
     </main>
   );
 }
