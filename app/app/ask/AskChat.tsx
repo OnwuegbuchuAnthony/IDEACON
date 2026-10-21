@@ -92,7 +92,7 @@ export function AskChat() {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex min-h-[280px] flex-col gap-2 rounded-2xl border border-primary-100 bg-white p-4 shadow">
+      <div className="flex max-h-[45vh] min-h-[220px] flex-col gap-2 overflow-y-auto rounded-2xl border border-primary-100 bg-white p-4 shadow">
         {msgs.length === 0 && (
           <p className="text-sm text-ink/50">
             Ask about ideas, NDAs, pricing, how the brokered handoff works — I answer from the live catalog.

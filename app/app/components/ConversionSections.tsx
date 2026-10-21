@@ -27,27 +27,3 @@ export function PricingTeaser() {
     </section>
   );
 }
-
-/** NDA & proof-of-origin visual flow. */
-export function NdaFlow() {
-  const steps: [string, string][] = [
-    ["Teaser", "Public: niche, uniqueness, scale. Never the full detail."],
-    ["Request", "Company asks; broker reviews the fit first."],
-    ["NDA", "Signed, time-boxed grant unlocks files + identity."],
-    ["Proof", "Every step timestamped into a hash-chained trail."],
-  ];
-  return (
-    <section aria-label="NDA and proof of origin" className="w-full rounded-2xl bg-primary-800 p-6 text-white shadow">
-      <h2 className="font-display text-2xl font-extrabold tracking-tight">Locked down, by design</h2>
-      <ol className="mt-4 grid gap-4 sm:grid-cols-4">
-        {steps.map(([t, d], i) => (
-          <li key={t} className="relative rounded-xl bg-white/10 p-4">
-            <p className="font-display text-sm font-extrabold text-sun">0{i + 1}</p>
-            <p className="mt-1 font-display text-base font-bold">{t}</p>
-            <p className="mt-1 text-xs opacity-80">{d}</p>
-          </li>
-        ))}
-      </ol>
-    </section>
-  );
-}
