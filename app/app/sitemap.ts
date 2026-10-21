@@ -1,32 +1,28 @@
-import type { MetadataRoute } from "next";
+import { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo";
 
-// Public marketing/content routes. Authed app routes stay out by design.
-// (Idea detail URLs join here once public teaser pages ship.)
-const PATHS = [
-  "/",
-  "/how-it-works",
-  "/creators",
-  "/companies",
-  "/students",
-  "/discover",
-  "/university",
-  "/pricing",
-  "/trust",
-  "/faq",
-  "/waitlist",
-  "/about",
-  "/contact",
-  "/terms",
-  "/privacy",
-  "/ask",
-];
-
 export default function sitemap(): MetadataRoute.Sitemap {
-  return PATHS.map((path) => ({
-    url: `${SITE_URL}${path}`,
+  const routes = [
+    "",
+    "/discover",
+    "/how-it-works",
+    "/creators",
+    "/companies",
+    "/niches",
+    "/pricing",
+    "/faq",
+    "/students",
+    "/submit",
+    "/about",
+    "/contact",
+    "/privacy",
+    "/terms",
+  ];
+
+  return routes.map((route) => ({
+    url: `${SITE_URL}${route}`,
     lastModified: new Date(),
-    changeFrequency: path === "/" ? "daily" : "weekly",
-    priority: path === "/" ? 1 : 0.7,
+    changeFrequency: route === "" ? "daily" : "weekly",
+    priority: route === "" ? 1 : 0.7,
   }));
 }
