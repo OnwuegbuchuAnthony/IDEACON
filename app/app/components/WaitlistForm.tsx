@@ -6,7 +6,7 @@ import { joinWaitlistAction } from "@/lib/actions-waitlist";
 import { trackEvent } from "@/lib/analytics";
 import { NIGERIAN_STATES } from "@/lib/nigerian-states";
 import { Turnstile } from "@/app/components/Turnstile";
-import type { Niche } from "@prisma/client";
+import { parseNiche } from "@/lib/niche";
 
 const ROLES = ["creator", "company", "student", "other"] as const;
 type Role = (typeof ROLES)[number];
@@ -56,7 +56,7 @@ export function WaitlistForm({
         name: String(fd.get("name") ?? ""),
         role: variant === "minimal" ? "other" : role,
         state: String(fd.get("state") ?? ""),
-            niche: (String(fd.get("niche") ?? "") || undefined) as Niche | undefined,
+            niche: parseNiche(fd.get("niche")),
             consent: fd.get("consent") === "on",
             turnstileToken: token || undefined,
           });

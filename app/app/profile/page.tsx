@@ -3,10 +3,11 @@ import { requireUser } from "@/lib/session";
 import { avatarUrl, logoUrl } from "@/lib/media";
 import { ImageUploader } from "@/app/components/ImageUploader";
 import { CompanyCard } from "./CompanyCard";
-import type { CreatorType, Niche } from "@prisma/client";
+import type { CreatorType } from "@prisma/client";
+import { NICHES, parseNiche } from "@/lib/niche";
 
 const CREATOR_TYPES: CreatorType[] = ["INDEPENDENT", "CASUAL", "EXPERT", "STUDENT"];
-const NICHES: Niche[] = ["HEALTHTECH", "AGROTECH", "FINTECH", "BUSINESS", "OTHER"];
+
 
 // Bio-style profile: personal basics, creator bio, company cards. All editable.
 export default async function ProfilePage() {
@@ -74,7 +75,7 @@ export default async function ProfilePage() {
         <form action={async (fd: FormData) => {
           "use server";
           const { createCompanyAction: c } = await import("@/lib/actions-profile");
-          await c({ name: String(fd.get("name")), niche: String(fd.get("niche")) as Niche, state: String(fd.get("state") ?? "") });
+          await c({ name: String(fd.get("name")), niche: parseNiche(fd.get("niche")) ?? "OTHER", state: String(fd.get("state") ?? "") });
         }} className="flex flex-col gap-2 rounded-2xl border border-dashed border-primary-400 bg-primary-100/40 p-5">
           <h2 className="font-display font-bold">🏢 Register a firm</h2>
           <input name="name" aria-label="New company name" placeholder="Company / firm name" required />
