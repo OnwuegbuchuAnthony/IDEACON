@@ -5,6 +5,8 @@ import { ConsentBanner } from "@/app/components/ConsentBanner";
 import { AuthModalProvider } from "@/app/components/AuthModalProvider";
 import { SiteHeader } from "@/app/components/SiteHeader";
 import { SiteFooter } from "@/app/components/SiteFooter";
+import { SwRegister } from "@/app/components/SwRegister";
+import { MobileGetStartedBar } from "@/app/components/MobileGetStartedBar";
 import { OG_IMAGE, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
@@ -50,7 +52,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0EA5E9", // Metadata API needs a literal; kept equal to --color-azure.
+  themeColor: "#0EA5E9",
   width: "device-width",
   initialScale: 1,
 };
@@ -94,11 +96,13 @@ export default function RootLayout({
           }}
         />
         <Analytics />
+        <SwRegister />
         <ConsentBanner />
         <AuthModalProvider>
           <SiteHeader />
-          <div id="main-content" className="flex flex-1 flex-col">{children}</div>
+          <div id="main-content" className="flex flex-1 flex-col pb-20 md:pb-0">{children}</div>
           <SiteFooter />
+          <MobileGetStartedBar />
         </AuthModalProvider>
       </body>
     </html>

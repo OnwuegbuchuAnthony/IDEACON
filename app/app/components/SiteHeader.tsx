@@ -190,7 +190,7 @@ export function SiteHeader() {
               aria-controls="site-menu"
               aria-label={open ? "Close menu" : "Open menu"}
               onClick={() => setOpen((v) => !v)}
-              className="tap ml-auto shrink-0 rounded-lg border border-border p-1.5 md:hidden"
+              className="tap ml-auto h-11 w-11 shrink-0 rounded-lg border border-border p-1.5 md:hidden"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5 block" stroke="currentColor" strokeWidth="2" fill="none" aria-hidden="true">
                 {open ? (
