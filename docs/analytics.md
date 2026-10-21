@@ -28,6 +28,8 @@ Pageviews are automatic. Custom events via `trackEvent(name, data)`:
 | `role_selected` | Role picked in hero chooser | `role`: creator \| company \| student |
 | `waitlist_submit` | Waitlist join succeeds | `variant`: compact \| full \| student |
 | `faq_opened` | FAQ accordion opened | `index`: question position |
+| `ask_open` | Floating "Ask IDEACON" launcher opened | — |
+| `ask_query` | Question sent to the assistant | — |
 
 Rules: no emails, names, IPs, or free text in properties. Role/variant/index
 describe the UI, never the person.

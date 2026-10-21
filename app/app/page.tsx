@@ -3,6 +3,8 @@ import { HomeAuthNav } from "./HomeAuthNav";
 import { InstallBanner } from "@/app/components/InstallBanner";
 import { Container, Section } from "@/app/components/Container";
 import { TrustBlock } from "@/app/components/TrustBlock";
+import { StatsRow } from "@/app/components/TrustSections";
+import { FloatingAsk } from "@/app/components/FloatingAsk";
 import { HowItWorks } from "@/app/components/HowItWorks";
 import { NicheShowcase } from "@/app/components/NicheShowcase";
 import { PricingTeaser } from "@/app/components/ConversionSections";
@@ -61,10 +63,10 @@ export default function Home() {
         <InstallBanner />
       </Container>
 
-      {/* Trust strip */}
-      <Section ariaLabel="Trust strip">
+      {/* Safe by design — the single place we explain what protects an idea */}
+      <Section ariaLabel="Safe by design">
         <Container>
-          <TrustBlock />
+          <TrustBlock title="Safe by design" />
         </Container>
       </Section>
 
@@ -98,6 +100,13 @@ export default function Home() {
               For students &amp; universities
             </Link>
           </div>
+        </Container>
+      </Section>
+
+      {/* Live stats, or a launch badge while the counters are still empty */}
+      <Section ariaLabel="Platform stats">
+        <Container>
+          <StatsRow />
         </Container>
       </Section>
 
@@ -161,6 +170,9 @@ export default function Home() {
           </div>
         </Container>
       </Section>
+
+      {/* Floating assistant launcher */}
+      <FloatingAsk />
     </div>
   );
 }
