@@ -15,9 +15,10 @@
   --color-violet: #7c3aed;
   --color-azure: #0ea5e9;
   --color-teal: #2dd4bf;
+  --color-navy: #0a1b24;
 
   /* Supporting tints/scales already in use across the app. */
-  --color-ink: #0a2540;
+  --color-ink: #0a1b24;
   --color-primary-800: #0b3d91;
   --color-primary-600: #0f62fe;
   --color-primary-400: #2f6bdf;
@@ -44,9 +45,61 @@
   --color-ink-muted: #4a5b74;
 }
 
+html {
+  font-size: 16px;
+}
+
 body {
   background: var(--color-surface-muted);
   color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.625;
+}
+
+/* Type scale per requirements */
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.14;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+  h1 {
+    font-size: 3.5rem; /* 56px */
+    line-height: 1.14; /* 64px */
+  }
+  h2 {
+    font-size: 2.5rem; /* 40px */
+    line-height: 1.2; /* 48px */
+  }
+  body {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.555; /* 28px */
+  }
+}
+
+@media (max-width: 639px) {
+  h1 {
+    font-size: 2.25rem; /* 36px */
+    line-height: 1.22; /* 44px */
+  }
+  h2 {
+    font-size: 2rem; /* 32px approx, but spec says 40/48 desktop, 36/44 mobile for h1; h2 not fully specified but follow pattern */
+    line-height: 1.25;
+  }
+  body {
+    font-size: 1rem; /* 16px */
+    line-height: 1.625; /* 26px */
+  }
 }
 
 /* Visible keyboard focus everywhere (token-based, 3px azure outline). */
@@ -74,7 +127,8 @@ a[class*="rounded-full"] {
   transition:
     filter 150ms ease,
     transform 150ms ease,
-    background-color 150ms ease;
+    background-color 150ms ease,
+    box-shadow 150ms ease;
 }
 button:not(:disabled):hover,
 a[class*="rounded-full"]:hover {
@@ -87,6 +141,7 @@ a[class*="rounded-full"]:active {
 }
 button:disabled {
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* Interactive cards (teasers, rows that navigate). */

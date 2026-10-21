@@ -36,7 +36,7 @@ export function Section({
     <section
       id={id}
       aria-label={ariaLabel}
-      className={`w-full scroll-mt-20 py-8 sm:py-12 ${className}`}
+      className={`w-full scroll-mt-20 py-14 sm:py-24 ${className}`}
     >
       {children}
     </section>
@@ -91,7 +91,7 @@ export function InfoCard({
 }) {
   return (
     <div
-      className={`rounded-2xl border border-border bg-surface p-5 shadow ${className}`}
+      className={`rounded-[16px] border border-border bg-surface p-5 shadow transition-transform hover:-translate-y-[2px] hover:shadow-lg ${className}`}
     >
       <h2 className="font-display text-lg font-bold">{title}</h2>
       <div className="mt-1 text-sm text-ink/70">{children}</div>
