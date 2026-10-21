@@ -88,7 +88,7 @@ export function LoginModal({
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 3l12 12M15 3L3 15" /></svg>
       </button>
 
-      <h1 id="ic-login-title" className="ic-title">{mode === "login" ? "Login" : "Register"}</h1>
+      <h2 id="ic-login-title" className="ic-title">{mode === "login" ? "Login" : "Register"}</h2>
       <p className="ic-sub">Continue with Google or use your email address.</p>
 
       <button className="ic-google" type="button" disabled={busy} onClick={() => run(onGoogle)}>
