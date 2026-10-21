@@ -1,0 +1,22 @@
+/* IDEACON login tokens — dev preview only (app/dev/login-preview).
+   Values ALIAS the live Tailwind v4 theme (@theme in app/globals.css) wherever
+   the site already defines the colour; exact brief hex otherwise.
+   No new colours, no new fonts. */
+:root {
+  --ic-surface: var(--color-surface);        /* site: #ffffff (brief #FFFFFF) */
+  --ic-border: var(--color-border);          /* site: #dce6f2 (brief #DCE7F7) */
+  --ic-field-border: #6F8FC0;                /* 3.3:1 on white (AA non-text) */
+  --ic-field-hover: #4F73A8;                  /* deeper on hover */
+  --ic-ink: var(--color-ink);                /* site: #0a2540 (brief #0B2447) */
+  --ic-muted: var(--color-ink-muted);        /* site: #4a5b74 (brief #5E6E86) */
+  --ic-placeholder: #66768D;                 /* site defines no placeholder token */
+  --ic-primary: var(--color-primary-600);    /* site: #0f62fe (brief #0F62FE — identical) */
+  --ic-primary-2: var(--color-primary-400);  /* gradient end stop: #2f6bdf (AA on white) */
+  --ic-link: var(--color-primary-600);       /* site links are text-primary-600 (brief #0B5FFF) */
+  --ic-danger: var(--color-red-600);         /* site errors are text-red-600 (brief #D92D20) */
+  --ic-grad: linear-gradient(90deg, var(--ic-primary), var(--ic-primary-2));
+  --ic-ring: rgb(15 98 254 / .22);           /* equals primary-600 at 22% */
+  --ic-radius-card: 24px;
+  --ic-radius-field: 16px;                   /* == Tailwind rounded-2xl */
+  --ic-radius-pill: 999px;                   /* == Tailwind rounded-full */
+}

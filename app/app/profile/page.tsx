@@ -1,6 +1,5 @@
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/session";
-import { updatePersonalAction, updateCreatorAction, updateCompanyAction } from "@/lib/actions-profile";
 import { avatarUrl, logoUrl } from "@/lib/media";
 import { ImageUploader } from "@/app/components/ImageUploader";
 import { CompanyCard } from "./CompanyCard";

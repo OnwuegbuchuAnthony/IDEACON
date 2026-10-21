@@ -1,6 +1,6 @@
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { HeroCta } from "./HeroCta";
+import { HomeAuthNav } from "./HomeAuthNav";
 import { InstallBanner } from "@/app/components/InstallBanner";
 
 const AskChat = dynamic(() => import("./ask/AskChat").then((m) => m.AskChat), {
@@ -26,37 +26,7 @@ export default function Home() {
             ◈ IDEACON
           </span>
           <nav className="flex gap-3 text-sm font-semibold">
-            {waitlist ? (
-              <>
-                <Link
-                  href="/waitlist"
-                  className="rounded-full bg-white px-4 py-2 text-primary-800 hover:bg-primary-100"
-                >
-                  Join waitlist
-                </Link>
-                <Link
-                  href="/login"
-                  className="rounded-full bg-white/15 px-4 py-2 hover:bg-white/25"
-                >
-                  Member log in
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="rounded-full bg-white/15 px-4 py-2 hover:bg-white/25"
-                >
-                  Log in
-                </Link>
-                <Link
-                  href="/signup"
-                  className="rounded-full bg-white px-4 py-2 text-primary-800 hover:bg-primary-100"
-                >
-                  Get started
-                </Link>
-              </>
-            )}
+            <HomeAuthNav waitlist={waitlist} />
           </nav>
         </div>
       </header>

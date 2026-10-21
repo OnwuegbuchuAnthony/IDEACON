@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "../styles/ic-tokens.css";
+@import "../styles/ic-fields.css";
 
 @theme {
   --font-display: "Sora", "Plus Jakarta Sans", system-ui, sans-serif;
@@ -15,7 +17,7 @@
   --color-ink: #0a2540;
   --color-primary-800: #0b3d91;
   --color-primary-600: #0f62fe;
-  --color-primary-400: #5b9dff;
+  --color-primary-400: #2f6bdf;
   --color-primary-100: #e3efff;
   --color-teal-500: #2dd4bf;
   --color-teal-100: #d9f7f1;

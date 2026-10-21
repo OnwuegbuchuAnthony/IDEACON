@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect, useState } from "react";
+import { useConsent } from "@/app/components/ConsentBanner";
 
 declare global {
   interface Window {
@@ -13,19 +13,7 @@ declare global {
 // track(). Renders nothing until NEXT_PUBLIC_UMAMI_* are set AND the visitor
 // accepted analytics in the NDPR consent banner. Loads after interactive.
 export function Analytics() {
-  const [consented, setConsented] = useState(false);
-  useEffect(() => {
-    const check = () => {
-      try {
-        setConsented(localStorage.getItem("ideacon-consent") === "accepted");
-      } catch {
-        setConsented(false);
-      }
-    };
-    check();
-    window.addEventListener("ideacon-consent", check);
-    return () => window.removeEventListener("ideacon-consent", check);
-  }, []);
+  const consented = useConsent() === "accepted";
 
   const src = process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL;
   const websiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;

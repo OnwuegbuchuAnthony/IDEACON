@@ -1,10 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 const KEY = "ideacon-consent";
 
 export type Consent = "accepted" | "declined" | null;
+
+const listeners = new Set<() => void>();
+
+function notify() {
+  listeners.forEach((l) => l());
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("ideacon-consent", notify);
+}
+
+function subscribe(cb: () => void) {
+  listeners.add(cb);
+  return () => {
+    listeners.delete(cb);
+  };
+}
 
 /** Read stored NDPR consent choice (client only). */
 export function getConsent(): Consent {
@@ -17,22 +34,19 @@ export function getConsent(): Consent {
 }
 
 /**
+ * Live consent choice via useSyncExternalStore — safe during SSR (server
+ * snapshot is null) and re-renders whenever the choice changes.
+ */
+export function useConsent(): Consent {
+  return useSyncExternalStore(subscribe, getConsent, () => null);
+}
+
+/**
  * NDPR consent banner. Analytics + tracker load only after explicit accept.
  * No tracking scripts run before choice; decline keeps everything local.
  */
 export function ConsentBanner() {
-  const [choice, setChoice] = useState<Consent>(null);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setChoice(getConsent());
-    setReady(true);
-    const onChange = () => setChoice(getConsent());
-    window.addEventListener("ideacon-consent", onChange);
-    return () => window.removeEventListener("ideacon-consent", onChange);
-  }, []);
-
-  if (!ready || choice) return null;
+  const choice = useConsent();
 
   function pick(v: "accepted" | "declined") {
     try {
@@ -42,6 +56,8 @@ export function ConsentBanner() {
     }
     window.dispatchEvent(new Event("ideacon-consent"));
   }
+
+  if (choice) return null;
 
   return (
     <div

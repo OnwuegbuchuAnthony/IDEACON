@@ -1,9 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore, useState } from "react";
 import { useInstallPrompt, useIsInstalled } from "@/lib/install-prompt";
 
 const DISMISSED_KEY = "ideacon-install-dismissed";
+
+const dismissedListeners = new Set<() => void>();
+function notifyDismissed() {
+  dismissedListeners.forEach((l) => l());
+}
+function subscribeDismissed(cb: () => void) {
+  dismissedListeners.add(cb);
+  return () => {
+    dismissedListeners.delete(cb);
+  };
+}
+function getDismissed() {
+  try {
+    return localStorage.getItem(DISMISSED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Contextual install banner (homepage hero). Shows only when Chrome has
@@ -13,16 +31,8 @@ const DISMISSED_KEY = "ideacon-install-dismissed";
 export function InstallBanner() {
   const promptEvent = useInstallPrompt();
   const installed = useIsInstalled();
-  const [dismissed, setDismissed] = useState(true);
+  const dismissed = useSyncExternalStore(subscribeDismissed, getDismissed, () => false);
   const [showHelp, setShowHelp] = useState(false);
-
-  useEffect(() => {
-    try {
-      setDismissed(localStorage.getItem(DISMISSED_KEY) === "1");
-    } catch {
-      setDismissed(false);
-    }
-  }, []);
 
   if (installed || dismissed) return null;
 
@@ -32,7 +42,7 @@ export function InstallBanner() {
     } catch {
       /* private mode */
     }
-    setDismissed(true);
+    notifyDismissed();
   }
 
   return (

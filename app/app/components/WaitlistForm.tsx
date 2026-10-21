@@ -36,6 +36,8 @@ export function WaitlistForm({
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [token, setToken] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+  const [email, setEmail] = useState("");
 
   if (done) {
     return (
@@ -70,9 +72,6 @@ export function WaitlistForm({
       setBusy(false);
     }
   }
-
-  const formRef = useRef<HTMLFormElement>(null);
-  const [email, setEmail] = useState("");
 
   function goStep2() {
     if (!EMAIL_RE.test(email.trim())) {

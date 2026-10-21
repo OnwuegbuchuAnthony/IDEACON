@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Sora, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@/lib/analytics";
 import { ConsentBanner } from "@/app/components/ConsentBanner";
+import { AuthModalProvider } from "@/app/components/AuthModalProvider";
 import { SiteHeader } from "@/app/components/SiteHeader";
 import { SiteFooter } from "@/app/components/SiteFooter";
 import { OG_IMAGE, SITE_URL } from "@/lib/seo";
@@ -94,9 +95,11 @@ export default function RootLayout({
         />
         <Analytics />
         <ConsentBanner />
-        <SiteHeader />
-        <div id="main-content" className="flex flex-1 flex-col">{children}</div>
-        <SiteFooter />
+        <AuthModalProvider>
+          <SiteHeader />
+          <div id="main-content" className="flex flex-1 flex-col">{children}</div>
+          <SiteFooter />
+        </AuthModalProvider>
       </body>
     </html>
   );

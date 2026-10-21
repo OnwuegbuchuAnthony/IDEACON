@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useAuthModal } from "@/app/components/AuthModalProvider";
 import "@/lib/install-prompt";
 
 const LINKS: { href: string; label: string }[] = [
@@ -23,18 +24,17 @@ const FOCUSABLE =
  */
 export function SiteHeader() {
   const pathname = usePathname();
+  const authModal = useAuthModal();
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const [lastPath, setLastPath] = useState(pathname);
 
-  // Close the panel on navigation; return focus to the toggle.
-  useEffect(() => {
-    if (open) {
-      setOpen(false);
-      toggleRef.current?.focus();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  // Close the panel on navigation (adjust during render, not in an effect).
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    if (open) setOpen(false);
+  }
 
   // Escape to close + focus trap while the panel is open.
   useEffect(() => {
@@ -98,12 +98,31 @@ export function SiteHeader() {
               </Link>
             ))}
           </nav>
-          <Link
-            href={process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? "/waitlist" : "/signup"}
-            className="ml-auto hidden rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-sm font-bold text-white md:inline-block"
-          >
-            {process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? "Join waitlist" : "Get started"}
-          </Link>
+          {process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? (
+            <Link
+              href="/waitlist"
+              className="ml-auto hidden rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-sm font-bold text-white md:inline-block"
+            >
+              Join waitlist
+            </Link>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={(e) => authModal.open("login", e.currentTarget)}
+                className="ml-auto hidden text-sm font-bold text-ink/70 hover:text-primary-600 md:inline-block"
+              >
+                Log in
+              </button>
+              <button
+                type="button"
+                onClick={(e) => authModal.open("register", e.currentTarget)}
+                className="hidden rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-sm font-bold text-white md:inline-block"
+              >
+                Get started
+              </button>
+            </>
+          )}
           <button
             ref={toggleRef}
             type="button"
@@ -143,13 +162,34 @@ export function SiteHeader() {
                 {l.label}
               </Link>
             ))}
-            <Link
-              href={process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? "/waitlist" : "/signup"}
-              tabIndex={open ? undefined : -1}
-              className="mt-1 rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-center text-sm font-bold text-white"
-            >
-              {process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? "Join waitlist" : "Get started"}
-            </Link>
+            {process.env.NEXT_PUBLIC_LAUNCH_MODE === "waitlist" ? (
+              <Link
+                href="/waitlist"
+                tabIndex={open ? undefined : -1}
+                className="mt-1 rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-center text-sm font-bold text-white"
+              >
+                Join waitlist
+              </Link>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  tabIndex={open ? undefined : -1}
+                  onClick={(e) => { setOpen(false); authModal.open("login", e.currentTarget); }}
+                  className="mt-1 rounded-lg px-3 py-2 text-left text-sm font-bold text-ink/70"
+                >
+                  Log in
+                </button>
+                <button
+                  type="button"
+                  tabIndex={open ? undefined : -1}
+                  onClick={(e) => { setOpen(false); authModal.open("register", e.currentTarget); }}
+                  className="rounded-full bg-gradient-to-r from-primary-600 to-primary-400 px-5 py-2 text-center text-sm font-bold text-white"
+                >
+                  Get started
+                </button>
+              </>
+            )}
           </nav>
         </div>
       </header>
