@@ -12,7 +12,7 @@ export default function OfflinePage() {
       <p className="text-sm text-ink-muted">
         IDEACON needs a connection for fresh ideas. Reconnect and your drafts and queue will be right here.
       </p>
-      <Link href="/browse" className="rounded-full bg-primary-600 px-6 py-2.5 text-sm font-bold text-white">
+      <Link href="/discover" className="rounded-full bg-primary-600 px-6 py-2.5 text-sm font-bold text-white">
         Retry
       </Link>
     </main>

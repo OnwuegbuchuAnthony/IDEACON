@@ -85,7 +85,7 @@ export default function RootLayout({
                   url: SITE_URL,
                   potentialAction: {
                     "@type": "SearchAction",
-                    target: `${SITE_URL}/browse?q={query}`,
+                    target: `${SITE_URL}/discover?q={query}`,
                     "query-input": "required name=query",
                   },
                 },

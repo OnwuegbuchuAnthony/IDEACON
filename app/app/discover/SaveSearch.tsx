@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { saveSearchAction } from "@/lib/actions-workspace";
-import type { Niche } from "@prisma/client";
+import { parseNiche } from "@/lib/niche";
 
 /** Save the current filter set (company members only, enforced server-side). */
 export function SaveSearchButton({ niche, stage, q }: { niche?: string; stage?: string; q?: string }) {
@@ -19,7 +19,7 @@ export function SaveSearchButton({ niche, stage, q }: { niche?: string; stage?: 
     <form
       className="flex items-center gap-2"
       action={async () => {
-        await saveSearchAction({ name, niche: (niche || undefined) as Niche | undefined, stage, q });
+        await saveSearchAction({ name, niche: parseNiche(niche), stage, q });
       }}
     >
       <input aria-label="Search name" placeholder="Search name" value={name} onChange={(e) => setName(e.target.value)} required className="max-w-[180px]" />

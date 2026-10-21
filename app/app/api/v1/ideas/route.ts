@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import type { Niche } from "@prisma/client";
 import { db } from "@/lib/db";
 import { requireApiScope } from "@/lib/api-keys";
+import { parseNiche } from "@/lib/niche";
 
 /** GET /api/v1/ideas?niche=&stage=&q= — teaser-safe public catalog. */
 export async function GET(req: Request) {
@@ -9,14 +9,14 @@ export async function GET(req: Request) {
   if ("error" in gate) return gate.error;
 
   const url = new URL(req.url);
-  const niche = url.searchParams.get("niche") ?? undefined;
+  const niche = parseNiche(url.searchParams.get("niche"));
   const stage = url.searchParams.get("stage") ?? undefined;
   const q = url.searchParams.get("q") ?? undefined;
 
   const ideas = await db.idea.findMany({
     where: {
       status: { in: ["APPROVED", "MATCHED", "UNDER_NDA"] },
-      ...(niche ? { niche: niche as Niche } : {}),
+      ...(niche ? { niche } : {}),
       ...(stage ? { stage } : {}),
       ...(q
         ? {

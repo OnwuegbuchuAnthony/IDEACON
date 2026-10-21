@@ -2,46 +2,41 @@
 
 import { useAuthModal } from "@/app/components/AuthModalProvider";
 
-/** Homepage hero auth actions — opens the shared auth modal. */
-export function HomeAuthNav({ waitlist }: { waitlist: boolean }) {
+/**
+ * Hero auth action — opens the shared auth modal. The hero's primary CTA is
+ * the role chooser in <HeroCta />, so this stays a single secondary "Log in"
+ * link (with a context prefix) rather than a second competing primary button.
+ */
+export function HomeAuthNav({
+  waitlist,
+  prefix,
+}: {
+  waitlist: boolean;
+  prefix?: string;
+}) {
   const authModal = useAuthModal();
 
   if (waitlist) {
     return (
-      <>
-        <a
-          href="/waitlist"
-          className="rounded-full bg-white px-4 py-2 text-primary-800 hover:bg-primary-100"
-        >
-          Join waitlist
+      <p className="text-sm text-white/90">
+        {prefix ? `${prefix} ` : ""}
+        <a href="/waitlist" className="font-bold text-white underline underline-offset-4">
+          Join the waitlist
         </a>
-        <button
-          type="button"
-          onClick={(e) => authModal.open("login", e.currentTarget)}
-          className="rounded-full bg-white/15 px-4 py-2 hover:bg-white/25"
-        >
-          Member log in
-        </button>
-      </>
+      </p>
     );
   }
 
   return (
-    <>
+    <p className="text-sm text-white/90">
+      {prefix ? `${prefix} ` : ""}
       <button
         type="button"
         onClick={(e) => authModal.open("login", e.currentTarget)}
-        className="rounded-full bg-white/15 px-4 py-2 hover:bg-white/25"
+        className="font-bold text-white underline underline-offset-4"
       >
         Log in
       </button>
-      <button
-        type="button"
-        onClick={(e) => authModal.open("register", e.currentTarget)}
-        className="rounded-full bg-white px-4 py-2 text-primary-800 hover:bg-primary-100"
-      >
-        Get started
-      </button>
-    </>
+    </p>
   );
 }

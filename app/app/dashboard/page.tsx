@@ -46,7 +46,7 @@ export default async function DashboardPage() {
     if (s.niche) p.set("niche", s.niche);
     if (s.stage) p.set("stage", s.stage);
     if (s.q) p.set("q", s.q);
-    return `/browse?${p.toString()}`;
+    return `/discover?${p.toString()}`;
   };
 
   return (
@@ -104,7 +104,7 @@ export default async function DashboardPage() {
                   <b>{m.idea.title}</b> <span className="text-ink/50">· {m.source} · {m.createdAt.toISOString().slice(0, 10)}</span>
                 </RowLink>
               ))}
-              {company.matches.length === 0 && <p className="text-sm text-ink/50">No access requests yet — <Link href="/browse" className="underline">browse teasers</Link>.</p>}
+              {company.matches.length === 0 && <p className="text-sm text-ink/50">No access requests yet — <Link href="/discover" className="underline">browse teasers</Link>.</p>}
             </div>
           </section>
 
